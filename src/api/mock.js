@@ -1,4 +1,4 @@
 import Mock from 'mockjs'
-import homeApi from './mockdata/home.js'
+import loginApi from './mockdata/login.js'
 // 拦截请求
-Mock.mock('/home/getData', homeApi.getHomeData)
+Mock.mock('http://localhost:8080/api/backstage-management-service/login', loginApi.getLoginData())

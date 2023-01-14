@@ -1,14 +1,88 @@
 <script setup>
-import {ref} from 'vue'
+import {reactive, ref, onMounted} from 'vue'
+import {ElMessage} from 'element-plus'
+import axios from '../api/request'
+import Cookies from 'js-cookie'
+import {encrypt, decrypt} from "../utils/jsencrypt.js";
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const EXPIRE_DAY = 30
 
 // ref引入 要使用vue2中的$ref需要这样引入
 const loginFormRef = ref()
 
-const loginForm = ref({
+const loginForm = reactive({
   username: '',
   password: '',
   rememberMe: false
 })
+
+const submitForm = {
+  account_number: '',
+  password: ''
+}
+
+const rules = reactive({
+  username: [
+    {required: true, message: '请输入用户名', trigger: 'blur'},
+    {min: 1, max: 20, message: '账号长度为1-20', trigger: 'blur'}
+  ],
+  password: [
+    {required: true, message: '请输入密码', trigger: 'blur'},
+    {min: 8, max: 20, message: '密码长度为8-20', trigger: 'blur'}
+  ]
+})
+
+const submit = async (form) => {
+  if(!form){
+    return
+  }
+  await form.validate(async (valid, fields) => {
+    if (valid) {
+      await login()
+    } else {
+      ElMessage.error('预校验未通过,请检查输入')
+    }
+  })
+}
+
+const loginLoading = ref(false)
+
+const login = async () => {
+  try {
+    loginLoading.value = true
+    submitForm.account_number = loginForm.username
+    submitForm.password = encrypt(loginForm.password)
+    const { data } =
+        await axios.post('/backstage-management-service/login', submitForm)
+    if(data.code !== 200){
+      ElMessage.error(data.msg)
+      return
+    }
+    // 信息写入cookie
+    if (loginForm.rememberMe) {
+      Cookies.set('username', loginForm.username, {expires: EXPIRE_DAY})
+      Cookies.set('password', encrypt(loginForm.password), {expires: EXPIRE_DAY})
+      Cookies.set('rememberMe', loginForm.rememberMe, {expires: EXPIRE_DAY})
+    } else {
+      Cookies.remove('username')
+      Cookies.remove('password')
+      Cookies.remove('rememberMe')
+    }
+    Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
+    Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
+    ElMessage.success('登录成功')
+    // TODO 权限控制
+    if(data.data.role === 'admin'){
+      await router.push('/adminHome')
+    }
+  } catch (e) {
+    ElMessage.error(e.message)
+  } finally {
+    loginLoading.value = false
+  }
+}
 
 const resetForm = (form) => {
   if(!form){
@@ -17,6 +91,14 @@ const resetForm = (form) => {
   form.resetFields()
 }
 
+onMounted(() => {
+  if (Cookies.get('rememberMe') && Cookies.get('rememberMe') === 'true') {
+    loginForm.username = Cookies.get('username')
+    loginForm.password = decrypt(Cookies.get('password'))
+    loginForm.rememberMe = true
+    login()
+  }
+})
 </script>
 
 <template>
@@ -24,7 +106,7 @@ const resetForm = (form) => {
     <div class="login-banner">
       <el-row>
         <div style="margin: auto; ">
-          <h1 style="color: white ">欢迎使用监所管理系统</h1>
+          <h1 style="color: white ">监所警察执法保障试验平台</h1>
         </div>
       </el-row>
     </div>
@@ -38,8 +120,9 @@ const resetForm = (form) => {
           class = "login-form"
           :model="loginForm"
           ref="loginFormRef"
+          :rules="rules"
       >
-        <!--        用户名 注意prop属性标注在form-item的位置-->
+        <!--用户名 注意prop属性标注在form-item的位置-->
         <el-form-item prop="username">
           <el-input
               placeholder="请输入账号"
@@ -53,7 +136,7 @@ const resetForm = (form) => {
           </template>
           </el-input>
         </el-form-item>
-        <!--        密码-->
+        <!--密码-->
         <el-form-item prop="password">
           <el-input
               placeholder="请输入密码"
@@ -68,7 +151,8 @@ const resetForm = (form) => {
             </template>
           </el-input>
         </el-form-item>
-        <el-row class="button-row">
+        <!--按钮组-->
+        <el-row class="button-row" align="middle">
           <el-form-item>
             <el-checkbox
                 v-model="loginForm.rememberMe"
@@ -79,7 +163,13 @@ const resetForm = (form) => {
           <div class="buttons">
             <el-form-item>
               <!--          登录-->
-              <el-button type="primary" >登录</el-button>
+              <el-button
+                type="primary"
+                @click="submit(loginFormRef)"
+                :loading="loginLoading"
+              >
+                登录
+              </el-button>
               <!--        重置-->
               <el-button type="info" @click="resetForm(loginFormRef)">重置</el-button>
             </el-form-item>
@@ -138,7 +228,7 @@ const resetForm = (form) => {
       padding: 0 20px;
       box-sizing: border-box;
       .button-row{
-        margin-bottom: 10px;
+        margin-top: 40px;
         justify-content: space-between;
       }
     }

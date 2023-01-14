@@ -1,20 +1,20 @@
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 // 创建一个axios实例
 const _axios = axios.create({
-    baseURL: config.baseUrl
+    baseURL: 'http://localhost:8080/api'
 })
 
 // 加入拦截器
 _axios.interceptors.request.use(
     (req) => {
-        // 在这里可以统一处理请求
+        // 比如在这里添加统一的 headers
+        if (Cookies.get('accessToken') !== null) {
+            req.headers.accseeToken = Cookies.get('accessToken')
+        }
+
         return req
-        // // 比如在这里添加统一的 headers
-        // if (window.sessionStorage.getItem('token') !== null) {
-        //     config.headers.token = window.sessionStorage.getItem('token')
-        // }
-        // return config
     }
 )
 
