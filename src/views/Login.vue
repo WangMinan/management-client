@@ -92,11 +92,14 @@ const resetForm = (form) => {
 }
 
 onMounted(() => {
+  window.sessionStorage.setItem('activePath', null)
   if (Cookies.get('rememberMe') && Cookies.get('rememberMe') === 'true') {
     loginForm.username = Cookies.get('username')
     loginForm.password = decrypt(Cookies.get('password'))
     loginForm.rememberMe = true
-    login()
+    if(Cookies.get('manualExit') === 'false') {
+      login()
+    }
   }
 })
 </script>
@@ -182,7 +185,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .login-container{
-  background: url("../assets/bigsur.png") no-repeat fixed center;
+  background: url("../assets/img/bigsur.png") no-repeat fixed center;
   background-size:100% ,100%;
   height: 100%;
   .login-banner{

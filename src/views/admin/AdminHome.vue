@@ -1,5 +1,6 @@
 <script setup>
 import AdminAside from '../../components/aside/AdminAside.vue'
+import AdminHeader from '../../components/header/AdminHeader.vue'
 </script>
 
 <template>
@@ -7,7 +8,9 @@ import AdminAside from '../../components/aside/AdminAside.vue'
     <el-container>
       <AdminAside/>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>
+          <AdminHeader/>
+        </el-header>
         <el-main>
           <router-view/>
         </el-main>
@@ -27,7 +30,6 @@ import AdminAside from '../../components/aside/AdminAside.vue'
 }
 .el-header{
   padding: 0;
-  background: #ECF5FF;
 }
 /*.el-main{
 //给home组件中el-row留出空间

@@ -1,5 +1,14 @@
 <script setup>
 import {ref} from 'vue'
+import {useStorage} from "@vueuse/core";
+
+// 记住导航状态（仅本次登录期间）从sessionStorage中获取activePath
+let activePath = ref('')
+activePath = useStorage('activePath', null, sessionStorage)
+const saveNavState = (path) => {
+  // 将path存入sessionStorage
+  activePath.value = path
+}
 </script>
 
 <template>
@@ -7,17 +16,17 @@ import {ref} from 'vue'
     <div class="imgBox">
       <img
         class="logo"
-        src="../../assets/prison-logo.svg"
+        src="../../assets/img/prison-logo.svg"
         alt="LOGO"
       >
     </div>
     <el-menu
-        class="el-menu-vertical-demo"
-        default-active="1"
-        router
-        background-color="#333D55"
-        text-color="#fff"
-        active-text-color="#ffd04b"
+      class="el-menu-vertical"
+      :default-active="activePath"
+      router
+      background-color="#333D55"
+      text-color="#fff"
+      active-text-color="#ffd04b"
     >
       <el-sub-menu index="1">
         <template #title>
@@ -26,12 +35,14 @@ import {ref} from 'vue'
         </template>
         <el-menu-item
           :index="'/prisonManagement'"
+          @click="saveNavState('/prisonManagement')"
         >
           <el-icon><OfficeBuilding /></el-icon>
           <span>监所管理</span>
         </el-menu-item>
         <el-menu-item
           :index="'/prisonManagerManagement'"
+          @click="saveNavState('/prisonManagerManagement')"
         >
           <el-icon><User /></el-icon>
           <span>监所管理员管理</span>
@@ -39,12 +50,15 @@ import {ref} from 'vue'
       </el-sub-menu>
       <el-menu-item
         :index="'/modelManagement'"
+        @click="saveNavState('/modelManagement')"
       >
         <el-icon><Menu /></el-icon>
         <span>训练模型管理</span>
       </el-menu-item>
       <el-menu-item
-        :index="'/opBoard'">
+        :index="'/opBoard'"
+        @click="saveNavState('/opBoard')"
+      >
         <el-icon><Odometer /></el-icon>
         <span>平台运维看板</span>
       </el-menu-item>
