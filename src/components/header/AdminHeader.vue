@@ -169,7 +169,7 @@ const submit = async (form) => {
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="confirmPassword" label="请确认密码">
+      <el-form-item prop="confirmPassword" label="请确认新密码">
         <el-input
             v-model="revisePasswordTable.confirmPassword"
             placeholder="确认密码"
@@ -201,7 +201,7 @@ const submit = async (form) => {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  background: #A0CFFF;
+  background: #79BBFF;
   align-items: center;
   .l-content{
     color: white;

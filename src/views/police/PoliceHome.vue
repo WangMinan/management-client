@@ -1,15 +1,15 @@
 <script setup>
-import AdminAside from '../../components/aside/AdminAside.vue'
-import AdminHeader from '../../components/header/AdminHeader.vue'
+import PoliceAside from '../../components/aside/PoliceAside.vue'
+import PoliceHeader from '../../components/header/PoliceHeader.vue'
 </script>
 
 <template>
   <div class="common-layout">
     <el-container>
-      <AdminAside/>
+      <PoliceAside/>
       <el-container>
         <el-header>
-          <AdminHeader/>
+          <PoliceHeader/>
         </el-header>
         <el-main>
           <router-view/>

@@ -11,7 +11,7 @@ _axios.interceptors.request.use(
     (req) => {
         // 比如在这里添加统一的 headers
         if (Cookies.get('accessToken') !== null) {
-            req.headers.accseeToken = Cookies.get('accessToken')
+            req.headers.Token = Cookies.get('accessToken')
         }
 
         return req

@@ -6,7 +6,9 @@ import adminApi from '../../../api/mockdata/admin/admin.js'
 
 const prisonTableRef = ref()
 // 保存所有选中的监狱的id
-const prisonSelection = ref([])
+const prisonSelection = ref({
+  idList: []
+})
 // 保存表格中的监狱数据
 const prisonData = ref([])
 // 表格的加载圈
@@ -15,8 +17,8 @@ const prisonLoading = ref(false)
 const queryInfo = ref({
   query: '',
   // 当前页码
-  pagenum: 1,
-  pagesize: 5
+  pageNum: 1,
+  pageSize: 5
 })
 
 const total = ref(0)
@@ -24,8 +26,17 @@ const total = ref(0)
 const getPrisonList = async () => {
   try{
     prisonLoading.value=true
-    // const {data} =
-    //     axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.pagenum}/${queryInfo.value.pagesize}`)
+    // let resp = {}
+    // if(queryInfo.value.query === ''){
+    //   resp =
+    //     await axios.get(`/backstage-management-service/admin/prison/
+    //     ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    // } else {
+    //   resp =
+    //       await axios.get(`/backstage-management-service/admin/prison/
+    //     ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    // }
+    // const data = resp.data
     // if(data.code !== '200'){
     //   ElMessage.error(data.msg)
     // }
@@ -45,16 +56,16 @@ onMounted(() => {
 })
 
 const handleSizeChange = (newSize) => {
-  queryInfo.pagesize = newSize
+  queryInfo.pageSize = newSize
   getPrisonList()
 }
 const handleCurrentChange = (newPage) => {
-  queryInfo.pagenum = newPage
+  queryInfo.pageNum = newPage
   getPrisonList()
 }
 
 const handleSelectionChange = (val) => {
-  prisonSelection.value = val.map(item => item.id)
+  prisonSelection.value.idList = val.map(item => item.id)
 }
 
 // 接下来是新增监狱的部分
@@ -79,9 +90,8 @@ const addPrison = async (form) => {
   }
   await form.validate(async (valid, fields) => {
     if (valid) {
-      console.log(addPrisonForm.value.prisonName)
       const {data} =
-          await axios.post('/backstage-management-service/admin/prison',addPrisonForm.value.prisonName)
+          await axios.post('/backstage-management-service/admin/prison',addPrisonForm.value)
       if(data.code === 200) {
         ElMessage.success('新增监狱成功')
         addPrisonDialogVisible.value = false
@@ -104,11 +114,11 @@ const resetAddPrisonForm = (form) => {
 
 // 接下来是删除监所的部分
 const deletePrisons = () => {
-  if(prisonSelection.value.length === 0){
+  if(prisonSelection.value.idList.length === 0){
     ElMessage.error('请至少选择一个监狱')
     return
   }
-  ElMessageBox.confirm('此操作将永久删除选中监狱, 是否继续?', '提示', {
+  ElMessageBox.confirm('此操作将永久删除选中的监狱, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -176,8 +186,8 @@ const deletePrisons = () => {
     </el-table>
     <!--分页组件-->
     <el-pagination
-      v-model:current-page="queryInfo.pagenum"
-      v-model:page-size="queryInfo.pagesize"
+      v-model:current-page="queryInfo.pageNum"
+      v-model:page-size="queryInfo.pageSize"
       :page-sizes="[2, 5, 10, 20]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
@@ -190,7 +200,7 @@ const deletePrisons = () => {
     title="添加监所"
     v-model="addPrisonDialogVisible"
     center
-    @close="resetAddPrisonForm(addPrisonFormRef)"
+    @closed="resetAddPrisonForm(addPrisonFormRef)"
   >
     <el-form :model="addPrisonForm" ref="addPrisonFormRef" :rules="addPrisonRules">
       <el-form-item prop="prisonName" label="监所名称">

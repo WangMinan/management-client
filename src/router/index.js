@@ -64,6 +64,44 @@ const routes = [
                 }
             }
         ]
+    },
+    {
+        path: '/prisonHome',
+        name: 'prisonHome',
+        component: () => import('../views/prison/PrisonHome.vue'),
+        redirect: '/prisonMain',
+        meta: {
+            title: '监所管理系统-监所首页'
+        },
+        children: [
+            {
+                path: '/prisonMain',
+                name: 'prisonMain',
+                component: () => import('../views/prison/main/PrisonMain.vue'),
+                meta: {
+                    title: '监所管理系统-监所首页'
+                }
+            }
+        ]
+    },
+    {
+        path: '/policeHome',
+        name: 'policeHome',
+        component: () => import('../views/police/PoliceHome.vue'),
+        redirect: '/policeMain',
+        meta: {
+            title: '监所管理系统-警员首页'
+        },
+        children: [
+            {
+                path: '/policeMain',
+                name: 'policeMain',
+                component: () => import('../views/police/main/PoliceMain.vue'),
+                meta: {
+                    title: '监所管理系统-警员首页'
+                }
+            }
+        ]
     }
 ]
 

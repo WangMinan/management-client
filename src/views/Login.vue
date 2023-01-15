@@ -19,7 +19,7 @@ const loginForm = reactive({
 })
 
 const submitForm = {
-  account_number: '',
+  accountNumber: '',
   password: ''
 }
 
@@ -52,7 +52,7 @@ const loginLoading = ref(false)
 const login = async () => {
   try {
     loginLoading.value = true
-    submitForm.account_number = loginForm.username
+    submitForm.accountNumber = loginForm.username
     submitForm.password = encrypt(loginForm.password)
     const { data } =
         await axios.post('/backstage-management-service/login', submitForm)
@@ -73,9 +73,12 @@ const login = async () => {
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
     ElMessage.success('登录成功')
-    // TODO 权限控制
     if(data.data.role === 'admin'){
       await router.push('/adminHome')
+    } else if(data.data.role === 'prison'){
+      await router.push('/prisonHome')
+    } else {
+      await router.push('/policeHome')
     }
   } catch (e) {
     ElMessage.error(e.message)
