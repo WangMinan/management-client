@@ -18,7 +18,7 @@ const logout = ()=> {
   router.push('/login')
 }
 
-const dialogVisible = ref(false)
+let dialogVisible = ref(false)
 const revisePasswordTableRef=ref()
 const revisePasswordTable = ref({
   'oldPassword': '',
@@ -87,7 +87,6 @@ const submit = async (form) => {
   }
   await form.validate(async (valid, fields) => {
     if (valid) {
-      // TODO 和后端讲他们少了个id字段 返回值也不是通用返回值
       const uploadTable = {
         'oldPassword': revisePasswordTable.value.oldPassword,
         'newPassword': revisePasswordTable.value.newPassword,
@@ -187,10 +186,10 @@ const submit = async (form) => {
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible=false">取消</el-button>
         <el-button type="primary" @click="submit(revisePasswordTableRef)">
           确认
         </el-button>
+        <el-button @click="dialogVisible=false">取消</el-button>
       </span>
     </template>
   </el-dialog>

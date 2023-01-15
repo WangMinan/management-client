@@ -25,13 +25,28 @@ const saveNavState = (path) => {
       :default-active="activePath"
       router
     >
-      <el-menu-item
-          :index="'/prisonManagement'"
-          @click="saveNavState('/prisonManagement')"
+      <el-sub-menu
+        :index="'1'"
       >
-        <el-icon><OfficeBuilding /></el-icon>
-        <span>监所管理</span>
-      </el-menu-item>
+        <template #title>
+          <el-icon><Monitor /></el-icon>
+          <span>监所信息管理</span>
+        </template>
+        <el-menu-item
+            :index="'/prisonManagement'"
+            @click="saveNavState('/prisonManagement')"
+        >
+          <el-icon><OfficeBuilding /></el-icon>
+          <span>监所管理</span>
+        </el-menu-item>
+        <el-menu-item
+            :index="'/prisonManagerManagement'"
+            @click="saveNavState('/prisonManagerManagement')"
+        >
+          <el-icon><User /></el-icon>
+          <span>监所管理员管理</span>
+        </el-menu-item>
+      </el-sub-menu>
       <el-menu-item
         :index="'/modelManagement'"
         @click="saveNavState('/modelManagement')"
