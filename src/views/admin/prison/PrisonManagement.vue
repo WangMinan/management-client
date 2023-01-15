@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue'
 import axios from '../../../api/request'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import adminApi from '../../../api/mockdata/admin/admin.js'
 
 const prisonTableRef = ref()
 // 保存所有选中的监狱的id
@@ -26,24 +25,22 @@ const total = ref(0)
 const getPrisonList = async () => {
   try{
     prisonLoading.value=true
-    // let resp = {}
-    // if(queryInfo.value.query === ''){
-    //   resp =
-    //     await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // } else {
-    //   resp =
-    //       await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // }
-    // const data = resp.data
-    // if(data.code !== '200'){
-    //   ElMessage.error(data.msg)
-    // }
-    // prisonData.value = data.data
-    // total.value = data.total
-    prisonData.value = adminApi.getPrisonTotalData().data.list
-    total.value = adminApi.getPrisonTotalData().data.total
+    let resp = {}
+    if(queryInfo.value.query === ''){
+      resp =
+        await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    } else {
+      resp =
+        await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    }
+    const data = resp.data
+    if(data.code !== 200){
+      ElMessage.error(data.msg)
+    }
+    prisonData.value = data.data.list
+    total.value = data.data.total
+    // prisonData.value = adminApi.getPrisonTotalData().data.list
+    // total.value = adminApi.getPrisonTotalData().data.total
   } catch (e) {
     ElMessage.error('获取监狱列表失败，请检查网络环境')
   } finally {

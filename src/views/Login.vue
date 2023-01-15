@@ -70,6 +70,7 @@ const login = async () => {
       Cookies.remove('password')
       Cookies.remove('rememberMe')
     }
+    Cookies.set('role',data.data.role,{expires: EXPIRE_DAY})
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
     ElMessage.success('登录成功')
@@ -95,7 +96,6 @@ const resetForm = (form) => {
 }
 
 onMounted(() => {
-  window.sessionStorage.setItem('activePath', null)
   if (Cookies.get('rememberMe') && Cookies.get('rememberMe') === 'true') {
     loginForm.username = Cookies.get('username')
     loginForm.password = decrypt(Cookies.get('password'))

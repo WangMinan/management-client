@@ -9,5 +9,12 @@ export default {
                 refreshToken: 'refreshToken'
             }
         }
+    },
+    getLogoutData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {}
+        }
     }
 }

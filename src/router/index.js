@@ -32,7 +32,7 @@ const routes = [
                 }
             },
             {
-                path: '/prisonManagement',
+                path: '/adminPrisonManagement',
                 name: 'prisonManagement',
                 component: () => import('../views/admin/prison/PrisonManagement.vue'),
                 meta: {
@@ -40,7 +40,7 @@ const routes = [
                 }
             },
             {
-                path: '/prisonManagerManagement',
+                path: '/adminPrisonManagerManagement',
                 name: 'prisonManagerManagement',
                 component: () => import('../views/admin/prison/PrisonManagerManagement.vue'),
                 meta: {
@@ -48,7 +48,7 @@ const routes = [
                 }
             },
             {
-                path: '/modelManagement',
+                path: '/adminModelManagement',
                 name: 'modelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),
                 meta: {
@@ -56,7 +56,7 @@ const routes = [
                 }
             },
             {
-                path: '/opBoard',
+                path: '/adminOpBoard',
                 name: 'opBoard',
                 component: () => import('../views/admin/screen/OpBoard.vue'),
                 meta: {
@@ -125,15 +125,39 @@ router.beforeEach((to, from, next) => {
     // 获取请求头
     const accessToken = Cookies.get('accessToken')
     const refreshToken = Cookies.get('refreshToken')
-    if (!accessToken && !refreshToken) {
-        ElMessage.error('您的访问未被授权,可能是您的身份验证已过期,请重新登录')
+    if (!accessToken || !refreshToken) {
+        ElMessage.error('您的访问未被授权,可能是您的身份验证已过期,3秒后将跳转至登录页面')
         // 等待三秒
         setTimeout(() => {
             next('/login')
         },3000)
     } else {
-        // TODO 如果只有refresh-token但access-token过期则刷新access-token
-        next()
+        // 鉴权 如果Cookies中的role为admin则仅允许访问adminHome下的页面
+        if (Cookies.get('role') === 'admin') {
+            if(to.path.startsWith('/admin')) {
+                next()
+            } else {
+                ElMessage.error('您的访问未被授权,请联系管理员')
+                next(from.path)
+            }
+        } else if (Cookies.get('role') === 'prison') {
+            if(to.path.startsWith('/prison')) {
+                next()
+            } else {
+                ElMessage.error('您的访问未被授权,请联系管理员')
+                next(from.path)
+            }
+        } else if (Cookies.get('role') === 'police') {
+            if(to.path.startsWith('/police')) {
+                next()
+            } else {
+                ElMessage.error('您的访问未被授权,请联系管理员')
+                next(from.path)
+            }
+        } else {
+            ElMessage.error('您的访问未被授权,请联系管理员')
+            next(from.path)
+        }
     }
 })
 

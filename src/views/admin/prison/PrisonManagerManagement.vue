@@ -29,24 +29,23 @@ const total = ref(0)
 
 const getPrisonList = async () => {
   try{
-    // let resp = {}
-    // if(queryInfo.value.query === ''){
-    //   resp =
-    //     await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // } else {
-    //   resp =
-    //       await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // }
-    // const data = resp.data
-    // if(data.code !== '200'){
-    //   ElMessage.error(data.msg)
-    // }
-    // prisonData.value = data.data
-    // total.value = data.total
-    prisonData.value = adminApi.getPrisonTotalData().data.list
-    total.value = adminApi.getPrisonTotalData().data.total
+    let resp = {}
+    if(queryInfo.value.query === ''){
+      resp =
+        await axios.get(`/backstage-management-service/admin/prison/
+        ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    } else {
+      resp =
+          await axios.get(`/backstage-management-service/admin/prison/
+        ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    }
+    const data = resp.data
+    if(data.code !== 200){
+      ElMessage.error(data.msg)
+    }
+    prisonData.value = data.data.list
+    // prisonData.value = adminApi.getPrisonTotalData().data.list
+    // total.value = adminApi.getPrisonTotalData().data.total
   } catch (e) {
     ElMessage.error('获取监狱列表失败，部分功能收到影响，请检查网络环境')
   }
@@ -55,25 +54,25 @@ const getPrisonList = async () => {
 const getPrisonManagerList = async () => {
   try{
     prisonManagerLoading.value=true
-    // let resp = {}
-    // if(queryInfo.value.query === ''){
-    //   resp =
-    //     await axios.get(`/backstage-management-service/admin/padmin/
-    //     ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // } else {
-    //   resp =
-    //       await axios.get(`/backstage-management-service/admin/padmin/
-    //     ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // }
-    // const data = resp.data
-    // if(data.code !== '200'){
-    //   ElMessage.error(data.msg)
-    // }
-    // prisonManagerData.value = data.data
-    // total.value = data.total
-    prisonManagerData.value = adminApi.getPrisonManagerTotalData().data.list
-    total.value = adminApi.getPrisonManagerTotalData().data.total
+    let resp = {}
+    if(queryInfo.value.query === ''){
+      resp =
+        await axios.get(`/backstage-management-service/admin/padmin/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    } else {
+      resp =
+        await axios.get(`/backstage-management-service/admin/padmin/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    }
+    const data = resp.data
+    console.log(data)
+    if(data.code !== 200){
+      ElMessage.error(data.msg)
+    }
+    prisonManagerData.value = data.data.list
+    total.value = data.data.total
+    // prisonManagerData.value = adminApi.getPrisonManagerTotalData().data.list
+    // total.value = adminApi.getPrisonManagerTotalData().data.total
   } catch (e) {
+    console.log(e)
     ElMessage.error('获取监狱管理员列表失败，请检查网络环境')
   } finally {
     prisonManagerLoading.value=false

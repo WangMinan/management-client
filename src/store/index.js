@@ -1,12 +1,15 @@
 import { createStore } from 'vuex'
 
+const state = {
+    navState: sessionStorage.getItem('navState') || ''
+}
+
 export default createStore({
-    state: {
-        isCollapse: true
-    },
+    state,
     mutations: {
-        updateIsCollapse(state, payload) {
-            state.isCollapse = !state.isCollapse
+        saveNavState(state, payload) {
+            state.navState = payload
+            sessionStorage.setItem('navState', payload)
         }
     }
 })

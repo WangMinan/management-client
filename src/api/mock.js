@@ -8,5 +8,7 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/account/passwo
     adminApi.getRevisePasswordData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/prison'+'.*'),
     adminApi.getPrisonTotalData())
-// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/padmin'+'.*'),
-//     adminApi.getPrisonManagerTotalData())
+Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/padmin'+'.*'),
+    adminApi.getPrisonManagerTotalData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
+    loginApi.getLogoutData())

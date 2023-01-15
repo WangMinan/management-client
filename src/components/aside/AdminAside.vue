@@ -1,13 +1,12 @@
 <script setup>
-import {ref} from 'vue'
-import {useStorage} from "@vueuse/core";
+import { useStore } from 'vuex'
+const store = useStore()
 
-// 记住导航状态（仅本次登录期间）从sessionStorage中获取activePath
-let activePath = ref('')
-activePath = useStorage('activePath', null, sessionStorage)
+// 记住导航状态（仅本次登录期间）
+let activePath = store.state.navState
 const saveNavState = (path) => {
-  // 将path存入sessionStorage
-  activePath.value = path
+  // 将path存入store
+  store.commit('saveNavState', path)
 }
 </script>
 
@@ -33,30 +32,30 @@ const saveNavState = (path) => {
           <span>监所信息管理</span>
         </template>
         <el-menu-item
-            :index="'/prisonManagement'"
-            @click="saveNavState('/prisonManagement')"
+            :index="'/adminPrisonManagement'"
+            @click="saveNavState('/adminPrisonManagement')"
         >
           <el-icon><OfficeBuilding /></el-icon>
           <span>监所管理</span>
         </el-menu-item>
         <el-menu-item
-            :index="'/prisonManagerManagement'"
-            @click="saveNavState('/prisonManagerManagement')"
+            :index="'/adminPrisonManagerManagement'"
+            @click="saveNavState('/adminPrisonManagerManagement')"
         >
           <el-icon><User /></el-icon>
           <span>监所管理员管理</span>
         </el-menu-item>
       </el-sub-menu>
       <el-menu-item
-        :index="'/modelManagement'"
-        @click="saveNavState('/modelManagement')"
+        :index="'/adminModelManagement'"
+        @click="saveNavState('/adminModelManagement')"
       >
         <el-icon><Menu /></el-icon>
         <span>训练项目管理</span>
       </el-menu-item>
       <el-menu-item
-        :index="'/opBoard'"
-        @click="saveNavState('/opBoard')"
+        :index="'/adminOpBoard'"
+        @click="saveNavState('/adminOpBoard')"
       >
         <el-icon><Odometer /></el-icon>
         <span>平台运维看板</span>
