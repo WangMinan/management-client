@@ -40,14 +40,6 @@ const routes = [
                 }
             },
             {
-                path: '/prisonManagerManagement',
-                name: 'prisonManagerManagement',
-                component: () => import('../views/admin/prison/PrisonManagerManagement.vue'),
-                meta: {
-                    title: '监所管理系统-监所管理员管理'
-                }
-            },
-            {
                 path: '/modelManagement',
                 name: 'modelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),

@@ -16,4 +16,11 @@ export default {
             }
         }
     },
+    getRevisePasswordData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {}
+        }
+    }
 }

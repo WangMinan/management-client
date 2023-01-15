@@ -12,7 +12,7 @@ const saveNavState = (path) => {
 </script>
 
 <template>
-  <el-aside width="15%" style="height: 100vh; background: #333D55">
+  <el-aside width="15%">
     <div class="imgBox">
       <img
         class="logo"
@@ -24,36 +24,20 @@ const saveNavState = (path) => {
       class="el-menu-vertical"
       :default-active="activePath"
       router
-      background-color="#333D55"
-      text-color="#fff"
-      active-text-color="#ffd04b"
     >
-      <el-sub-menu index="1">
-        <template #title>
-          <el-icon><Monitor /></el-icon>
-          <span>监所信息管理</span>
-        </template>
-        <el-menu-item
+      <el-menu-item
           :index="'/prisonManagement'"
           @click="saveNavState('/prisonManagement')"
-        >
-          <el-icon><OfficeBuilding /></el-icon>
-          <span>监所管理</span>
-        </el-menu-item>
-        <el-menu-item
-          :index="'/prisonManagerManagement'"
-          @click="saveNavState('/prisonManagerManagement')"
-        >
-          <el-icon><User /></el-icon>
-          <span>监所管理员管理</span>
-        </el-menu-item>
-      </el-sub-menu>
+      >
+        <el-icon><OfficeBuilding /></el-icon>
+        <span>监所管理</span>
+      </el-menu-item>
       <el-menu-item
         :index="'/modelManagement'"
         @click="saveNavState('/modelManagement')"
       >
         <el-icon><Menu /></el-icon>
-        <span>训练模型管理</span>
+        <span>训练项目管理</span>
       </el-menu-item>
       <el-menu-item
         :index="'/opBoard'"
@@ -75,8 +59,6 @@ const saveNavState = (path) => {
     width: 42px;
     height: 42px;
     margin-top: 10px;
-  //  将黑色的logo变成白色
-    filter: invert(100%);
   }
 }
 </style>

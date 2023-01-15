@@ -124,6 +124,7 @@ onMounted(() => {
           :model="loginForm"
           ref="loginFormRef"
           :rules="rules"
+          status-icon
       >
         <!--用户名 注意prop属性标注在form-item的位置-->
         <el-form-item prop="username">
