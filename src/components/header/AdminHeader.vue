@@ -3,7 +3,10 @@ import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
 import {onMounted, reactive, ref} from 'vue'
 import axios from '../../api/request'
-import {ElMessage} from 'element-plus'
+import {ElLoading, ElMessage} from 'element-plus'
+import { useStore } from 'vuex'
+const store = useStore()
+
 const getImgSrc =(imgName) => {
   return new URL(`../../assets/img/${imgName}.png`, import.meta.url).href
 }
@@ -13,9 +16,24 @@ onMounted(() => {
 })
 
 const router = useRouter()
-const logout = ()=> {
+const logout = async ()=> {
+  // 从store中删除路由数据
+  store.commit('saveNavState','')
   Cookies.set('manualExit','true')
-  router.push('/login')
+  // 使用服务方式调用loading全局遮罩 禁用操作
+  const loading = ElLoading.service({
+    lock: true,
+    text: '正在清除登录状态',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  try{
+    await axios.post('/backstage-management-service/logout')
+  } catch (e) {
+    ElMessage.error('后端服务器异常,将强制退出')
+  } finally {
+    loading.close()
+    await router.push('/login')
+  }
 }
 
 let dialogVisible = ref(false)
@@ -110,7 +128,7 @@ const submit = async (form) => {
 <template>
   <div class="header">
     <div class="l-content">
-      <h1>监所警察执法保障试验平台</h1>
+      <h1>监所警察执法保障试验平台——运维端,欢迎您:{{Cookies.get('username')}}</h1>
     </div>
     <div class="r-content">
       <el-dropdown>
@@ -208,6 +226,7 @@ const submit = async (form) => {
     margin-left: 1%;
   }
   .r-content{
+    display: flex;
     margin-right: 1%;
     .user-icon{
       width: 30px;
