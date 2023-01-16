@@ -32,12 +32,10 @@ const getPrisonList = async () => {
     let resp = {}
     if(queryInfo.value.query === ''){
       resp =
-        await axios.get(`/backstage-management-service/admin/prison/
-        ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+        await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
     } else {
       resp =
-          await axios.get(`/backstage-management-service/admin/prison/
-        ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+          await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
     }
     const data = resp.data
     if(data.code !== 200){

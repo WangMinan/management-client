@@ -12,3 +12,5 @@ Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/p
     adminApi.getPrisonManagerTotalData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
     loginApi.getLogoutData())
+Mock.mock(RegExp('http://localhost:8080/api/psychology-service/model'+'.*'),
+    adminApi.getModelTotalData())

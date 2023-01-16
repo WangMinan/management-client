@@ -3,10 +3,9 @@ import Cookies from 'js-cookie'
 import {ElMessage} from 'element-plus'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-
 const refreshToken = async () => {
     try {
+        const router = useRouter()
         // 在请求头中添加refreshToken
         axios.defaults.headers.common['Token'] = Cookies.get('refreshToken')
         // 发送请求
@@ -54,6 +53,7 @@ _axios.interceptors.request.use(
 // 响应拦截器
 _axios.interceptors.response.use(
     (resp) => {
+        const router = useRouter()
         // 如果resp中没有data或data中没有code则直接返回
         if (resp.data === undefined || resp.data.code === undefined) {
             return resp
@@ -62,6 +62,10 @@ _axios.interceptors.response.use(
             switch (resp.data.code) {
                 case 200:
                     return resp
+                case 400:
+                    // 通用请求错误
+                    ElMessage.error(resp.data.message)
+                    return Promise.reject(resp)
                 case 4010:
                     // access-token 过期 将cookie中的refreshToken放进请求头的Token中
                     // 重新请求access-token
@@ -97,7 +101,7 @@ _axios.interceptors.response.use(
                 case 4030:
                     // 用户权限不足
                     ElMessage.error('您的访问未被授权,可能是您的身份权限不足')
-                    return resp
+                    return Promise.reject(resp)
                 case 4040:
                     // 请求的资源不存在
                     ElMessage.error('您的请求的资源不存在,当前页面将被刷新')
@@ -112,6 +116,9 @@ _axios.interceptors.response.use(
                         return r
                     })
                     break
+                default:
+                    // 未知情况
+                    return resp
             }
         }
 

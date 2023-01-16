@@ -4,15 +4,15 @@ import axios from '../../../api/request'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import adminApi from '../../../api/mockdata/admin/admin.js'
 
-const prisonTableRef = ref()
-// 保存所有选中的监狱的id
-const prisonSelection = ref({
+const modelTableRef = ref()
+// 保存所有选中的模型的id
+const modelSelection = ref({
   idList: []
 })
 // 保存表格中的监狱数据
-const prisonData = ref([])
+const modelData = ref([])
 // 表格的加载圈
-const prisonLoading = ref(false)
+const modelLoading = ref(false)
 // 请求参数的格式
 const queryInfo = ref({
   query: '',
@@ -23,79 +23,93 @@ const queryInfo = ref({
 
 const total = ref(0)
 
-const getPrisonList = async () => {
+const getModelList = async () => {
   try{
-    prisonLoading.value=true
-    // let resp = {}
-    // if(queryInfo.value.query === ''){
-    //   resp =
-    //     await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // } else {
-    //   resp =
-    //       await axios.get(`/backstage-management-service/admin/prison/
-    //     ${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    // }
-    // const data = resp.data
-    // if(data.code !== '200'){
-    //   ElMessage.error(data.msg)
-    // }
-    // prisonData.value = data.data
-    // total.value = data.total
-    prisonData.value = adminApi.getPrisonTotalData().data.list
-    total.value = adminApi.getPrisonTotalData().data.total
+    modelLoading.value=true
+    let resp = {}
+    if(queryInfo.value.query === ''){
+      resp =
+        await axios.get(`/psychology-service/model/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    } else {
+      resp =
+          await axios.get(`/psychology-service/model/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
+    }
+    const data = resp.data
+    if(data.code !== 200){
+      ElMessage.error(data.msg)
+    }
+    modelData.value = data.data.list
+    // 将modalData中的数据按照priority进行从小到大排序
+    modelData.value.sort((a,b) => a.priority - b.priority)
+    total.value = data.data.total
+    // modelData.value = adminApi.getPrisonTotalData().data.list
+    // total.value = adminApi.getPrisonTotalData().data.total
   } catch (e) {
-    ElMessage.error('获取监狱列表失败，请检查网络环境')
+    ElMessage.error('获取训练模型列表失败，请检查网络环境')
   } finally {
-    prisonLoading.value=false
+    modelLoading.value=false
   }
 }
 
 onMounted(() => {
-  getPrisonList()
+  getModelList()
 })
 
 const handleSizeChange = (newSize) => {
   queryInfo.pageSize = newSize
-  getPrisonList()
+  getModelList()
 }
 const handleCurrentChange = (newPage) => {
   queryInfo.pageNum = newPage
-  getPrisonList()
+  getModelList()
 }
 
 const handleSelectionChange = (val) => {
-  prisonSelection.value.idList = val.map(item => item.id)
+  modelSelection.value.idList = val.map(item => item.id)
 }
 
-// 接下来是新增监狱的部分
-let addPrisonDialogVisible = ref(false)
+// 接下来是新增模型的部分
+let addModelDialogVisible = ref(false)
 
-const addPrisonForm = ref({
-  prisonName:''
+const addModelForm = ref({
+  name:'',
+  description: '',
+  enable: true,
+  priority: 0
 })
 
-const addPrisonFormRef = ref()
+const addModelFormRef = ref()
 
-const addPrisonRules = ref({
-  prisonName: [
-    {required: true, message: '请输入监狱名称', trigger: 'blur'},
-    {min: 2, max: 10, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+const addModelRules = ref({
+  name: [
+    {required: true, message: '请输入模型名称', trigger: 'blur'},
+    {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+  ],
+  description: [
+    {required: true, message: '请输入模型描述', trigger: 'blur'},
+    {min: 5, max: 255, message: '长度在 5 到 255 个字符', trigger: 'blur'}
+  ],
+  enable: [
+    {required: true, message: '请选择是否启用', trigger: 'change'}
+  ],
+  priority: [
+    {required: true, message: '请输入优先级', trigger: 'blur'},
+    {type: 'number', message: '优先级必须为数字值', trigger: 'blur'}
   ]
 })
 
-const addPrison = async (form) => {
+const addModel = async (form) => {
   if(!form){
     return
   }
   await form.validate(async (valid, fields) => {
     if (valid) {
       const {data} =
-          await axios.post('/backstage-management-service/admin/prison',addPrisonForm.value)
+          await axios.post('/psychology-service/model',addModelForm.value)
       if(data.code === 200) {
-        ElMessage.success('新增监狱成功')
-        addPrisonDialogVisible.value = false
-        await getPrisonList()
+        ElMessage.success('新增模型成功')
+        addModelDialogVisible.value = false
+        await getModelList()
       } else {
         ElMessage.error(data.msg)
       }
@@ -112,22 +126,22 @@ const resetAddPrisonForm = (form) => {
   form.resetFields()
 }
 
-// 接下来是删除监所的部分
+// 接下来是删除模型的部分
 const deletePrisons = () => {
-  if(prisonSelection.value.idList.length === 0){
-    ElMessage.error('请至少选择一个监狱')
+  if(modelSelection.value.idList.length === 0){
+    ElMessage.error('请至少选择一个模型')
     return
   }
-  ElMessageBox.confirm('此操作将永久删除选中的监狱, 是否继续?', '提示', {
+  ElMessageBox.confirm('此操作将永久删除选中的模型, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
     const {data} =
-        await axios.delete('/backstage-management-service/admin/prison', {data: prisonSelection.value})
+        await axios.delete('/psychology-service/model', {data: modelSelection.value})
     if(data.code === 200) {
       ElMessage.success('删除成功')
-      await getPrisonList()
+      await getModelList()
     } else {
       ElMessage.error(data.msg)
     }
@@ -135,23 +149,60 @@ const deletePrisons = () => {
     ElMessage.info('已取消删除')
   })
 }
+
+const stateFormat =  (row, column, cellValue) => {
+  if (!cellValue) return ''
+  if (cellValue.length > 20) {
+    // 最多显示20个字符
+    return cellValue.slice(0, 20) + '...'
+  }
+  return cellValue
+}
+
+// 接下来是更新模型的部分
+const switchLoading = ref(false)
+
+const updateModelBySwitch = async (row) => {
+  switchLoading.value = true
+  try {
+    const rowData = {
+      name: row.name,
+      description: row.description,
+      enable: row.enable,
+      priority: row.priority
+    }
+    const {data} =
+        await axios.put(`/psychology-service/model/${row.id}`, rowData)
+    if (data.code === 200) {
+      ElMessage.success('更新模型状态成功')
+      await getModelList()
+    } else {
+      ElMessage.error(data.msg)
+      await getModelList()
+    }
+  } catch (e) {
+    ElMessage.error('更新模型状态失败，请检查网络环境')
+    await getModelList()
+  } finally {
+    switchLoading.value = false
+  }
+}
 </script>
 
 <template>
   <!--面包屑导航-->
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/adminHome' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>监所信息管理</el-breadcrumb-item>
-    <el-breadcrumb-item>监所管理</el-breadcrumb-item>
+    <el-breadcrumb-item>训练项目管理</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->
     <el-row class="searchRow">
       <el-col :span = "10">
         <!--需要绑定@clear以在清空文本框时做状态更新-->
-        <el-input placeholder="请输入搜索内容" v-model="queryInfo.query" clearable @clear="getPrisonList">
+        <el-input placeholder="请输入搜索内容" v-model="queryInfo.query" clearable @clear="getModelList">
           <template #append>
-            <el-button @click="getPrisonList">
+            <el-button @click="getModelList">
               <el-icon class="el-input__icon">
                 <Search />
               </el-icon>
@@ -161,28 +212,57 @@ const deletePrisons = () => {
       </el-col>
       <!--按钮区-->
       <el-col :span="6" class="btnCol">
-        <el-button type="primary" @click="addPrisonDialogVisible = true">
+        <el-button type="primary" @click="addModelDialogVisible = true">
           <el-icon><Edit/></el-icon>
-          添加监所
+          添加模型
         </el-button>
         <el-button type="danger" @click="deletePrisons">
           <el-icon><Delete/></el-icon>
-          删除监所
+          删除模型
         </el-button>
       </el-col>
     </el-row>
     <!--表格-->
     <el-table
         style="width: 100%;"
-        v-loading="prisonLoading"
-        :ref="prisonTableRef"
-        :data="prisonData"
+        v-loading="modelLoading"
+        :ref="modelTableRef"
+        :data="modelData"
         border stripe
         @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="id" label="ID"></el-table-column>
-      <el-table-column prop="name" label="监所名称"></el-table-column>
+      <el-table-column prop="name" label="模型名称"></el-table-column>
+      <el-table-column label="是否启用">
+        <template #default="scope">
+          <el-switch
+            v-model="scope.row.enable"
+            inline-prompt
+            active-text="启用"
+            inactive-text="禁用"
+            :loading="switchLoading"
+            @change="updateModelBySwitch(scope.row)"
+          >
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column prop="priority" label="优先级"></el-table-column>
+      <el-table-column prop="description" label="描述" :formatter="stateFormat"></el-table-column>
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-tooltip effect="light" content="模型具体信息查看" placement="top" :enterable="false">
+            <el-button type="success" circle size="small" @click="showCheckDialog(scope.row.id)">
+              <el-icon><InfoFilled /></el-icon>
+            </el-button>
+          </el-tooltip>
+          <el-tooltip effect="light" content="模型具体信息查看" placement="top" :enterable="false">
+            <el-button type="primary" circle size="small" @click="showCheckDialog(scope.row.id)">
+              <el-icon><Edit /></el-icon>
+            </el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
     </el-table>
     <!--分页组件-->
     <el-pagination
@@ -195,28 +275,50 @@ const deletePrisons = () => {
         @current-change="handleCurrentChange"
     />
   </el-card>
-  <!--添加监所弹窗-->
+  <!--添加模型弹窗-->
   <el-dialog
-      title="添加监所"
-      v-model="addPrisonDialogVisible"
-      center
-      @closed="resetAddPrisonForm(addPrisonFormRef)"
+    title="添加模型"
+    v-model="addModelDialogVisible"
+    center
+    @closed="resetAddPrisonForm(addModelFormRef)"
   >
-    <el-form :model="addPrisonForm" ref="addPrisonFormRef" :rules="addPrisonRules">
-      <el-form-item prop="prisonName" label="监所名称">
-        <el-input v-model="addPrisonForm.prisonName" placeholder="请输入监所名称">
+    <el-form :model="addModelForm" ref="addModelFormRef" :rules="addModelRules">
+      <el-form-item prop="name" label="模型名称">
+        <el-input v-model="addModelForm.name" placeholder="请输入模型名称">
           <template #prefix>
-            <el-icon><OfficeBuilding /></el-icon>
+            <el-icon><Menu /></el-icon>
           </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="enable" label="是否启用">
+        <el-switch
+            v-model="addModelForm.enable"
+            inline-prompt
+            active-text="启用"
+            inactive-text="禁用"
+        >
+        </el-switch>
+      </el-form-item>
+      <el-form-item prop="priority" label="优先级别">
+        <el-tooltip
+          effect="light"
+          content="数字越小(-65525~65535),优先级越高"
+          placement="bottom"
+        >
+          <el-input-number v-model="addModelForm.priority" :min="-65535" :max="65535" :step="1"></el-input-number>
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item prop="description" label="模型描述">
+        <el-input type="textarea" maxlength="255" rows="5" v-model="addModelForm.description" show-word-limit>
         </el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="addPrison(addPrisonFormRef)">
+        <el-button type="primary" @click="addModel(addModelFormRef)">
           确认
         </el-button>
-        <el-button @click="addPrisonDialogVisible=false">取消</el-button>
+        <el-button @click="addModelDialogVisible=false">取消</el-button>
       </span>
     </template>
   </el-dialog>
