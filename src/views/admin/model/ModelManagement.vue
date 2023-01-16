@@ -42,8 +42,8 @@ const getModelList = async () => {
     // 将modalData中的数据按照priority进行从小到大排序
     modelData.value.sort((a,b) => a.priority - b.priority)
     total.value = data.data.total
-    // modelData.value = adminApi.getPrisonTotalData().data.list
-    // total.value = adminApi.getPrisonTotalData().data.total
+    // modelData.value = adminApi.getModelTotalData().data.list
+    // total.value = adminApi.getModelTotalData().data.total
   } catch (e) {
     ElMessage.error('获取训练模型列表失败，请检查网络环境')
   } finally {
@@ -119,15 +119,15 @@ const addModel = async (form) => {
   })
 }
 
-const resetAddPrisonForm = (form) => {
+const resetAddModelForm = (form) => {
   if (!form) {
     return
   }
   form.resetFields()
 }
 
-// 接下来是删除模型的部分
-const deletePrisons = () => {
+// 接下来是删除模型(滑动)的部分
+const deleteModels = () => {
   if(modelSelection.value.idList.length === 0){
     ElMessage.error('请至少选择一个模型')
     return
@@ -187,6 +187,85 @@ const updateModelBySwitch = async (row) => {
     switchLoading.value = false
   }
 }
+
+const checkModelDialogVisible = ref(false)
+
+const checkModelData = ref({
+  name: '',
+  description: '',
+  enable: true,
+  priority: 0
+})
+
+const checkModelFormRef = ref()
+
+const showCheckDialog = (id) => {
+  checkModelDialogVisible.value = true
+  const tmpModel = modelData.value.find(item => item.id === id)
+  checkModelData.value = {
+    name: tmpModel.name,
+    description: tmpModel.description,
+    enable: tmpModel.enable,
+    priority: tmpModel.priority
+  }
+}
+
+const handleCheckModelDialogClose = () => {
+  checkModelDialogVisible.value = false
+  checkModelFormRef.value.resetFields()
+}
+
+// 接下来是更新模型的部分
+const updateModelDialogVisible = ref(false)
+
+const updateModelData = ref({
+  id: '',
+  name: '',
+  description: '',
+  enable: true,
+  priority: 0
+})
+
+const updateModelFormRef = ref()
+
+const showUpdateDialog = (id) => {
+  updateModelDialogVisible.value = true
+  const tmpModel = modelData.value.find(item => item.id === id)
+  updateModelData.value = {
+    id: id,
+    name: tmpModel.name,
+    description: tmpModel.description,
+    enable: tmpModel.enable,
+    priority: tmpModel.priority
+  }
+}
+
+const updateModel = async (form) => {
+  if(!form){
+    return
+  }
+  const tmpForm = {
+    name: updateModelData.value.name,
+    description: updateModelData.value.description,
+    enable: updateModelData.value.enable,
+    priority: updateModelData.value.priority
+  }
+  await form.validate(async (valid, fields) => {
+    if (valid) {
+      const {data} =
+          await axios.put(`/psychology-service/model/${updateModelData.value.id}`, tmpForm)
+      if(data.code === 200) {
+        ElMessage.success('更新模型成功')
+        updateModelDialogVisible.value = false
+        await getModelList()
+      } else {
+        ElMessage.error(data.msg)
+      }
+    } else {
+      ElMessage.error('预校验未通过,请检查输入')
+    }
+  })
+}
 </script>
 
 <template>
@@ -216,7 +295,7 @@ const updateModelBySwitch = async (row) => {
           <el-icon><Edit/></el-icon>
           添加模型
         </el-button>
-        <el-button type="danger" @click="deletePrisons">
+        <el-button type="danger" @click="deleteModels">
           <el-icon><Delete/></el-icon>
           删除模型
         </el-button>
@@ -256,8 +335,8 @@ const updateModelBySwitch = async (row) => {
               <el-icon><InfoFilled /></el-icon>
             </el-button>
           </el-tooltip>
-          <el-tooltip effect="light" content="模型具体信息查看" placement="top" :enterable="false">
-            <el-button type="primary" circle size="small" @click="showCheckDialog(scope.row.id)">
+          <el-tooltip effect="light" content="模型信息修改" placement="top" :enterable="false">
+            <el-button type="primary" circle size="small" @click="showUpdateDialog(scope.row.id)">
               <el-icon><Edit /></el-icon>
             </el-button>
           </el-tooltip>
@@ -280,7 +359,7 @@ const updateModelBySwitch = async (row) => {
     title="添加模型"
     v-model="addModelDialogVisible"
     center
-    @closed="resetAddPrisonForm(addModelFormRef)"
+    @closed="resetAddModelForm(addModelFormRef)"
   >
     <el-form :model="addModelForm" ref="addModelFormRef" :rules="addModelRules">
       <el-form-item prop="name" label="模型名称">
@@ -319,6 +398,98 @@ const updateModelBySwitch = async (row) => {
           确认
         </el-button>
         <el-button @click="addModelDialogVisible=false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!--查看模型具体信息弹窗-->
+  <el-dialog
+    title="模型信息"
+    v-model="checkModelDialogVisible"
+    center
+    :before-close="handleCheckModelDialogClose"
+  >
+    <el-form :model="checkModelData" ref="checkModelFormRef">
+      <el-form-item label="模型名称">
+        <el-input v-model="checkModelData.name" placeholder="请输入模型名称" disabled>
+          <template #prefix>
+            <el-icon><Menu /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="是否启用">
+        <el-switch
+            v-model="checkModelData.enable"
+            inline-prompt
+            active-text="启用"
+            inactive-text="禁用"
+            disabled
+        >
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="优先级别">
+        <el-tooltip
+          effect="light"
+          content="数字越小(-65525~65535),优先级越高"
+          placement="bottom"
+        >
+          <el-input-number v-model="checkModelData.priority" :min="-65535" :max="65535" :step="1" disabled></el-input-number>
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item label="模型描述">
+        <el-input type="textarea" maxlength="255" rows="5" v-model="checkModelData.description" show-word-limit disabled>
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="checkModelDialogVisible=false">关闭</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!--修改模型具体信息弹窗-->
+  <el-dialog
+    title="模型信息修改"
+    v-model="updateModelDialogVisible"
+    center
+    :before-close="handleUpdateModelDialogClose"
+  >
+    <el-form :model="updateModelData" ref="updateModelFormRef" :rules="addModelRules">
+      <el-form-item prop="name" label="模型名称">
+        <el-input v-model="updateModelData.name" placeholder="请输入模型名称">
+          <template #prefix>
+            <el-icon><Menu /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="enable" label="是否启用">
+        <el-switch
+            v-model="updateModelData.enable"
+            inline-prompt
+            active-text="启用"
+            inactive-text="禁用"
+        >
+        </el-switch>
+      </el-form-item>
+      <el-form-item prop="priority" label="优先级别">
+        <el-tooltip
+          effect="light"
+          content="数字越小(-65525~65535),优先级越高"
+          placement="bottom"
+        >
+          <el-input-number v-model="updateModelData.priority" :min="-65535" :max="65535" :step="1"></el-input-number>
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item prop="description" label="模型描述">
+        <el-input type="textarea" maxlength="255" rows="5" v-model="updateModelData.description" show-word-limit>
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="updateModel(updateModelFormRef)">
+          确认
+        </el-button>
+        <el-button @click="updateModelDialogVisible=false">取消</el-button>
       </span>
     </template>
   </el-dialog>
