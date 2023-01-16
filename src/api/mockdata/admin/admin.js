@@ -86,5 +86,46 @@ export default {
                 ]
             }
         }
+    },
+    getAccessData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {
+                accessCount: 37,
+                trainingCount: 99,
+                weeklyTrainingCount: 72,
+                flow: 19,
+                accessLastWeek:[
+                    10,30,25,10,20,30,40
+                ]
+            }
+        }
+    },
+    getModelUseData: () => {
+        return{
+            code: 200,
+            msg: "success",
+            data: [
+                {
+                    prisonName: "处有线干根",
+                    modelName: "四候求热热",
+                    operation: true,
+                    time: "1974-03-06 01:58:56"
+                },
+                {
+                    prisonName: "强她热广她因",
+                    modelName: "无运期从",
+                    operation: true,
+                    time: "2017-04-04 16:45:50"
+                },
+                {
+                    prisonName: "强她热广她因",
+                    modelName: "无运期从",
+                    operation: false,
+                    time: "2017-04-04 16:45:50"
+                }
+            ]
+        }
     }
 }
