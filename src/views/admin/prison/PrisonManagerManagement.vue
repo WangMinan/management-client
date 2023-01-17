@@ -177,7 +177,7 @@ const deletePrisonManagers = () => {
 <template>
   <!--面包屑导航-->
   <el-breadcrumb>
-    <el-breadcrumb-item :to="{ path: '/adminHome' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/admin/home' }">首页</el-breadcrumb-item>
     <el-breadcrumb-item>监所信息管理</el-breadcrumb-item>
     <el-breadcrumb-item>监所管理员管理</el-breadcrumb-item>
   </el-breadcrumb>

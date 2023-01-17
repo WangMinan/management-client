@@ -5,6 +5,8 @@ import {onMounted, reactive, ref} from 'vue'
 import axios from '../../api/request'
 import {ElLoading, ElMessage} from 'element-plus'
 import { useStore } from 'vuex'
+import { encrypt } from '../../utils/jsencrypt.js'
+
 const store = useStore()
 
 const getImgSrc =(imgName) => {
@@ -106,8 +108,8 @@ const submit = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       const uploadTable = {
-        'oldPassword': revisePasswordTable.value.oldPassword,
-        'newPassword': revisePasswordTable.value.newPassword,
+        'oldPassword': encrypt(revisePasswordTable.value.oldPassword),
+        'newPassword': encrypt(revisePasswordTable.value.newPassword)
       }
       const {data} = await axios.put('/backstage-management-service/account/password',uploadTable)
       if(data.code === 200){
@@ -123,12 +125,25 @@ const submit = async (form) => {
   })
 }
 
+const nickName = ref(
+    (JSON.parse(sessionStorage.getItem('person'))).nickname ||
+    (JSON.parse(sessionStorage.getItem('person'))).name
+)
+
 </script>
 
 <template>
   <div class="header">
     <div class="l-content">
-      <h1>监所警察执法保障试验平台——运维端,欢迎您:{{Cookies.get('username')}}</h1>
+      <h1 v-if="Cookies.get('role') === 'admin'">
+        监所警察执法保障试验平台——运维端,欢迎您:{{nickName}}
+      </h1>
+      <h1 v-else-if="Cookies.get('role') === 'prison'">
+        监所警察执法保障试验平台——监狱端,欢迎您:{{nickName}}
+      </h1>
+      <h1 v-else-if="Cookies.get('role') === 'police'">
+        监所警察执法保障试验平台——警员端,欢迎您:{{nickName}}
+      </h1>
     </div>
     <div class="r-content">
       <el-dropdown>

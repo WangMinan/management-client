@@ -32,30 +32,30 @@ const saveNavState = (path) => {
           <span>监所信息管理</span>
         </template>
         <el-menu-item
-            :index="'/adminPrisonManagement'"
-            @click="saveNavState('/adminPrisonManagement')"
+            :index="'/admin/prisonManagement'"
+            @click="saveNavState('/admin/prisonManagement')"
         >
           <el-icon><OfficeBuilding /></el-icon>
           <span>监所管理</span>
         </el-menu-item>
         <el-menu-item
-            :index="'/adminPrisonManagerManagement'"
-            @click="saveNavState('/adminPrisonManagerManagement')"
+            :index="'/admin/prisonManagerManagement'"
+            @click="saveNavState('/admin/prisonManagerManagement')"
         >
           <el-icon><User /></el-icon>
           <span>监所管理员管理</span>
         </el-menu-item>
       </el-sub-menu>
       <el-menu-item
-        :index="'/adminModelManagement'"
-        @click="saveNavState('/adminModelManagement')"
+        :index="'/admin/modelManagement'"
+        @click="saveNavState('/admin/modelManagement')"
       >
         <el-icon><Menu /></el-icon>
         <span>训练模型管理</span>
       </el-menu-item>
       <el-menu-item
-        :index="'/adminOpBoard'"
-        @click="saveNavState('/adminOpBoard')"
+        :index="'/admin/opBoard'"
+        @click="saveNavState('/admin/opBoard')"
         :disabled="true"
       >
         <el-icon><Odometer /></el-icon>

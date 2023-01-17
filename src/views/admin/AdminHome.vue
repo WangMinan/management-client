@@ -1,6 +1,6 @@
 <script setup>
 import AdminAside from '../../components/aside/AdminAside.vue'
-import AdminHeader from '../../components/header/AdminHeader.vue'
+import AdminHeader from '../../components/header/Header.vue'
 </script>
 
 <template>

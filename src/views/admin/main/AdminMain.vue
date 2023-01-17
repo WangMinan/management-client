@@ -148,14 +148,14 @@ onMounted(async () => {
   <el-row :gutter="15" style="margin-top: 2%">
     <!--上周访问流量统计折线图-->
     <el-col :span="12">
-      <el-card>
+      <el-card class="graphCard">
         <template #header>
           <div class="card-header">
             <el-icon><ChromeFilled /></el-icon>
             <span>上周访问流量</span>
           </div>
-          <div class="graphCard">
-            <div id="line" style="width: 400px;height:300px;"></div>
+          <div class="graphBox">
+            <div id="line" style="width: 400px; height: 300px;"></div>
           </div>
         </template>
       </el-card>
@@ -213,8 +213,12 @@ onMounted(async () => {
   align-items: center;
 }
 .graphCard{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .graphBox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

@@ -1,11 +1,10 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import {ElMessage} from 'element-plus'
-import { useRouter } from 'vue-router'
+import router from '../router/index'
 
 const refreshToken = async () => {
     try {
-        const router = useRouter()
         // 在请求头中添加refreshToken
         axios.defaults.headers.common['Token'] = Cookies.get('refreshToken')
         // 发送请求
@@ -53,7 +52,6 @@ _axios.interceptors.request.use(
 // 响应拦截器
 _axios.interceptors.response.use(
     (resp) => {
-        const router = useRouter()
         // 如果resp中没有data或data中没有code则直接返回
         if (resp.data === undefined || resp.data.code === undefined) {
             return resp

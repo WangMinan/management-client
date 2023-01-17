@@ -1,6 +1,6 @@
 <script setup>
 import PoliceAside from '../../components/aside/PoliceAside.vue'
-import PoliceHeader from '../../components/header/PoliceHeader.vue'
+import PoliceHeader from '../../components/header/Header.vue'
 </script>
 
 <template>

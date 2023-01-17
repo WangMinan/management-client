@@ -3,7 +3,7 @@ import loginApi from './mockdata/login.js'
 import adminApi from './mockdata/admin/admin.js'
 // 拦截请求
 Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-    loginApi.getLoginData())
+    loginApi.getAdminLoginData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/account/password',
     adminApi.getRevisePasswordData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/prison'+'.*'),

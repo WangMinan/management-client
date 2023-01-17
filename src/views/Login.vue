@@ -70,16 +70,18 @@ const login = async () => {
       Cookies.remove('password')
       Cookies.remove('rememberMe')
     }
+    // 用户信息写入sessionStorage
+    sessionStorage.setItem('person', JSON.stringify(data.data.person))
     Cookies.set('role',data.data.role,{expires: EXPIRE_DAY})
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
     ElMessage.success('登录成功')
     if(data.data.role === 'admin'){
-      await router.push('/adminHome')
+      await router.push('/admin/home')
     } else if(data.data.role === 'prison'){
-      await router.push('/prisonHome')
+      await router.push('/prison/home')
     } else {
-      await router.push('/policeHome')
+      await router.push('/police/home')
     }
   } catch (e) {
     ElMessage.error(e.message)

@@ -15,16 +15,24 @@ const routes = [
         }
     },
     {
-        path: '/adminHome',
+        path: '/404',
+        name: '404NotFound',
+        component: () => import('../views/warn/404.vue'),
+        meta: {
+            title: '监所管理系统-404页面不存在'
+        }
+    },
+    {
+        path: '/admin/home',
         name: 'adminHome',
         component: () => import('../views/admin/AdminHome.vue'),
-        redirect: '/adminMain',
+        redirect: '/admin/main',
         meta: {
             title: '监所管理系统-运维首页'
         },
         children: [
             {
-                path: '/adminMain',
+                path: '/admin/main',
                 name: 'main',
                 component: () => import('../views/admin/main/AdminMain.vue'),
                 meta: {
@@ -32,7 +40,7 @@ const routes = [
                 }
             },
             {
-                path: '/adminPrisonManagement',
+                path: '/admin/prisonManagement',
                 name: 'prisonManagement',
                 component: () => import('../views/admin/prison/PrisonManagement.vue'),
                 meta: {
@@ -40,7 +48,7 @@ const routes = [
                 }
             },
             {
-                path: '/adminPrisonManagerManagement',
+                path: '/admin/prisonManagerManagement',
                 name: 'prisonManagerManagement',
                 component: () => import('../views/admin/prison/PrisonManagerManagement.vue'),
                 meta: {
@@ -48,7 +56,7 @@ const routes = [
                 }
             },
             {
-                path: '/adminModelManagement',
+                path: '/admin/modelManagement',
                 name: 'modelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),
                 meta: {
@@ -56,7 +64,7 @@ const routes = [
                 }
             },
             {
-                path: '/adminOpBoard',
+                path: '/admin/opBoard',
                 name: 'opBoard',
                 component: () => import('../views/admin/screen/OpBoard.vue'),
                 meta: {
@@ -66,7 +74,7 @@ const routes = [
         ]
     },
     {
-        path: '/prisonHome',
+        path: '/prison/home',
         name: 'prisonHome',
         component: () => import('../views/prison/PrisonHome.vue'),
         redirect: '/prisonMain',
@@ -75,7 +83,7 @@ const routes = [
         },
         children: [
             {
-                path: '/prisonMain',
+                path: '/prison/main',
                 name: 'prisonMain',
                 component: () => import('../views/prison/main/PrisonMain.vue'),
                 meta: {
@@ -85,7 +93,7 @@ const routes = [
         ]
     },
     {
-        path: '/policeHome',
+        path: '/police/home',
         name: 'policeHome',
         component: () => import('../views/police/PoliceHome.vue'),
         redirect: '/policeMain',
@@ -94,7 +102,7 @@ const routes = [
         },
         children: [
             {
-                path: '/policeMain',
+                path: '/police/main',
                 name: 'policeMain',
                 component: () => import('../views/police/main/PoliceMain.vue'),
                 meta: {
@@ -132,6 +140,10 @@ router.beforeEach((to, from, next) => {
             next('/login')
         },3000)
     } else {
+        // 如果to的页面在路由表中没出现则404
+        if (to.matched.length === 0) {
+            next('/404')
+        }
         // 鉴权 如果Cookies中的role为admin则仅允许访问adminHome下的页面
         if (Cookies.get('role') === 'admin') {
             if(to.path.startsWith('/admin')) {

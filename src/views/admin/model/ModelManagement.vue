@@ -271,7 +271,7 @@ const updateModel = async (form) => {
 <template>
   <!--面包屑导航-->
   <el-breadcrumb>
-    <el-breadcrumb-item :to="{ path: '/adminHome' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item :to="{ path: '/admin/home' }">首页</el-breadcrumb-item>
     <el-breadcrumb-item>训练项目管理</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
