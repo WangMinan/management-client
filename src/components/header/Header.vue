@@ -130,6 +130,11 @@ const nickName = ref(
     (JSON.parse(sessionStorage.getItem('person'))).name
 )
 
+const imageUrl = ref(
+    (JSON.parse(sessionStorage.getItem('person'))).image_url ||
+    getImgSrc('user')
+)
+
 </script>
 
 <template>
@@ -148,7 +153,8 @@ const nickName = ref(
     <div class="r-content">
       <el-dropdown>
         <span class="el-dropdown-link">
-          <img class="user-icon" :src="getImgSrc('user')" alt="logo">
+          <img v-if="Cookies.get('role') === 'police'" :src="imageUrl" class="user-icon" alt="LOGO">
+          <img v-else class="user-icon" :src="getImgSrc('user')" alt="logo">
         </span>
         <template #dropdown>
           <el-dropdown-menu>

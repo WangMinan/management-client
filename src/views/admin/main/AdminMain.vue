@@ -28,11 +28,7 @@ const getAccessData = async () => {
     if(data.code !== 200){
       ElMessage.error("请求数据失败")
     } else {
-      accessData.value.accessCount = data.data.accessCount
-      accessData.value.trainingCount = data.data.trainingCount
-      accessData.value.weeklyTrainingCount = data.data.weeklyTrainingCount
-      accessData.value.flow = data.data.flow
-      accessData.value.accessLastWeek = data.data.accessLastWeek
+      accessData.value = data.data
     }
   } catch (e) {
     ElMessage.error("请求访问数据失败")

@@ -188,7 +188,7 @@ const updateModelBySwitch = async (row) => {
   }
 }
 
-const checkModelDialogVisible = ref(false)
+let checkModelDialogVisible = ref(false)
 
 const checkModelData = ref({
   name: '',
@@ -216,7 +216,7 @@ const handleCheckModelDialogClose = () => {
 }
 
 // 接下来是更新模型的部分
-const updateModelDialogVisible = ref(false)
+let updateModelDialogVisible = ref(false)
 
 const updateModelData = ref({
   id: '',

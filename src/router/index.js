@@ -96,7 +96,7 @@ const routes = [
         path: '/police/home',
         name: 'policeHome',
         component: () => import('../views/police/PoliceHome.vue'),
-        redirect: '/policeMain',
+        redirect: '/police/main',
         meta: {
             title: '监所管理系统-警员首页'
         },
@@ -107,6 +107,38 @@ const routes = [
                 component: () => import('../views/police/main/PoliceMain.vue'),
                 meta: {
                     title: '监所管理系统-警员首页'
+                }
+            },
+            {
+                path: '/police/training',
+                name: 'policeTraining',
+                component: () => import('../views/police/training/TrainingList.vue'),
+                meta: {
+                    title: '监所管理系统-警员训练'
+                }
+            },
+            {
+                path: '/police/psychoAssessment',
+                name: 'psychoAssessment',
+                component: () => import('../views/police/assessment/PsychologicalAssessment.vue'),
+                meta: {
+                    title: '监所管理系统-心理评估'
+                }
+            },
+            {
+                path: '/police/trainingHistory',
+                name: 'trainingHistory',
+                component: () => import('../views/police/assessment/TrainingHistory.vue'),
+                meta: {
+                    title: '监所管理系统-训练历史'
+                }
+            },
+            {
+                path: '/police/personalProfile',
+                name: 'personalProfile',
+                component: () => import('../views/police/profile/PersonalProfile.vue'),
+                meta: {
+                    title: '监所管理系统-个人档案'
                 }
             }
         ]
