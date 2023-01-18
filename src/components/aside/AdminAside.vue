@@ -51,7 +51,7 @@ const saveNavState = (path) => {
         @click="saveNavState('/admin/modelManagement')"
       >
         <el-icon><Menu /></el-icon>
-        <span>训练模型管理</span>
+        <span>训练场景管理</span>
       </el-menu-item>
       <el-menu-item
         :index="'/admin/opBoard'"

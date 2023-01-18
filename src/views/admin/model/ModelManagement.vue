@@ -5,7 +5,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import adminApi from '../../../api/mockdata/admin/admin.js'
 
 const modelTableRef = ref()
-// 保存所有选中的模型的id
+// 保存所有选中的场景的id
 const modelSelection = ref({
   idList: []
 })
@@ -45,7 +45,7 @@ const getModelList = async () => {
     // modelData.value = adminApi.getModelTotalData().data.list
     // total.value = adminApi.getModelTotalData().data.total
   } catch (e) {
-    ElMessage.error('获取训练模型列表失败，请检查网络环境')
+    ElMessage.error('获取训练场景列表失败，请检查网络环境')
   } finally {
     modelLoading.value=false
   }
@@ -68,7 +68,7 @@ const handleSelectionChange = (val) => {
   modelSelection.value.idList = val.map(item => item.id)
 }
 
-// 接下来是新增模型的部分
+// 接下来是新增场景的部分
 let addModelDialogVisible = ref(false)
 
 const addModelForm = ref({
@@ -82,11 +82,11 @@ const addModelFormRef = ref()
 
 const addModelRules = ref({
   name: [
-    {required: true, message: '请输入模型名称', trigger: 'blur'},
+    {required: true, message: '请输入场景名称', trigger: 'blur'},
     {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
   ],
   description: [
-    {required: true, message: '请输入模型描述', trigger: 'blur'},
+    {required: true, message: '请输入场景描述', trigger: 'blur'},
     {min: 5, max: 255, message: '长度在 5 到 255 个字符', trigger: 'blur'}
   ],
   enable: [
@@ -107,7 +107,7 @@ const addModel = async (form) => {
       const {data} =
           await axios.post('/psychology-service/model',addModelForm.value)
       if(data.code === 200) {
-        ElMessage.success('新增模型成功')
+        ElMessage.success('新增场景成功')
         addModelDialogVisible.value = false
         await getModelList()
       } else {
@@ -126,13 +126,13 @@ const resetAddModelForm = (form) => {
   form.resetFields()
 }
 
-// 接下来是删除模型(滑动)的部分
+// 接下来是删除场景(滑动)的部分
 const deleteModels = () => {
   if(modelSelection.value.idList.length === 0){
-    ElMessage.error('请至少选择一个模型')
+    ElMessage.error('请至少选择一个场景')
     return
   }
-  ElMessageBox.confirm('此操作将永久删除选中的模型, 是否继续?', '提示', {
+  ElMessageBox.confirm('此操作将永久删除选中的场景, 是否继续?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
@@ -159,7 +159,7 @@ const stateFormat =  (row, column, cellValue) => {
   return cellValue
 }
 
-// 接下来是更新模型的部分
+// 接下来是更新场景的部分
 const switchLoading = ref(false)
 
 const updateModelBySwitch = async (row) => {
@@ -174,21 +174,21 @@ const updateModelBySwitch = async (row) => {
     const {data} =
         await axios.put(`/psychology-service/model/${row.id}`, rowData)
     if (data.code === 200) {
-      ElMessage.success('更新模型状态成功')
+      ElMessage.success('更新场景状态成功')
       await getModelList()
     } else {
       ElMessage.error(data.msg)
       await getModelList()
     }
   } catch (e) {
-    ElMessage.error('更新模型状态失败，请检查网络环境')
+    ElMessage.error('更新场景状态失败，请检查网络环境')
     await getModelList()
   } finally {
     switchLoading.value = false
   }
 }
 
-// 接下来是查看模型具体信息的部分
+// 接下来是查看场景具体信息的部分
 let checkModelDialogVisible = ref(false)
 
 const checkModelData = ref({
@@ -216,7 +216,7 @@ const handleCheckModelDialogClose = () => {
   checkModelFormRef.value.resetFields()
 }
 
-// 接下来是更新模型的部分
+// 接下来是更新场景的部分
 let updateModelDialogVisible = ref(false)
 
 const updateModelData = ref({
@@ -256,7 +256,7 @@ const updateModel = async (form) => {
       const {data} =
           await axios.put(`/psychology-service/model/${updateModelData.value.id}`, tmpForm)
       if(data.code === 200) {
-        ElMessage.success('更新模型成功')
+        ElMessage.success('更新场景成功')
         updateModelDialogVisible.value = false
         await getModelList()
       } else {
@@ -294,11 +294,11 @@ const updateModel = async (form) => {
       <el-col :span="6" class="btnCol">
         <el-button type="primary" @click="addModelDialogVisible = true">
           <el-icon><Edit/></el-icon>
-          添加模型
+          添加场景
         </el-button>
         <el-button type="danger" @click="deleteModels">
           <el-icon><Delete/></el-icon>
-          删除模型
+          删除场景
         </el-button>
       </el-col>
     </el-row>
@@ -313,7 +313,7 @@ const updateModel = async (form) => {
     >
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="id" label="ID"></el-table-column>
-      <el-table-column prop="name" label="模型名称"></el-table-column>
+      <el-table-column prop="name" label="场景名称"></el-table-column>
       <el-table-column label="是否启用">
         <template #default="scope">
           <el-switch
@@ -331,12 +331,12 @@ const updateModel = async (form) => {
       <el-table-column prop="description" label="描述" :formatter="stateFormat"></el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-tooltip effect="light" content="模型具体信息查看" placement="top" :enterable="false">
+          <el-tooltip effect="light" content="场景具体信息查看" placement="top" :enterable="false">
             <el-button type="success" circle size="small" @click="showCheckDialog(scope.row.id)">
               <el-icon><InfoFilled /></el-icon>
             </el-button>
           </el-tooltip>
-          <el-tooltip effect="light" content="模型信息修改" placement="top" :enterable="false">
+          <el-tooltip effect="light" content="场景信息修改" placement="top" :enterable="false">
             <el-button type="primary" circle size="small" @click="showUpdateDialog(scope.row.id)">
               <el-icon><Edit /></el-icon>
             </el-button>
@@ -355,16 +355,16 @@ const updateModel = async (form) => {
         @current-change="handleCurrentChange"
     />
   </el-card>
-  <!--添加模型弹窗-->
+  <!--添加场景弹窗-->
   <el-dialog
-    title="添加模型"
+    title="添加场景"
     v-model="addModelDialogVisible"
     center
     @closed="resetAddModelForm(addModelFormRef)"
   >
     <el-form :model="addModelForm" ref="addModelFormRef" :rules="addModelRules">
-      <el-form-item prop="name" label="模型名称">
-        <el-input v-model="addModelForm.name" placeholder="请输入模型名称">
+      <el-form-item prop="name" label="场景名称">
+        <el-input v-model="addModelForm.name" placeholder="请输入场景名称">
           <template #prefix>
             <el-icon><Menu /></el-icon>
           </template>
@@ -388,7 +388,7 @@ const updateModel = async (form) => {
           <el-input-number v-model="addModelForm.priority" :min="-65535" :max="65535" :step="1"></el-input-number>
         </el-tooltip>
       </el-form-item>
-      <el-form-item prop="description" label="模型描述">
+      <el-form-item prop="description" label="场景描述">
         <el-input type="textarea" maxlength="255" rows="5" v-model="addModelForm.description" show-word-limit>
         </el-input>
       </el-form-item>
@@ -402,16 +402,16 @@ const updateModel = async (form) => {
       </span>
     </template>
   </el-dialog>
-  <!--查看模型具体信息弹窗-->
+  <!--查看场景具体信息弹窗-->
   <el-dialog
-    title="模型信息"
+    title="场景信息"
     v-model="checkModelDialogVisible"
     center
     :before-close="handleCheckModelDialogClose"
   >
     <el-form :model="checkModelData" ref="checkModelFormRef">
-      <el-form-item label="模型名称">
-        <el-input v-model="checkModelData.name" placeholder="请输入模型名称" disabled>
+      <el-form-item label="场景名称">
+        <el-input v-model="checkModelData.name" placeholder="请输入场景名称" disabled>
           <template #prefix>
             <el-icon><Menu /></el-icon>
           </template>
@@ -436,7 +436,7 @@ const updateModel = async (form) => {
           <el-input-number v-model="checkModelData.priority" :min="-65535" :max="65535" :step="1" disabled></el-input-number>
         </el-tooltip>
       </el-form-item>
-      <el-form-item label="模型描述">
+      <el-form-item label="场景描述">
         <el-input type="textarea" maxlength="255" rows="5" v-model="checkModelData.description" show-word-limit disabled>
         </el-input>
       </el-form-item>
@@ -447,16 +447,16 @@ const updateModel = async (form) => {
       </span>
     </template>
   </el-dialog>
-  <!--修改模型具体信息弹窗-->
+  <!--修改场景具体信息弹窗-->
   <el-dialog
-    title="模型信息修改"
+    title="场景信息修改"
     v-model="updateModelDialogVisible"
     center
     :before-close="handleUpdateModelDialogClose"
   >
     <el-form :model="updateModelData" ref="updateModelFormRef" :rules="addModelRules">
-      <el-form-item prop="name" label="模型名称">
-        <el-input v-model="updateModelData.name" placeholder="请输入模型名称">
+      <el-form-item prop="name" label="场景名称">
+        <el-input v-model="updateModelData.name" placeholder="请输入场景名称">
           <template #prefix>
             <el-icon><Menu /></el-icon>
           </template>
@@ -480,7 +480,7 @@ const updateModel = async (form) => {
           <el-input-number v-model="updateModelData.priority" :min="-65535" :max="65535" :step="1"></el-input-number>
         </el-tooltip>
       </el-form-item>
-      <el-form-item prop="description" label="模型描述">
+      <el-form-item prop="description" label="场景描述">
         <el-input type="textarea" maxlength="255" rows="5" v-model="updateModelData.description" show-word-limit>
         </el-input>
       </el-form-item>

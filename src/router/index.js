@@ -60,7 +60,7 @@ const routes = [
                 name: 'modelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),
                 meta: {
-                    title: '监所管理系统-训练模型管理'
+                    title: '监所管理系统-训练场景管理'
                 }
             },
             {
@@ -130,7 +130,7 @@ const routes = [
                 name: 'trainingHistory',
                 component: () => import('../views/police/assessment/TrainingHistory.vue'),
                 meta: {
-                    title: '监所管理系统-训练历史'
+                    title: '监所管理系统-场景模拟历史'
                 }
             },
             {

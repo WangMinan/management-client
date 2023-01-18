@@ -48,7 +48,7 @@ const getModelList = async () => {
     // total.value = adminApi.getModelTotalData().data.total
   } catch (e) {
     console.log(e)
-    ElMessage.error('获取训练模型列表失败，请检查网络环境')
+    ElMessage.error('获取训练场景列表失败，请检查网络环境')
   } finally {
     modelLoading.value=false
   }
@@ -63,7 +63,7 @@ const handleCurrentChange = (newPage) => {
   getModelList()
 }
 
-// 接下来是查看模型具体信息的部分
+// 接下来是查看场景具体信息的部分
 let checkModelDialogVisible = ref(false)
 
 const checkModelData = ref({
@@ -155,7 +155,7 @@ onMounted(() => {
         border stripe
     >
       <el-table-column prop="id" label="ID"></el-table-column>
-      <el-table-column prop="name" label="模型名称"></el-table-column>
+      <el-table-column prop="name" label="场景名称"></el-table-column>
       <el-table-column label="是否启用">
         <template #default="scope">
           <el-switch
@@ -172,7 +172,7 @@ onMounted(() => {
       <el-table-column prop="description" label="描述" :formatter="stateFormat"></el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
-          <el-tooltip effect="light" content="模型具体信息查看" placement="top" :enterable="false">
+          <el-tooltip effect="light" content="场景具体信息查看" placement="top" :enterable="false">
             <el-button type="success" circle size="small" @click="showCheckDialog(scope.row.id)">
               <el-icon><InfoFilled /></el-icon>
             </el-button>
@@ -195,16 +195,16 @@ onMounted(() => {
         @current-change="handleCurrentChange"
     />
   </el-card>
-  <!--查看模型具体信息弹窗-->
+  <!--查看场景具体信息弹窗-->
   <el-dialog
-      title="模型信息"
+      title="场景信息"
       v-model="checkModelDialogVisible"
       center
       :before-close="handleCheckModelDialogClose"
   >
     <el-form :model="checkModelData" ref="checkModelFormRef">
-      <el-form-item label="模型名称">
-        <el-input v-model="checkModelData.name" placeholder="请输入模型名称" disabled>
+      <el-form-item label="场景名称">
+        <el-input v-model="checkModelData.name" placeholder="请输入场景名称" disabled>
           <template #prefix>
             <el-icon><Menu /></el-icon>
           </template>
@@ -229,7 +229,7 @@ onMounted(() => {
           <el-input-number v-model="checkModelData.priority" :min="-65535" :max="65535" :step="1" disabled></el-input-number>
         </el-tooltip>
       </el-form-item>
-      <el-form-item label="模型描述">
+      <el-form-item label="场景描述">
         <el-input type="textarea" maxlength="255" rows="5" v-model="checkModelData.description" show-word-limit disabled>
         </el-input>
       </el-form-item>

@@ -29,7 +29,7 @@ const saveNavState = (path) => {
           @click="saveNavState('/police/training')"
       >
         <el-icon><GoldMedal /></el-icon>
-        <span>训练项目选择</span>
+        <span>训练场景选择</span>
       </el-menu-item>
       <el-sub-menu
         :index="'1'"
