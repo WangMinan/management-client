@@ -23,3 +23,5 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/admin/mainPage
 
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/profile'+'.*'),
     policeApi.getPersonalProfileData())
+Mock.mock(RegExp('http://localhost:8080/api/psychology-service/training'+'.*'),
+    policeApi.getTrainingReplyData())

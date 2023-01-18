@@ -6,7 +6,7 @@ import router from '../router/index'
 const refreshToken = async () => {
     try {
         // 在请求头中添加refreshToken
-        axios.defaults.headers.common['Token'] = Cookies.get('refreshToken')
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + Cookies.get('refreshToken')
         // 发送请求
         const {data} = await axios.get('http://localhost:8080/api/backstage-management-service/refreshToken')
         if(data.code === 200) {
@@ -14,7 +14,7 @@ const refreshToken = async () => {
             Cookies.set('accessToken',data.data.accessToken, {expires: 30})
             Cookies.set('refreshToken',data.data.refreshToken, {expires: 30})
             // 删除请求头中的refreshToken
-            delete axios.defaults.headers.common['Token']
+            delete axios.defaults.headers.common['Authorization']
             return true
         } else {
             ElMessage.error("自动刷新令牌失败,请重新登录")
@@ -40,7 +40,7 @@ _axios.interceptors.request.use(
     (req) => {
         // 比如在这里添加统一的 headers
         if (Cookies.get('accessToken') !== null) {
-            req.headers.Token = Cookies.get('accessToken')
+            req.headers.Authorization = 'Bearer ' + Cookies.get('accessToken')
         }
         return req
     },

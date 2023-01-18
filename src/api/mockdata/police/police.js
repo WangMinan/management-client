@@ -11,5 +11,12 @@ export default {
                 imageUrl:'http://121.41.227.153:8081/file/00.png'
             }
         }
+    },
+    getTrainingReplyData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {}
+        }
     }
 }
