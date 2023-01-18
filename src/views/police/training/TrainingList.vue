@@ -1,7 +1,9 @@
 <script setup>
 import {ref, onMounted, stop} from 'vue'
-import axios from "../../../api/request.js";
-import {ElLoading, ElMessage} from "element-plus";
+import axios from '../../../api/request.js'
+import {ElLoading, ElMessage} from 'element-plus'
+import Cookies from 'js-cookie'
+
 // 保存表格中的监狱数据
 const modelData = ref([])
 // 表格的加载圈
@@ -99,18 +101,24 @@ const startTraining = async (id) => {
     if (data.code !== 200) {
       ElMessage.error(data.msg)
     } else {
-      ElMessage.success('启动训练成功')
       const currentTime = new Date().getTime()
       // 结束时间为开始后一个小时
       const stopTime = currentTime + 3600 * 1000
+      const trainingDetail = {
+        policeId: (JSON.parse(Cookies.get('person'))).id,
+        trainingStopTime: stopTime
+      }
+      window.localStorage.setItem('trainingStatus', JSON.stringify(trainingDetail))
       // 使用服务调用全局遮罩
       loading = ElLoading.service({
         lock: true,
         text: '正在训练中，您的训练结束时间为' + new Date(stopTime).toLocaleString(),
         background: 'rgba(0, 0, 0, 0.7)',
       })
+      ElMessage.success('启动训练成功')
     }
   } catch (e) {
+    console.log(e)
     ElMessage.error('启动训练失败，请检查网络环境')
   } finally {
     modelLoading.value = false
@@ -122,13 +130,30 @@ const startTraining = async (id) => {
 }
 onMounted(() => {
   getModelList()
+  // 判断时间先后
+  if (window.localStorage.getItem('trainingStatus')){
+    const trainingStatus = JSON.parse(window.localStorage.getItem('trainingStatus'))
+    const trainingStopTime = trainingStatus.trainingStopTime
+    if (trainingStopTime > new Date().getTime()) {
+      // 使用服务调用全局遮罩
+      const loading = ElLoading.service({
+        lock: true,
+        text: '正在训练中，您的训练结束时间为' + new Date(trainingStopTime).toLocaleString(),
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      // 等待到结束时间后关闭遮罩
+      setTimeout(() => {
+        loading.close()
+      }, trainingStopTime - new Date().getTime())
+    }
+  }
 })
 </script>
 
 <template>
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>训练项目选择</el-breadcrumb-item>
+    <el-breadcrumb-item>训练场景选择</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->

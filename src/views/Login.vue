@@ -71,7 +71,7 @@ const login = async () => {
       Cookies.remove('rememberMe')
     }
     // 用户信息写入sessionStorage
-    sessionStorage.setItem('person', JSON.stringify(data.data.person))
+    Cookies.set('person', JSON.stringify(data.data.person))
     Cookies.set('role',data.data.role,{expires: EXPIRE_DAY})
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
@@ -81,7 +81,22 @@ const login = async () => {
     } else if(data.data.role === 'prison'){
       await router.push('/prison/home')
     } else {
-      await router.push('/police/home')
+      // 判断警员是否正在训练中
+      if(!localStorage.getItem('trainingStatus')){
+        await router.push('/police/home')
+      } else if((JSON.parse(window.localStorage.getItem('trainingStatus'))).policeId !== data.data.person.id){
+        await router.push('/police/home')
+      } else {
+        // 判断时间先后
+        const trainingStatus = JSON.parse(window.localStorage.getItem('trainingStatus'))
+        const trainingStopTime = trainingStatus.trainingStopTime
+        if (trainingStopTime < new Date().getTime()) {
+          window.localStorage.removeItem('trainingStatus')
+          await router.push('/police/home')
+        } else {
+          await router.push('/police/training')
+        }
+      }
     }
   } catch (e) {
     ElMessage.error(e.message)
