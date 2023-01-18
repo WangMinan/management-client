@@ -2,7 +2,10 @@
 </script>
 
 <template>
-  <h1>训练列表</h1>
+  <el-breadcrumb>
+    <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>训练项目选择</el-breadcrumb-item>
+  </el-breadcrumb>
 </template>
 
 <style scoped>

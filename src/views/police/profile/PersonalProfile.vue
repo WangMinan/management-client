@@ -3,8 +3,8 @@ import {onMounted, ref} from 'vue'
 import axios from '../../../api/request'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
-import {client, headers, createFileNameUUID } from '../../../utils/OssUtil.js'
-import * as path from "path";
+import {client, headers, createFileNameUUID} from '../../../utils/OssUtil.js'
+
 
 const router = useRouter()
 
@@ -30,6 +30,7 @@ const getPersonalInformation = async () => {
 }
 
 let isEditing = ref(false)
+let isUploadEnabled = ref(false)
 
 const personalInformationFormRef = ref()
 
@@ -39,18 +40,55 @@ const abandonRevise = () => {
 
 const uploadFile = async (params) => {
   if (!['image/jpeg', 'image/png', 'image/jpg'].includes(params.file.type)) {
-    this.$message.error('上传图片只能是 JPG/PNG 格式!')
+    ElMessage.error('上传图片只能是 JPG/PNG 格式!')
     // 重置fileList
     fileList.value = []
   } else {
     try {
       // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
       // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
-      const result = await client.put(params.file.uid, params.file, {headers});
-      console.log(result);
+      const result = await client.put(
+          // 张三_uuid.jpg
+          personalInformation.value.name + '_'+ createFileNameUUID()+'.'+params.file.name.split('.')[1],
+          params.file,
+          {headers});
+      isUploadEnabled.value = false
+      personalInformation.value.imageUrl = result.url
     } catch (e) {
       console.log(e);
     }
+  }
+}
+
+const beginRevise = () => {
+  isEditing.value = true
+  isUploadEnabled.value = true
+}
+
+const personalInformationRules = {
+  name: [
+    {required: true, message: '请输入姓名', trigger: 'blur'},
+    {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+  ]
+}
+
+const reviseProfile = async () => {
+  cardLoading.value = true
+  try{
+    const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
+        personalInformation.value)
+    if (data.code !== 200){
+      ElMessage.error(data.message)
+    } else {
+      ElMessage.success('修改个人信息成功')
+      isEditing.value = false
+    }
+  } catch (e) {
+    ElMessage.error(e)
+  } finally {
+    // 刷新个人信息
+    await getPersonalInformation()
+    cardLoading.value = false
   }
 }
 
@@ -60,6 +98,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <el-breadcrumb>
+    <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>个人信息维护</el-breadcrumb-item>
+  </el-breadcrumb>
   <div class="informationCard">
     <el-card>
       <template #header>
@@ -74,11 +116,12 @@ onMounted(() => {
         :model="personalInformation"
         v-loading="cardLoading"
         ref="personalInformationFormRef"
+        :rules="personalInformationRules"
       >
         <el-form-item label="警员编号">
           <el-input
             v-model="personalInformation.accountNumber"
-            :disabled="!isEditing"
+            :disabled="true"
           >
             <template #prefix>
               <el-icon>
@@ -87,7 +130,7 @@ onMounted(() => {
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item label="警员姓名">
+        <el-form-item label="警员姓名" prop="name">
           <el-input
             v-model="personalInformation.name"
             :disabled="!isEditing"
@@ -114,7 +157,7 @@ onMounted(() => {
         <el-form-item label="所属监所">
           <el-input
             v-model="personalInformation.prisonName"
-            :disabled="!isEditing"
+            :disabled="true"
           >
             <template #prefix>
               <el-icon>
@@ -130,9 +173,9 @@ onMounted(() => {
               accept="image/jpeg,image/jpg,image/png"
               :limit="1"
               :file-list="fileList"
-              :disabled="!isEditing"
+              :disabled="!isUploadEnabled"
           >
-            <el-button type="primary" :disabled="!isEditing">点击上传</el-button>
+            <el-button type="primary" :disabled="!isUploadEnabled">点击上传</el-button>
             <template #tip>
               <div class="el-upload__tip">只能上传jpg/jpeg/png文件</div>
             </template>
@@ -140,13 +183,15 @@ onMounted(() => {
         </el-form-item>
       </el-form>
       <span class="dialog-footer">
-        <el-button type="primary" :disabled="isEditing" @click="isEditing = !isEditing">
+        <el-button type="primary" :disabled="isEditing" @click="beginRevise">
           修改个人信息
         </el-button>
-        <el-button type="success" :disabled="!isEditing" @click="isEditing = !isEditing">
+        <el-button type="success" :disabled="!isEditing" @click="reviseProfile">
+          <el-icon><Check /></el-icon>
           确认修改
         </el-button>
         <el-button type="info" :disabled="!isEditing" @click="abandonRevise">
+          <el-icon><Close /></el-icon>
           取消修改
         </el-button>
       </span>
