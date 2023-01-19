@@ -49,7 +49,7 @@ const routes = [
             },
             {
                 path: '/admin/modelManagement',
-                name: 'modelManagement',
+                name: 'adminModelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),
                 meta: {
                     title: '监所管理系统-模拟场景管理'
@@ -92,7 +92,7 @@ const routes = [
             },
             {
                 path: '/prison/modelManagement',
-                name: 'modelManagement',
+                name: 'prisonModelManagement',
                 component: () => import('../views/prison/simulationManagement/ModelManagement.vue'),
                 meta: {
                     title: '监所管理系统-模拟场景管理'

@@ -58,16 +58,15 @@ const drawLineChart = () => {
     yAxis: {
       type: 'value'
     },
+    tooltip: {
+      trigger: 'item'
+    },
     series: [
       {
-        data: [150, 230, 224, 218, 135, 147, 260],
+        data: accessData.value.accessLastWeek,
         type: 'line'
       }
     ]
-  };
-  option.series = {
-    data: accessData.value.accessLastWeek,
-    type: 'line'
   }
   const myChart = echarts.init(document.getElementById('line'));
   myChart.setOption(option);
@@ -83,14 +82,12 @@ onMounted(async () => {
     store.commit('saveNavState', '')
     await getAccessData()
     await getModelUseData()
-
     drawLineChart()
   } catch (e) {
     ElMessage.error("请求首页数据失败")
   } finally {
     loading.close()
   }
-
 });
 </script>
 
@@ -150,8 +147,9 @@ onMounted(async () => {
             <el-icon><ChromeFilled /></el-icon>
             <span>上周访问流量</span>
           </div>
+          <el-empty v-if="accessData.accessLastWeek.length === 0" description="暂无数据" />
           <div class="graphBox">
-            <div id="line" style="width: 400px; height: 300px;"></div>
+            <div id="line" style="width: 500px; height: 300px;"></div>
           </div>
         </template>
       </el-card>
@@ -162,7 +160,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><Menu /></el-icon>
-            <span>模型启用动态</span>
+            <span>场景启用动态</span>
           </div>
         </template>
         <ul>
@@ -203,10 +201,6 @@ onMounted(async () => {
       color: #409EFF;
     }
   }
-}
-.cell-item{
-  display: flex;
-  align-items: center;
 }
 .graphCard{
   .graphBox{

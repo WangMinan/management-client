@@ -215,6 +215,7 @@ const deletePrisonManagers = () => {
         border stripe
         @selection-change="handleSelectionChange"
     >
+      <el-empty v-if="prisonManagerData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="accountNumber" label="账号"></el-table-column>
       <el-table-column prop="nickname" label="监所管理员昵称"></el-table-column>

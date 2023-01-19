@@ -179,6 +179,7 @@ onMounted(() => {
       :data="modelData"
       border stripe
     >
+      <el-empty v-if="modelData.length === 0" description="暂无数据"></el-empty>
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="场景名称"></el-table-column>
       <el-table-column label="是否启用">

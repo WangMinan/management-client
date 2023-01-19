@@ -311,6 +311,7 @@ const updateModel = async (form) => {
         border stripe
         @selection-change="handleSelectionChange"
     >
+      <el-empty v-if="modelData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="场景名称"></el-table-column>

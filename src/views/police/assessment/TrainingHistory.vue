@@ -117,6 +117,7 @@ const handleCheckTrainingDialogClose = () => {
       :ref="trainingHistoryTableRef"
       border stripe
     >
+      <el-empty v-if="trainingHistoryData.length === 0" description="暂无数据"></el-empty>
       <el-table-column prop="id" label="序号"></el-table-column>
       <el-table-column prop="modelName" label="场景名"></el-table-column>
       <el-table-column prop="startTime" label="开始时间"></el-table-column>

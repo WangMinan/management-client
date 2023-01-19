@@ -27,7 +27,7 @@ export default {
                     name: 'police001',
                     prisonName: '西安监狱',
                     imageUrl:'http://121.41.227.153:8081/file/00.png',
-                    training: 'false'
+                    training: false
                 }
             }
         }

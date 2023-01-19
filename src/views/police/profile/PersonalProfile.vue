@@ -24,7 +24,7 @@ const getPersonalInformation = async () => {
       personalInformation.value = data.data
     }
   } catch (e) {
-    ElMessage.error(e)
+    ElMessage.error('数据初始化失败')
   } finally {
     cardLoading.value = false
   }
@@ -56,7 +56,7 @@ const uploadFile = async (params) => {
       isUploadEnabled.value = false
       personalInformation.value.imageUrl = result.url
     } catch (e) {
-      ElMessage.error(e)
+      ElMessage.error('数据初始化失败')
     }
   }
 }
@@ -90,7 +90,7 @@ const reviseProfile = async (form) => {
           router.go(0)
         }
       } catch (e) {
-        ElMessage.error(e)
+        ElMessage.error('数据初始化失败')
       } finally {
         // 刷新个人信息
         await getPersonalInformation()
@@ -126,6 +126,7 @@ onMounted(() => {
         ref="personalInformationFormRef"
         :rules="personalInformationRules"
       >
+        <el-empty v-if="personalInformation.length === 0" description="暂无数据"></el-empty>
         <el-form-item label="警员编号">
           <el-input
             v-model="personalInformation.accountNumber"

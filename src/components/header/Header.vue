@@ -178,7 +178,7 @@ const reviseNicknameSubmit = (form) => {
         监所警察执法保障试验平台——运维端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'prison'">
-        监所警察执法保障试验平台——监狱端,欢迎您:{{nickname}}
+        监所警察执法保障试验平台——监所端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'police'">
         监所警察执法保障试验平台——警员端,欢迎您:{{nickname}}
