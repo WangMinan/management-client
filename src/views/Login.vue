@@ -81,21 +81,11 @@ const login = async () => {
     } else if(data.data.role === 'prison'){
       await router.push('/prison/home')
     } else {
-      // 判断警员是否正在训练中
-      if(!localStorage.getItem('trainingStatus')){
-        await router.push('/police/home')
-      } else if((JSON.parse(window.localStorage.getItem('trainingStatus'))).policeId !== data.data.person.id){
+      if(data.data.person.training === false){
+        window.localStorage.removeItem('trainingStatus')
         await router.push('/police/home')
       } else {
-        // 判断时间先后
-        const trainingStatus = JSON.parse(window.localStorage.getItem('trainingStatus'))
-        const trainingStopTime = trainingStatus.trainingStopTime
-        if (trainingStopTime < new Date().getTime()) {
-          window.localStorage.removeItem('trainingStatus')
-          await router.push('/police/home')
-        } else {
-          await router.push('/police/training')
-        }
+        await router.push('/police/training')
       }
     }
   } catch (e) {

@@ -32,7 +32,7 @@ onMounted(() => {
 <template>
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>训练情况查看</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟情况查看</el-breadcrumb-item>
     <el-breadcrumb-item>心理综合评估结果</el-breadcrumb-item>
   </el-breadcrumb>
   <el-row :gutter="15">

@@ -15,14 +15,6 @@ const routes = [
         }
     },
     {
-        path: '/404',
-        name: '404NotFound',
-        component: () => import('../views/warn/404.vue'),
-        meta: {
-            title: '监所管理系统-404页面不存在'
-        }
-    },
-    {
         path: '/admin/home',
         name: 'adminHome',
         component: () => import('../views/admin/AdminHome.vue'),
@@ -60,7 +52,7 @@ const routes = [
                 name: 'modelManagement',
                 component: () => import('../views/admin/model/ModelManagement.vue'),
                 meta: {
-                    title: '监所管理系统-训练场景管理'
+                    title: '监所管理系统-模拟场景管理'
                 }
             },
             {
@@ -77,7 +69,7 @@ const routes = [
         path: '/prison/home',
         name: 'prisonHome',
         component: () => import('../views/prison/PrisonHome.vue'),
-        redirect: '/prisonMain',
+        redirect: '/prison/main',
         meta: {
             title: '监所管理系统-监所首页'
         },
@@ -88,6 +80,46 @@ const routes = [
                 component: () => import('../views/prison/main/PrisonMain.vue'),
                 meta: {
                     title: '监所管理系统-监所首页'
+                }
+            },
+            {
+                path: '/prison/policeManagement',
+                name: 'policeManagement',
+                component: () => import('../views/prison/management/PoliceManagement.vue'),
+                meta: {
+                    title: '监所管理系统-警员管理'
+                }
+            },
+            {
+                path: '/prison/modelManagement',
+                name: 'modelManagement',
+                component: () => import('../views/prison/simulationManagement/ModelManagement.vue'),
+                meta: {
+                    title: '监所管理系统-模拟场景管理'
+                }
+            },
+            {
+                path: '/prison/trainingHistory',
+                name: 'prisonTrainingHistory',
+                component: () => import('../views/prison/simulationManagement/TrainingHistory.vue'),
+                meta: {
+                    title: '监所管理系统-模拟动态查看'
+                }
+            },
+            {
+                path: '/prison/trainingAssessment',
+                name: 'trainingAssessment',
+                component: () => import('../views/prison/simulationManagement/TrainingAssessment.vue'),
+                meta: {
+                    title: '监所管理系统-模拟总体评估'
+                }
+            },
+            {
+                path: '/prison/prisonBoard',
+                name: 'prisonBoard',
+                component: () => import('../views/prison/screen/PrisonBoard.vue'),
+                meta: {
+                    title: '监所管理系统-模拟情况大屏'
                 }
             }
         ]
@@ -114,7 +146,7 @@ const routes = [
                 name: 'policeTraining',
                 component: () => import('../views/police/training/TrainingList.vue'),
                 meta: {
-                    title: '监所管理系统-警员训练'
+                    title: '监所管理系统-警员模拟'
                 }
             },
             {
@@ -127,10 +159,10 @@ const routes = [
             },
             {
                 path: '/police/trainingHistory',
-                name: 'trainingHistory',
+                name: 'policeTrainingHistory',
                 component: () => import('../views/police/assessment/TrainingHistory.vue'),
                 meta: {
-                    title: '监所管理系统-场景模拟历史'
+                    title: '监所管理系统-场景模拟动态'
                 }
             },
             {
@@ -172,10 +204,6 @@ router.beforeEach((to, from, next) => {
             next('/login')
         },3000)
     } else {
-        // 如果to的页面在路由表中没出现则404
-        if (to.matched.length === 0) {
-            next('/404')
-        }
         // 鉴权 如果Cookies中的role为admin则仅允许访问adminHome下的页面
         if (Cookies.get('role') === 'admin') {
             if(to.path.startsWith('/admin')) {

@@ -50,7 +50,7 @@ const getModelList = async () => {
       // total.value = adminApi.getModelTotalData().data.total
     }
   } catch (e) {
-    ElMessage.error('获取训练场景列表失败，请检查网络环境')
+    ElMessage.error('获取模拟场景列表失败，请检查网络环境')
   } finally {
     modelLoading.value=false
   }
@@ -93,7 +93,7 @@ const handleCheckModelDialogClose = () => {
   checkModelFormRef.value.resetFields()
 }
 
-// 训练部分
+// 模拟部分
 const startTraining = async (id) => {
   let loading
   modelLoading.value = true
@@ -113,13 +113,13 @@ const startTraining = async (id) => {
       // 使用服务调用全局遮罩
       loading = ElLoading.service({
         lock: true,
-        text: '正在训练中，您的训练结束时间为' + new Date(stopTime).toLocaleString(),
+        text: '正在模拟中，您的模拟结束时间为' + new Date(stopTime).toLocaleString(),
         background: 'rgba(0, 0, 0, 0.7)',
       })
-      ElMessage.success('启动训练成功')
+      ElMessage.success('启动模拟成功')
     }
   } catch (e) {
-    ElMessage.error('启动训练失败，请检查网络环境')
+    ElMessage.error('启动模拟失败，请检查网络环境')
   } finally {
     modelLoading.value = false
   }
@@ -138,7 +138,7 @@ onMounted(() => {
       // 使用服务调用全局遮罩
       const loading = ElLoading.service({
         lock: true,
-        text: '正在训练中，您的训练结束时间为' + new Date(trainingStopTime).toLocaleString(),
+        text: '正在模拟中，您的模拟结束时间为' + new Date(trainingStopTime).toLocaleString(),
         background: 'rgba(0, 0, 0, 0.7)',
       })
       // 等待到结束时间后关闭遮罩
@@ -153,7 +153,7 @@ onMounted(() => {
 <template>
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>训练场景选择</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟场景选择</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->
@@ -204,7 +204,7 @@ onMounted(() => {
           </el-tooltip>
           <el-button type="primary" size="small" @click="startTraining(scope.row.id)">
             <el-icon><Opportunity /></el-icon>
-            开始训练
+            开始模拟
           </el-button>
         </template>
       </el-table-column>

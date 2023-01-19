@@ -10,7 +10,6 @@ export default {
                 person: {
                     id: '1',
                     nickname: 'admin001',
-                    account_id: '101'
                 }
             }
         }
@@ -25,10 +24,26 @@ export default {
                 refreshToken: 'refreshToken',
                 person: {
                     id: '1',
-                    nickname: 'police001',
-                    account_id: '101',
-                    prison_id: '1',
-                    image_url:'http://121.41.227.153:8081/file/00.png'
+                    name: 'police001',
+                    prisonName: '西安监狱',
+                    imageUrl:'http://121.41.227.153:8081/file/00.png',
+                    training: 'false'
+                }
+            }
+        }
+    },
+    getPrisonLoginData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {
+                role: 'prison',
+                accessToken: 'accessToken',
+                refreshToken: 'refreshToken',
+                person: {
+                    id: '1',
+                    nickname: 'prison001',
+                    prisonName: '西安监狱'
                 }
             }
         }

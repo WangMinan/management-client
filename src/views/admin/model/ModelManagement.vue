@@ -45,7 +45,7 @@ const getModelList = async () => {
     // modelData.value = adminApi.getModelTotalData().data.list
     // total.value = adminApi.getModelTotalData().data.total
   } catch (e) {
-    ElMessage.error('获取训练场景列表失败，请检查网络环境')
+    ElMessage.error('获取模拟场景列表失败，请检查网络环境')
   } finally {
     modelLoading.value=false
   }
@@ -273,7 +273,7 @@ const updateModel = async (form) => {
   <!--面包屑导航-->
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/admin/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>训练项目管理</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟项目管理</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->

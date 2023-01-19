@@ -39,8 +39,8 @@ const logout = async ()=> {
 }
 
 let dialogVisible = ref(false)
-const revisePasswordTableRef=ref()
-const revisePasswordTable = ref({
+const revisePasswordFormRef=ref()
+const revisePasswordForm = ref({
   'oldPassword': '',
   'newPassword': '',
   'confirmPassword':''
@@ -77,7 +77,7 @@ const validateConfirmPass = (rule, value, callback) => {
     if (value.length < 8 || value.length > 20) {
       callback(new Error('密码长度为8-20'))
     } else {
-      if (value !== revisePasswordTable.value.newPassword) {
+      if (value !== revisePasswordForm.value.newPassword) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
@@ -108,8 +108,8 @@ const submit = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       const uploadTable = {
-        'oldPassword': encrypt(revisePasswordTable.value.oldPassword),
-        'newPassword': encrypt(revisePasswordTable.value.newPassword)
+        'oldPassword': encrypt(revisePasswordForm.value.oldPassword),
+        'newPassword': encrypt(revisePasswordForm.value.newPassword)
       }
       const {data} = await axios.put('/backstage-management-service/account/password',uploadTable)
       if(data.code === 200){
@@ -125,29 +125,63 @@ const submit = async (form) => {
   })
 }
 
-const nickName = ref(
+const nickname = ref(
     (JSON.parse(Cookies.get('person'))).nickname ||
-    (JSON.parse(Cookies.get('person'))).name
+        (JSON.parse(Cookies.get('person'))).name
 )
 
 const imageUrl = ref(
-    (JSON.parse(Cookies.get('person'))).image_url ||
+    (JSON.parse(Cookies.get('person'))).imageUrl ||
     getImgSrc('user')
 )
 
+// 修改昵称请求
+let reviseNicknameDialogVisible = ref(false)
+const reviseNicknameFormRef = ref()
+const reviseNicknameData = ref({
+  'nickname': ''
+})
+const reviseNicknameRules = reactive({
+  nickname: [
+    { required: true, message: '请输入昵称', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' },
+  ]
+})
+const reviseNicknameSubmit = (form) => {
+  if(!form){
+    return
+  }
+  form.validate(async (valid, fields) => {
+    if (valid) {
+      const prisonAdminId = (JSON.parse(Cookies.get('person'))).id
+      const {data} = await axios.put(`/backstage-management-service/prison/${prisonAdminId}`,
+          reviseNicknameData.value)
+      if(data.code === 200){
+        ElMessage.success('修改成功')
+        reviseNicknameDialogVisible.value = false
+        nickname.value = reviseNicknameData.value.nickname
+        resetForm(form)
+      }else{
+        ElMessage.error(data.msg)
+      }
+    } else {
+      ElMessage.error('预校验未通过,请检查输入')
+    }
+  })
+}
 </script>
 
 <template>
   <div class="header">
     <div class="l-content">
       <h1 v-if="Cookies.get('role') === 'admin'">
-        监所警察执法保障试验平台——运维端,欢迎您:{{nickName}}
+        监所警察执法保障试验平台——运维端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'prison'">
-        监所警察执法保障试验平台——监狱端,欢迎您:{{nickName}}
+        监所警察执法保障试验平台——监狱端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'police'">
-        监所警察执法保障试验平台——警员端,欢迎您:{{nickName}}
+        监所警察执法保障试验平台——警员端,欢迎您:{{nickname}}
       </h1>
     </div>
     <div class="r-content">
@@ -158,8 +192,13 @@ const imageUrl = ref(
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="dialogVisible=true">修改密码</el-dropdown-item>
-            <el-dropdown-item @click="logout">退出</el-dropdown-item>
+            <el-dropdown-item v-if="Cookies.get('role') === 'prison'" @click="reviseNicknameDialogVisible=true">
+              <span>修改昵称</span>
+            </el-dropdown-item>
+            <el-dropdown-item @click="dialogVisible=true">
+              <span>修改密码</span>
+            </el-dropdown-item>
+            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -171,18 +210,18 @@ const imageUrl = ref(
     v-model="dialogVisible"
     center
     title="修改密码"
-    @close="resetForm(revisePasswordTableRef)"
+    @close="resetForm(revisePasswordFormRef)"
   >
     <el-form
-      :model="revisePasswordTable"
+      :model="revisePasswordForm"
       label-width="15%"
       status-icon
-      ref="revisePasswordTableRef"
+      ref="revisePasswordFormRef"
       :rules="rules"
     >
       <el-form-item prop="oldPassword" label="请输入旧密码">
         <el-input
-          v-model="revisePasswordTable.oldPassword"
+          v-model="revisePasswordForm.oldPassword"
           placeholder="旧密码"
           type="password"
           show-password
@@ -196,7 +235,7 @@ const imageUrl = ref(
       </el-form-item>
       <el-form-item prop="newPassword" label="请输入新密码">
         <el-input
-            v-model="revisePasswordTable.newPassword"
+            v-model="revisePasswordForm.newPassword"
             placeholder="旧密码"
             type="password"
             show-password
@@ -210,7 +249,7 @@ const imageUrl = ref(
       </el-form-item>
       <el-form-item prop="confirmPassword" label="请确认新密码">
         <el-input
-            v-model="revisePasswordTable.confirmPassword"
+            v-model="revisePasswordForm.confirmPassword"
             placeholder="确认密码"
             type="password"
             show-password
@@ -225,10 +264,47 @@ const imageUrl = ref(
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="submit(revisePasswordTableRef)">
+        <el-button type="primary" @click="submit(revisePasswordFormRef)">
           确认
         </el-button>
         <el-button @click="dialogVisible=false">取消</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!--修改昵称弹框-->
+  <el-dialog
+    style="width: 50%"
+    v-model="reviseNicknameDialogVisible"
+    center
+    title="修改昵称"
+    @close="resetForm(reviseNicknameFormRef)"
+  >
+    <el-form
+      :model="reviseNicknameData"
+      label-width="15%"
+      status-icon
+      ref="reviseNicknameFormRef"
+      :rules="reviseNicknameRules"
+    >
+      <el-form-item prop="nickname" label="新昵称">
+        <el-input
+          v-model="reviseNicknameData.nickname"
+          placeholder="请输入新昵称"
+        >
+          <template #prefix>
+            <el-icon class="el-input__icon">
+              <User />
+            </el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="reviseNicknameSubmit(reviseNicknameFormRef)">
+          确认
+        </el-button>
+        <el-button @click="reviseNicknameDialogVisible=false">取消</el-button>
       </span>
     </template>
   </el-dialog>

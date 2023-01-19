@@ -39,7 +39,7 @@ const getTrainingHistory = async () => {
       total = data.data.total
     }
   } catch (e) {
-    ElMessage.error('获取训练历史列表失败，请检查网络环境')
+    ElMessage.error('获取模拟历史列表失败，请检查网络环境')
   } finally {
     historyLoading.value=false
   }
@@ -60,7 +60,7 @@ onMounted(() => {
   getTrainingHistory()
 })
 
-// 查看详细训练评估部分
+// 查看详细模拟评估部分
 // 接下来是查看场景具体信息的部分
 let checkTrainingDialogVisible = ref(false)
 
@@ -90,8 +90,8 @@ const handleCheckTrainingDialogClose = () => {
 <template>
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/police/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>训练情况查看</el-breadcrumb-item>
-    <el-breadcrumb-item>训练动态</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟情况查看</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟动态</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->
@@ -121,7 +121,7 @@ const handleCheckTrainingDialogClose = () => {
       <el-table-column prop="modelName" label="场景名"></el-table-column>
       <el-table-column prop="startTime" label="开始时间"></el-table-column>
       <el-table-column prop="endTime" label="结束时间"></el-table-column>
-      <el-table-column prop="status" label="训练状态"></el-table-column>
+      <el-table-column prop="status" label="模拟状态"></el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button type="success" size="small" @click="showCheckDialog(scope.row.id)">
@@ -152,7 +152,7 @@ const handleCheckTrainingDialogClose = () => {
       ref="checkTrainingFormRef"
       :disabled="true"
     >
-      <el-form-item label="训练序号">
+      <el-form-item label="模拟序号">
         <el-input v-model="checkTrainingData.id"></el-input>
       </el-form-item>
       <el-form-item label="场景编号">
@@ -161,7 +161,7 @@ const handleCheckTrainingDialogClose = () => {
       <el-form-item label="场景名称">
         <el-input v-model="checkTrainingData.modelName"></el-input>
       </el-form-item>
-      <el-form-item label="训练时间">
+      <el-form-item label="模拟时间">
         <el-date-picker
           type="datetimerange"
           range-separator="到"
@@ -169,10 +169,10 @@ const handleCheckTrainingDialogClose = () => {
           :end-placeholder="checkTrainingData.endTime"
         />
       </el-form-item>
-      <el-form-item label="训练状态">
+      <el-form-item label="模拟状态">
         <el-input v-model="checkTrainingData.status"></el-input>
       </el-form-item>
-      <el-form-item label="训练结果">
+      <el-form-item label="模拟结果">
         <el-input type="textarea" rows="5" v-model="checkTrainingData.result"></el-input>
       </el-form-item>
     </el-form>

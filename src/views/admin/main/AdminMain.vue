@@ -11,9 +11,9 @@ const router = useRouter()
 const accessData = ref({
   // 今日访问量
   accessCount: 0,
-  // 今日训练量
+  // 今日模拟量
   trainingCount: 0,
-  // 本周训练量
+  // 本周模拟量
   weeklyTrainingCount: 0,
   // 流量
   flow: 0,
@@ -112,7 +112,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><Clock /></el-icon>
-            <span>今日训练</span>
+            <span>今日模拟</span>
           </div>
         </template>
         {{accessData.trainingCount}}
@@ -123,7 +123,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><Soccer /></el-icon>
-            <span>本周训练</span>
+            <span>本周模拟</span>
           </div>
         </template>
         {{accessData.weeklyTrainingCount}}

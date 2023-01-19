@@ -73,24 +73,31 @@ const personalInformationRules = {
   ]
 }
 
-const reviseProfile = async () => {
-  cardLoading.value = true
-  try{
-    const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
-        personalInformation.value)
-    if (data.code !== 200){
-      ElMessage.error(data.message)
-    } else {
-      ElMessage.success('修改个人信息成功')
-      isEditing.value = false
+const reviseProfile = async (form) => {
+  if(!form) return
+  await form.validate(async (valid, fields) => {
+    if(valid){
+      cardLoading.value = true
+      try{
+        const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
+            personalInformation.value)
+        if (data.code !== 200){
+          ElMessage.error(data.message)
+        } else {
+          ElMessage.success('修改个人信息成功')
+          isEditing.value = false
+          // 当前页面包括header全部刷新
+          router.go(0)
+        }
+      } catch (e) {
+        ElMessage.error(e)
+      } finally {
+        // 刷新个人信息
+        await getPersonalInformation()
+        cardLoading.value = false
+      }
     }
-  } catch (e) {
-    ElMessage.error(e)
-  } finally {
-    // 刷新个人信息
-    await getPersonalInformation()
-    cardLoading.value = false
-  }
+  })
 }
 
 onMounted(() => {
@@ -187,7 +194,7 @@ onMounted(() => {
         <el-button type="primary" :disabled="isEditing" @click="beginRevise">
           修改个人信息
         </el-button>
-        <el-button type="success" :disabled="!isEditing" @click="reviseProfile">
+        <el-button type="success" :disabled="!isEditing" @click="reviseProfile(personalInformationFormRef)">
           <el-icon><Check /></el-icon>
           确认修改
         </el-button>

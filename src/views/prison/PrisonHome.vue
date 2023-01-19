@@ -1,12 +1,12 @@
 <script setup>
-import PoliceAside from '../../components/aside/PoliceAside.vue'
+import PrisonAside from '../../components/aside/PrisonAside.vue'
 import PoliceHeader from '../../components/header/Header.vue'
 </script>
 
 <template>
   <div class="common-layout">
     <el-container>
-      <PoliceAside/>
+      <PrisonAside/>
       <el-container>
         <el-header>
           <PoliceHeader/>
