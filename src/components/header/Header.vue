@@ -126,12 +126,12 @@ const submit = async (form) => {
 }
 
 const nickName = ref(
-    (JSON.parse(sessionStorage.getItem('person'))).nickname ||
-    (JSON.parse(sessionStorage.getItem('person'))).name
+    (JSON.parse(Cookies.get('person'))).nickname ||
+    (JSON.parse(Cookies.get('person'))).name
 )
 
 const imageUrl = ref(
-    (JSON.parse(sessionStorage.getItem('person'))).image_url ||
+    (JSON.parse(Cookies.get('person'))).image_url ||
     getImgSrc('user')
 )
 

@@ -50,7 +50,7 @@ const saveNavState = (path) => {
             @click="saveNavState('/police/psychoAssessment')"
         >
           <el-icon><DataLine /></el-icon>
-          <span>心理评估结果</span>
+          <span>心理综合评估结果</span>
         </el-menu-item>
       </el-sub-menu>
       <el-menu-item

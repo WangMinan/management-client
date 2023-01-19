@@ -1,5 +1,4 @@
 <script setup>
-console.log(navigator.platform)
 </script>
 
 <template>

@@ -29,3 +29,7 @@ Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/
     policeApi.getPersonalProfileData())
 Mock.mock(RegExp('http://localhost:8080/api/psychology-service/training'+'.*'),
     policeApi.getTrainingReplyData())
+Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/query'+'.*'),
+    policeApi.getTrainingHistoryData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/police/totalResult',
+    policeApi.getAssessmentData())

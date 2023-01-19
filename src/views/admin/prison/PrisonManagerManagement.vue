@@ -61,7 +61,6 @@ const getPrisonManagerList = async () => {
         await axios.get(`/backstage-management-service/admin/padmin/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
     }
     const data = resp.data
-    console.log(data)
     if(data.code !== 200){
       ElMessage.error(data.msg)
     }
@@ -70,7 +69,6 @@ const getPrisonManagerList = async () => {
     // prisonManagerData.value = adminApi.getPrisonManagerTotalData().data.list
     // total.value = adminApi.getPrisonManagerTotalData().data.total
   } catch (e) {
-    console.log(e)
     ElMessage.error('获取监狱管理员列表失败，请检查网络环境')
   } finally {
     prisonManagerLoading.value=false

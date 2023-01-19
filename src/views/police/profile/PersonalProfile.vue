@@ -20,8 +20,9 @@ const getPersonalInformation = async () => {
     const {data} = await axios.get('/backstage-management-service/police/profile')
     if (data.code !== 200){
       ElMessage.error(data.message)
+    } else {
+      personalInformation.value = data.data
     }
-    personalInformation.value = data.data
   } catch (e) {
     ElMessage.error(e)
   } finally {
@@ -55,7 +56,7 @@ const uploadFile = async (params) => {
       isUploadEnabled.value = false
       personalInformation.value.imageUrl = result.url
     } catch (e) {
-      console.log(e);
+      ElMessage.error(e)
     }
   }
 }

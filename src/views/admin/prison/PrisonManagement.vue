@@ -36,9 +36,10 @@ const getPrisonList = async () => {
     const data = resp.data
     if(data.code !== 200){
       ElMessage.error(data.msg)
+    } else {
+      prisonData.value = data.data.list
+      total.value = data.data.total
     }
-    prisonData.value = data.data.list
-    total.value = data.data.total
     // prisonData.value = adminApi.getPrisonTotalData().data.list
     // total.value = adminApi.getPrisonTotalData().data.total
   } catch (e) {
