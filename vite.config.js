@@ -8,5 +8,8 @@ export default defineConfig({
     port: 7070,
     // host: '0.0.0.0'
   },
+  preview: {
+    port: 7070
+  },
   base: './',
 })
