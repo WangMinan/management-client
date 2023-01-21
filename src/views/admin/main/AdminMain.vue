@@ -147,11 +147,11 @@ onMounted(async () => {
             <el-icon><ChromeFilled /></el-icon>
             <span>上周访问流量</span>
           </div>
-          <el-empty v-if="accessData.accessLastWeek.length === 0" description="暂无数据" />
-          <div class="graphBox">
-            <div id="line" style="width: 500px; height: 300px;"></div>
-          </div>
         </template>
+        <el-empty v-if="accessData.accessLastWeek.length === 0" description="暂无数据" />
+        <div class="graphBox">
+          <div id="line" style="width: 500px; height: 300px;"></div>
+        </div>
       </el-card>
     </el-col>
     <!--模型启用动态-->

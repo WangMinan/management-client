@@ -8,15 +8,16 @@ import prisonApi from './mockdata/prison/prison.js'
 // 登录
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
 //     loginApi.getAdminLoginData())
-// Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-//     loginApi.getPoliceLoginData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-    loginApi.getPrisonLoginData())
+    loginApi.getPoliceLoginData())
+// Mock.mock('http://localhost:8080/api/backstage-management-service/login',
+//     loginApi.getPrisonLoginData())
 
 // 退出
 Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
     loginApi.getLogoutData())
 
+// 运维
 Mock.mock('http://localhost:8080/api/backstage-management-service/account/password',
     adminApi.getRevisePasswordData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/prison'+'.*'),
@@ -30,6 +31,7 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/admin/stats',
 Mock.mock('http://localhost:8080/api/backstage-management-service/admin/mainPage/dynamic',
     adminApi.getModelUseData())
 
+// 警员
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/profile'+'.*'),
     policeApi.getPersonalProfileData())
 Mock.mock(RegExp('http://localhost:8080/api/psychology-service/training'+'.*'),
@@ -38,7 +40,14 @@ Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/
     policeApi.getTrainingHistoryData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/police/totalResult',
     policeApi.getAssessmentData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/police/home/training',
+    policeApi.getTrainingSummaryData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/police/home/dynamic',
+    policeApi.getTrainingDynamicData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/police/home/weekTraining',
+    policeApi.getWeeklyTrainingData())
 
+// 监所
 Mock.mock('http://localhost:8080/api/backstage-management-service/prison/mainPage',
     prisonApi.getAccessData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/prison/mainPage/dynamic',

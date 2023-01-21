@@ -57,5 +57,51 @@ export default {
                 pressureType: '高压'
             }
         }
+    },
+    getTrainingSummaryData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {
+                // 今日预计模拟场景
+                dailyTasks: 5,
+                // 今日已完成模拟场景
+                dailyCompletedTasks: 2,
+                // 本周完成
+                weeklyModels: 10,
+            }
+        }
+    },
+    getTrainingDynamicData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: [
+                {
+                    modelName: '模拟场景1',
+                    startTime: '2019-01-01 12:00:00',
+                    endTime: '2019-01-01 13:00:00'
+                },
+                {
+                    modelName: '模拟场景2',
+                    startTime: '2019-01-01 12:00:00',
+                    endTime: '2019-01-01 13:00:00'
+                },
+                {
+                    modelName: '模拟场景3',
+                    startTime: '2019-01-01 12:00:00',
+                    endTime: '2019-01-01 13:00:00'
+                }
+            ]
+        }
+    },
+    getWeeklyTrainingData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: [
+                0, 4, 5, 3, 2, 1, 0
+            ]
+        }
     }
 }
