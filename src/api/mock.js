@@ -8,10 +8,10 @@ import prisonApi from './mockdata/prison/prison.js'
 // 登录
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
 //     loginApi.getAdminLoginData())
-Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-    loginApi.getPoliceLoginData())
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-//     loginApi.getPrisonLoginData())
+//     loginApi.getPoliceLoginData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/login',
+    loginApi.getPrisonLoginData())
 
 // 退出
 Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
@@ -56,5 +56,7 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/prison/mainPag
     prisonApi.getFinishTrainingData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/police/query/' + '.*'),
     prisonApi.getPoliceListData())
+Mock.mock('http://localhost:8080/api/backstage-management-service/prison/prison',
+    policeApi.getAllPrisonsData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/'+'.*'),
     prisonApi.reviseNicknameData())

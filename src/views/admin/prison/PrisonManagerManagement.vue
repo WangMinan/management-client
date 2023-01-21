@@ -147,7 +147,7 @@ const resetPrisonManagerForm = (form) => {
 }
 
 // 接下来是删除监所的部分
-const deletePrisonManagers = () => {
+const deletePrisonManagers = async () => {
   if(prisonManagerSelection.value.idList.length === 0){
     ElMessage.error('请至少选择一个管理员')
     return

@@ -111,7 +111,7 @@ const resetAddPrisonForm = (form) => {
 }
 
 // 接下来是删除监所的部分
-const deletePrisons = () => {
+const deletePrisons = async () => {
   if(prisonSelection.value.idList.length === 0){
     ElMessage.error('请至少选择一个监狱')
     return

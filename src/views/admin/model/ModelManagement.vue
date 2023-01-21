@@ -127,7 +127,7 @@ const resetAddModelForm = (form) => {
 }
 
 // 接下来是删除场景(滑动)的部分
-const deleteModels = () => {
+const deleteModels = async () => {
   if(modelSelection.value.idList.length === 0){
     ElMessage.error('请至少选择一个场景')
     return
@@ -304,12 +304,12 @@ const updateModel = async (form) => {
     </el-row>
     <!--表格-->
     <el-table
-        style="width: 100%;"
-        v-loading="modelLoading"
-        :ref="modelTableRef"
-        :data="modelData"
-        border stripe
-        @selection-change="handleSelectionChange"
+      style="width: 100%;"
+      v-loading="modelLoading"
+      :ref="modelTableRef"
+      :data="modelData"
+      border stripe
+      @selection-change="handleSelectionChange"
     >
       <el-empty v-if="modelData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>
@@ -465,10 +465,10 @@ const updateModel = async (form) => {
       </el-form-item>
       <el-form-item prop="enable" label="是否启用">
         <el-switch
-            v-model="updateModelData.enable"
-            inline-prompt
-            active-text="启用"
-            inactive-text="禁用"
+          v-model="updateModelData.enable"
+          inline-prompt
+          active-text="启用"
+          inactive-text="禁用"
         >
         </el-switch>
       </el-form-item>

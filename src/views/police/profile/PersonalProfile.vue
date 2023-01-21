@@ -50,7 +50,7 @@ const uploadFile = async (params) => {
       // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
       const result = await client.put(
           // 张三_uuid.jpg
-          personalInformation.value.name + '_'+ createFileNameUUID()+'.'+params.file.name.split('.')[1],
+          'police/' + personalInformation.value.name + '_'+ createFileNameUUID()+'.'+params.file.name.split('.')[1],
           params.file,
           {headers});
       isUploadEnabled.value = false
@@ -96,6 +96,8 @@ const reviseProfile = async (form) => {
         await getPersonalInformation()
         cardLoading.value = false
       }
+    } else {
+      ElMessage.error('请检查输入的信息')
     }
   })
 }

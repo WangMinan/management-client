@@ -103,5 +103,17 @@ export default {
                 0, 4, 5, 3, 2, 1, 0
             ]
         }
+    },
+    getAllPrisonsData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: [
+                '西安监狱',
+                '上海监狱',
+                '北京监狱',
+                '南京监狱'
+            ]
+        }
     }
 }
