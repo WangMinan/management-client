@@ -96,8 +96,6 @@ const drawPieChart = () => {
     ]
   }
 
-  const data = []
-
   for (const item of finishTrainingCount.value) {
     option.series[0].data.push({
       value: item.numberOfPolice,
