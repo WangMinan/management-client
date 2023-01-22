@@ -77,7 +77,7 @@ const uploadFile = async (params) => {
       isUploadEnabled.value = false
       personalInformation.value.imageUrl = result.url
     } catch (e) {
-      ElMessage.error('数据初始化失败')
+      ElMessage.error('数据上传失败')
     }
   }
 }

@@ -8,7 +8,7 @@ export default {
                 name: '张三',
                 accountNumber: '123',
                 prisonName: '西安监狱',
-                imageUrl:'http://121.41.227.153:8081/file/00.png'
+                imageUrl:'https://wangminan-files.oss-cn-hongkong.aliyuncs.com/police/%E7%8E%8B%E6%97%BB%E5%AE%89_1674377623528_de41b40b.jpg'
             }
         }
     },
