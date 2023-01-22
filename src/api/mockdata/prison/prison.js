@@ -78,5 +78,58 @@ export default {
                 ]
             }
         }
+    },
+    getAllModelNamesData: () => {
+        return {
+            code: 200,
+            msg: "success",
+            data: [
+                '模型1','模型2','模型3'
+            ]
+        }
+    },
+    getTrainingHistoryListData: () => {
+        return {
+            code: 200,
+            msg: "success",
+            data: {
+                total: 3,
+                list: [
+                    {
+                        id: 1,
+                        policeId: 1,
+                        policeName: '张三',
+                        modelId: 1,
+                        modelName: '模型1',
+                        startTime: '2021-05-01 12:00:00',
+                        endTime: '2021-05-01 13:00:00',
+                        status: '已完成',
+                        result: '通过'
+                    },
+                    {
+                        id: 2,
+                        policeId: 1,
+                        policeName: '张三',
+                        modelId: 2,
+                        modelName: '模型2',
+                        startTime: '2021-05-01 15:00:00',
+                        endTime: '2021-05-01 16:00:00',
+                        status: '已完成',
+                        result: '通过'
+                    },
+                    {
+                        id: 3,
+                        policeId: 2,
+                        policeName: '李四',
+                        modelId: 3,
+                        modelName: '模型3',
+                        startTime: '2021-05-01 17:00:00',
+                        endTime: '2021-05-01 18:00:00',
+                        status: '未完成',
+                        result: '未通过'
+                    }
+                ]
+            }
+        }
     }
 }

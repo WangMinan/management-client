@@ -26,24 +26,23 @@ const total = ref(0)
 const getModelList = async () => {
   try{
     modelLoading.value=true
-    let resp = {}
-    if(queryInfo.value.query === ''){
-      resp =
-        await axios.get(`/psychology-service/model/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    } else {
-      resp =
-          await axios.get(`/psychology-service/model/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    }
-    const data = resp.data
+    const {data} = await axios.get('/psychology-service/model/',{
+      params: {
+        query: queryInfo.value.query,
+        pageNum: queryInfo.value.pageNum,
+        pageSize: queryInfo.value.pageSize
+      }
+    })
     if(data.code !== 200){
       ElMessage.error(data.msg)
+    } else {
+      modelData.value = data.data.list
+      // 将modalData中的数据按照priority进行从小到大排序
+      modelData.value.sort((a,b) => a.priority - b.priority)
+      total.value = data.data.total
+      // modelData.value = adminApi.getModelTotalData().data.list
+      // total.value = adminApi.getModelTotalData().data.total
     }
-    modelData.value = data.data.list
-    // 将modalData中的数据按照priority进行从小到大排序
-    modelData.value.sort((a,b) => a.priority - b.priority)
-    total.value = data.data.total
-    // modelData.value = adminApi.getModelTotalData().data.list
-    // total.value = adminApi.getModelTotalData().data.total
   } catch (e) {
     ElMessage.error('获取模拟场景列表失败，请检查网络环境')
   } finally {

@@ -20,13 +20,13 @@ const policeTableRef = ref()
 const getPoliceList = async () => {
   policeLoading.value = true
   try{
-    let resp = {}
-    if (queryInfo.value.query === '') {
-      resp = await axios.get(`/backstage-management-service/prison/police/query/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    } else {
-      resp = await axios.get(`/backstage-management-service/prison/police/query/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    }
-    const data = resp.data
+    const {data} = await axios.get('/backstage-management-service/prison/police/query',{
+      params: {
+        query: queryInfo.value.query,
+        pageNum: queryInfo.value.pageNum,
+        pageSize: queryInfo.value.pageSize
+      }
+    })
     if (data.code === 200) {
       policeList.value = data.data.list
       total.value = data.data.total
@@ -153,8 +153,7 @@ const addPolice = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       try {
-        const resp = await axios.post('/backstage-management-service/prison/police', addPoliceForm.value)
-        const data = resp.data
+        const {data} = await axios.post('/backstage-management-service/prison/police', addPoliceForm.value)
         if (data.code === 200) {
           ElMessage.success('新增警员成功')
           addPoliceDialogVisible.value = false

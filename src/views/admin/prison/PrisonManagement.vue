@@ -25,15 +25,13 @@ const total = ref(0)
 const getPrisonList = async () => {
   try{
     prisonLoading.value=true
-    let resp = {}
-    if(queryInfo.value.query === ''){
-      resp =
-        await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    } else {
-      resp =
-        await axios.get(`/backstage-management-service/admin/prison/${queryInfo.value.query}/${queryInfo.value.pageNum}/${queryInfo.value.pageSize}`)
-    }
-    const data = resp.data
+    const {data} = await axios.get('/backstage-management-service/admin/prison', {
+      params: {
+        query: queryInfo.value.query,
+        pageNum: queryInfo.value.pageNum,
+        pageSize: queryInfo.value.pageSize
+      }
+    })
     if(data.code !== 200){
       ElMessage.error(data.msg)
     } else {
