@@ -114,7 +114,7 @@ const uploadFile = async (params) => {
     const result = await putFile(addPoliceForm.value.name ?
         addPoliceForm.value.name : editPoliceForm.value.name,
         params.file)
-    console.log(result)
+
     isUploadEnabled.value = false
     addPoliceForm.value.imageUrl = result.url
     editPoliceForm.value.imageUrl = result.url

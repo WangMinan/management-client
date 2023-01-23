@@ -131,5 +131,76 @@ export default {
                 ]
             }
         }
+    },
+    getTrainingAssessmentData: () => {
+        return {
+            code: 200,
+            msg: "success",
+            data: {
+                total: 8,
+                list: [
+                    {
+                        id: 82,
+                        policeName: "引局连花志等东",
+                        mentalPercentList: [
+                            75,
+                            9,
+                            25,
+                            43,
+                            22,
+                            5
+                        ],
+                        result: "reprehenderit",
+                        createTime: "1983-11-24 00:57:02",
+                        updateTime: "2000-12-17 13:32:11"
+                    },
+                    {
+                        id: 84,
+                        policeName: "市民争作何书往",
+                        mentalPercentList: [
+                            2,
+                            3,
+                            68,
+                            56,
+                            75,
+                            5,
+                        ],
+                        result: "dolore ad",
+                        createTime: "1989-10-08 19:39:41",
+                        updateTime: "2005-12-16 12:56:51"
+                    },
+                    {
+                        id: 63,
+                        policeName: "据部于本选",
+                        mentalPercentList: [
+                            70,
+                            100,
+                            50,
+                            25,
+                            57,
+                            96
+                        ],
+                        result: "veniam dolor minim et",
+                        createTime: "1986-01-30 12:58:05",
+                        updateTime: "1992-11-25 03:05:45"
+                    },
+                    {
+                        id: 99,
+                        policeName: "厂流青取",
+                        mentalPercentList: [
+                            30,
+                            69,
+                            28,
+                            66,
+                            71,
+                            12
+                        ],
+                        result: "fugiat in nostrud aute",
+                        createTime: "1994-03-08 13:20:30",
+                        updateTime: "2014-02-06 21:53:30"
+                    }
+                ]
+            }
+        }
     }
 }

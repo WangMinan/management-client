@@ -60,13 +60,6 @@ const saveNavState = (path) => {
           <span>模拟总体评估</span>
         </el-menu-item>
       </el-sub-menu>
-      <el-menu-item
-          :index="'/prison/prisonBoard'"
-          @click="saveNavState('/prison/prisonBoard')"
-      >
-        <el-icon><DataLine /></el-icon>
-        <span>模拟情况看板</span>
-      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>

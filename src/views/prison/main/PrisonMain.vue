@@ -102,7 +102,7 @@ const drawPieChart = () => {
       name: item.modelName
     })
   }
-  const myChart = echarts.init(document.getElementById('line'));
+  const myChart = echarts.init(document.getElementById('pie'));
   myChart.setOption(option);
 }
 
@@ -184,7 +184,7 @@ onMounted(async () => {
         </template>
         <el-empty v-if="finishTrainingCount.length === 0" description="暂无数据"></el-empty>
         <div class="graphBox">
-          <div id="line" style="width: 400px; height: 350px;"></div>
+          <div id="pie" style="width: 400px; height: 350px;"></div>
         </div>
       </el-card>
     </el-col>

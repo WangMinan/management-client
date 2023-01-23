@@ -163,6 +163,7 @@ const showCheckDialog = (id) => {
       :data="trainingHistory"
       border stripe
     >
+      <el-empty v-if="trainingHistory.length === 0" description="暂无数据"></el-empty>
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="policeName" label="警员姓名"></el-table-column>
       <el-table-column prop="modelName" label="场景名称"></el-table-column>

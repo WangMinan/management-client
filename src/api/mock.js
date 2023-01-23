@@ -64,5 +64,7 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/prison/trainDy
     prisonApi.getAllModelNamesData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/dynamic/query' + '.*'),
     prisonApi.getTrainingHistoryListData())
+Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/totalAssess' + '.*'),
+    prisonApi.getTrainingAssessmentData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/'+'.*'),
     prisonApi.reviseNicknameData())

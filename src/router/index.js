@@ -113,14 +113,6 @@ const routes = [
                 meta: {
                     title: '监所管理系统-模拟总体评估'
                 }
-            },
-            {
-                path: '/prison/prisonBoard',
-                name: 'prisonBoard',
-                component: () => import('../views/prison/screen/PrisonBoard.vue'),
-                meta: {
-                    title: '监所管理系统-模拟情况大屏'
-                }
             }
         ]
     },
