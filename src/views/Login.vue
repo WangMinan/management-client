@@ -274,7 +274,7 @@ const refuseStrategy = () => {
 
 <style lang="less" scoped>
 .login-container{
-  background: url("../assets/img/bigsur.png") no-repeat fixed center;
+  background: url("../assets/img/linebackground.jpg") no-repeat fixed center;
   background-size:100% ,100%;
   height: 100%;
   .login-banner{
