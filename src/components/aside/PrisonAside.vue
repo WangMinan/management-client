@@ -43,7 +43,7 @@ const saveNavState = (path) => {
             @click="saveNavState('/prison/modelManagement')"
         >
           <el-icon><Monitor /></el-icon>
-          <span>场景模拟管理</span>
+          <span>模拟场景管理</span>
         </el-menu-item>
         <el-menu-item
             :index="'/prison/trainingHistory'"

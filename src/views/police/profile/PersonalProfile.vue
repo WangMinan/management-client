@@ -3,8 +3,7 @@ import {onMounted, ref} from 'vue'
 import axios from '../../../api/request'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
-import {headers, createFileNameUUID} from '../../../utils/OssUtil.js'
-import OSS from "ali-oss";
+import {putFile} from '../../../utils/OssUtil.js'
 
 
 const router = useRouter()
@@ -47,33 +46,7 @@ const uploadFile = async (params) => {
     fileList.value = []
   } else {
     try {
-      // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
-      // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
-      const token = await axios.get('http://stsauth.wangminan.me/sts')
-      const client = new OSS ({
-        endpoint: 'oss-cn-hongkong.aliyuncs.com', //填写Bucket所在地域
-        accessKeyId: token.data.AccessKeyId,
-        accessKeySecret: token.data.AccessKeySecret,
-        // STS临时授权
-        stsToken: token.data.SecurityToken,
-        bucket: 'wangminan-files', // 填写Bucket名称。
-        useFetch: true, // 支持上传大于100KB的文件
-        secure: true, // 返回的url为https
-        refreshSTSToken: async () => {
-          const refreshToken = await axios.get("http://stsauth.wangminan.me/sts");
-          return {
-            accessKeyId: refreshToken.AccessKeyId,
-            accessKeySecret: refreshToken.AccessKeySecret,
-            stsToken: refreshToken.SecurityToken,
-          };
-        },
-      })
-      // 使用临时访问凭证上传文件
-      const result = await client.put(
-          // 张三_uuid.jpg
-          'police/' + personalInformation.value.name + '_'+ createFileNameUUID()+'.'+params.file.name.split('.')[1],
-          params.file,
-          {headers});
+      const result = await putFile(personalInformation.value.name, params.file)
       isUploadEnabled.value = false
       personalInformation.value.imageUrl = result.url
     } catch (e) {

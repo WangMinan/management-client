@@ -54,6 +54,10 @@ const getTrainingHistoryList = async () => {
     } else {
       total.value = data.data.total
       trainingHistory.value = data.data.list
+      // trainingHistory按照endTime倒序
+      trainingHistory.value.sort((a, b) => {
+        return new Date(b.endTime).getTime() - new Date(a.endTime).getTime()
+      })
     }
   } catch (e) {
     ElMessage.error('获取训练历史列表失败，请检查网络环境')
@@ -80,6 +84,24 @@ const clearQuery = () => {
   queryInfo.value.police = ''
   queryInfo.value.modelName = ''
   getTrainingHistoryList()
+}
+
+// 查看某次场景模拟的具体信息
+const checkTrainingData = ref({
+  id: 1,
+  policeId: 1,
+  policeName: '',
+  modelId: 1,
+  modelName: '',
+  startTime: '',
+  endTime: '',
+  status: '',
+  result: ''
+})
+const checkTrainingDialogVisible = ref(false)
+const showCheckDialog = (id) => {
+  checkTrainingData.value = trainingHistory.value.find(item => item.id === id)
+  checkTrainingDialogVisible.value = true
 }
 </script>
 
@@ -144,8 +166,8 @@ const clearQuery = () => {
       <el-table-column prop="id" label="编号"></el-table-column>
       <el-table-column prop="policeName" label="警员姓名"></el-table-column>
       <el-table-column prop="modelName" label="场景名称"></el-table-column>
+      <el-table-column prop="endTime" label="完成时间"></el-table-column>
       <el-table-column prop="status" label="模拟状态"></el-table-column>
-      <el-table-column prop="result" label="模拟结果"></el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button type="success" size="small" @click="showCheckDialog(scope.row.id)">
@@ -165,6 +187,47 @@ const clearQuery = () => {
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
     />
+    <!--查看本次评估具体信息-->
+    <el-dialog
+      title="本次评估详情"
+      center
+      v-model="checkTrainingDialogVisible"
+    >
+      <el-form
+          :model="checkTrainingData"
+          ref="checkTrainingFormRef"
+          :disabled="true"
+      >
+        <el-form-item label="模拟序号">
+          <el-input v-model="checkTrainingData.id"></el-input>
+        </el-form-item>
+        <el-form-item label="场景编号">
+          <el-input v-model="checkTrainingData.modelId"></el-input>
+        </el-form-item>
+        <el-form-item label="场景名称">
+          <el-input v-model="checkTrainingData.modelName"></el-input>
+        </el-form-item>
+        <el-form-item label="模拟时间">
+          <el-date-picker
+              type="datetimerange"
+              range-separator="到"
+              :start-placeholder="checkTrainingData.startTime"
+              :end-placeholder="checkTrainingData.endTime"
+          />
+        </el-form-item>
+        <el-form-item label="模拟状态">
+          <el-input v-model="checkTrainingData.status"></el-input>
+        </el-form-item>
+        <el-form-item label="模拟结果">
+          <el-input type="textarea" rows="5" v-model="checkTrainingData.result"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="checkTrainingDialogVisible=false">关闭</el-button>
+      </span>
+      </template>
+    </el-dialog>
   </el-card>
 </template>
 

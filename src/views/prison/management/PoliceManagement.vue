@@ -2,8 +2,8 @@
 import {onMounted, ref} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import axios from '../../../api/request'
-import {createFileNameUUID, headers} from "../../../utils/OssUtil.js";
-import OSS from "ali-oss";
+import {putFile} from "../../../utils/OssUtil.js";
+import {encrypt} from '../../../utils/jsencrypt.js'
 
 // 请求参数的格式
 const queryInfo = ref({
@@ -111,33 +111,10 @@ const beforeUpload = (file) => {
 // 上传图片
 const uploadFile = async (params) => {
   try {
-    // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
-    // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
-    const token = await axios.get('http://stsauth.wangminan.me/sts')
-    const client = new OSS ({
-      endpoint: 'oss-cn-hongkong.aliyuncs.com', //填写Bucket所在地域
-      accessKeyId: token.data.AccessKeyId,
-      accessKeySecret: token.data.AccessKeySecret,
-      // STS临时授权
-      stsToken: token.data.SecurityToken,
-      bucket: 'wangminan-files', // 填写Bucket名称。
-      useFetch: true, // 支持上传大于100KB的文件
-      secure: true, // 返回的url为https
-      refreshSTSToken: async () => {
-        const refreshToken = await axios.get("http://stsauth.wangminan.me/sts");
-        return {
-          accessKeyId: refreshToken.AccessKeyId,
-          accessKeySecret: refreshToken.AccessKeySecret,
-          stsToken: refreshToken.SecurityToken,
-        };
-      },
-    })
-    const name = addPoliceForm.value.name !== '' ? addPoliceForm.value.name : editPoliceForm.value.name
-    const result = await client.put(
-        // police/张三_uuid.jpg
-        'police/' + name + '_'+ createFileNameUUID()+'.'+params.file.name.split('.')[1],
-        params.file,
-        {headers})
+    const result = await putFile(addPoliceForm.value.name ?
+        addPoliceForm.value.name : editPoliceForm.value.name,
+        params.file)
+    console.log(result)
     isUploadEnabled.value = false
     addPoliceForm.value.imageUrl = result.url
     editPoliceForm.value.imageUrl = result.url
@@ -153,7 +130,12 @@ const addPolice = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       try {
-        const {data} = await axios.post('/backstage-management-service/prison/police', addPoliceForm.value)
+        const addForm = {
+          name: addPoliceForm.value.name,
+          imageUrl: addPoliceForm.value.imageUrl,
+          password: encrypt(addPoliceForm.value.password)
+        }
+        const {data} = await axios.post('/backstage-management-service/prison/police', addForm)
         if (data.code === 200) {
           ElMessage.success('新增警员成功')
           addPoliceDialogVisible.value = false
