@@ -1,9 +1,10 @@
 <script setup>
 import { useStore } from 'vuex'
+import {ref} from 'vue'
 const store = useStore()
 
 // 记住导航状态（仅本次登录期间）
-let activePath = store.state.navState
+let activePath = ref(store.state.navState)
 const saveNavState = (path) => {
   // 将path存入store
   store.commit('saveNavState', path)

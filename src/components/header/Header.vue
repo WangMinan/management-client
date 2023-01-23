@@ -169,6 +169,19 @@ const reviseNicknameSubmit = (form) => {
     }
   })
 }
+
+// 为暗黑模式启用支持
+import { useDark, useToggle } from '@vueuse/core'
+
+const dark = ref(
+      window.localStorage.getItem('vueuse-color-scheme') === 'dark'
+)
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+const changeTheme = () => {
+  dark.value = !dark.value
+  toggleDark()
+}
 </script>
 
 <template>
@@ -184,24 +197,37 @@ const reviseNicknameSubmit = (form) => {
         监所警察执法保障试验平台——警员端,欢迎您:{{nickname}}
       </h1>
     </div>
+    <div class="flex-grow"></div>
     <div class="r-content">
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          <img v-if="Cookies.get('role') === 'police'" :src="imageUrl" class="user-icon" alt="LOGO">
-          <img v-else class="user-icon" :src="getImgSrc('user')" alt="logo">
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item v-if="Cookies.get('role') === 'prison'" @click="reviseNicknameDialogVisible=true">
-              <span>修改昵称</span>
-            </el-dropdown-item>
-            <el-dropdown-item @click="dialogVisible=true">
-              <span>修改密码</span>
-            </el-dropdown-item>
-            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <el-row :gutter="15">
+        <el-col :span="18">
+          <el-button type="info" @click="changeTheme">
+            <el-icon v-if="!dark"><Sunny/></el-icon>
+            <el-icon v-else><Moon /></el-icon>
+            <span v-if="!dark">明亮模式</span>
+            <span v-else>暗黑模式</span>
+          </el-button>
+        </el-col>
+        <el-col :span="6">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <img v-if="Cookies.get('role') === 'police'" :src="imageUrl" class="user-icon" alt="LOGO">
+              <img v-else class="user-icon" :src="getImgSrc('user')" alt="logo">
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-if="Cookies.get('role') === 'prison'" @click="reviseNicknameDialogVisible=true">
+                  <span>修改昵称</span>
+                </el-dropdown-item>
+                <el-dropdown-item @click="dialogVisible=true">
+                  <span>修改密码</span>
+                </el-dropdown-item>
+                <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-col>
+      </el-row>
     </div>
   </div>
   <!--修改密码弹框-->
@@ -313,7 +339,6 @@ const reviseNicknameSubmit = (form) => {
 <style lang="less" scoped>
 .header{
   display: flex;
-  justify-content: space-between;
   width: 100%;
   height: 100%;
   background: #79BBFF;
@@ -322,9 +347,11 @@ const reviseNicknameSubmit = (form) => {
     color: white;
     margin-left: 1%;
   }
+  .flex-grow {
+    flex-grow: 1;
+  }
   .r-content{
-    display: flex;
-    margin-right: 1%;
+    padding: 0 10px;
     .user-icon{
       width: 30px;
       height: 30px;

@@ -1,8 +1,9 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import axios from '../../../api/request'
 import { ElMessage, ElLoading } from 'element-plus'
 import * as echarts from "echarts";
+import {useStorage} from '@vueuse/core'
 
 const trainingSummaryData = ref({})
 
@@ -49,9 +50,12 @@ const getWeeklyTrainingData = async () => {
   }
 }
 
+let myChart = ref()
+const checkIsDark = useStorage('vueuse-color-scheme','auto')
 // 绘制首页折线图
 const drawLineChart = () => {
   let option = {
+    backgroundColor: '',
     xAxis: {
       type: 'category',
       data: ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
@@ -69,9 +73,19 @@ const drawLineChart = () => {
       }
     ]
   }
-  const myChart = echarts.init(document.getElementById('line'));
+  myChart = echarts.init(document.getElementById('line')
+    , checkIsDark.value === 'dark' ? 'dark' : 'light'
+  );
   myChart.setOption(option);
 }
+
+// 使用自定义监听器来重新绘制图表
+watch(checkIsDark, () => {
+  if (myChart) {
+    myChart.dispose(); //销毁
+  }
+  drawLineChart()
+})
 
 onMounted(async () => {
   // 调用全局遮罩

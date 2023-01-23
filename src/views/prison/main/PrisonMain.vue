@@ -1,9 +1,10 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import axios from '../../../api/request'
 import {ElLoading, ElMessage} from 'element-plus'
 import {useStore} from 'vuex'
 import * as echarts from 'echarts'
+import {useStorage} from '@vueuse/core'
 
 const store = useStore()
 
@@ -56,9 +57,10 @@ const getFinishTrainingCount = async () => {
     ElMessage.error("请求模型使用数据失败")
   }
 }
-
+let myChart = ref(null)
 const drawPieChart = () => {
   let option = {
+    backgroundColor:'',
     tooltip: {
       trigger: 'item'
     },
@@ -102,9 +104,20 @@ const drawPieChart = () => {
       name: item.modelName
     })
   }
-  const myChart = echarts.init(document.getElementById('pie'));
+  myChart = echarts.init(document.getElementById('pie'),
+    window.localStorage.getItem('vueuse-color-scheme') === 'dark' ? 'dark' : 'light'
+  );
   myChart.setOption(option);
 }
+
+// 使用自定义监听器来重新绘制图表
+const checkIsDark = useStorage('vueuse-color-scheme','auto')
+watch(checkIsDark, () => {
+  if (myChart !== null && myChart !== '' && myChart !== undefined) {
+    myChart.dispose(); //销毁
+  }
+  drawPieChart()
+})
 
 onMounted(async () => {
   const loading = ElLoading.service({
