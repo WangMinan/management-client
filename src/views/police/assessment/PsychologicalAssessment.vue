@@ -15,7 +15,6 @@ const getAssessmentData = async() => {
       ElMessage.error(data.msg)
     } else {
       assessmentData.value = data.data
-      console.log()
     }
   } catch (e) {
     ElMessage.error('获取评估数据失败')

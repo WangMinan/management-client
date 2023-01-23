@@ -105,7 +105,6 @@ const beforeUpload = (file) => {
     // 重置fileList
     fileList.value = []
   }
-  console.log((isJPG || isPNG) && isLt3M && hasName)
   return (isJPG || isPNG) && isLt3M && hasName
 }
 // 上传图片
