@@ -1,6 +1,6 @@
 <script setup>
 import {reactive, ref, onMounted} from 'vue'
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElNotification} from 'element-plus'
 import axios from '../api/request'
 import Cookies from 'js-cookie'
 import {encrypt, decrypt} from "../utils/jsencrypt.js";
@@ -50,6 +50,10 @@ const submit = async (form) => {
 const loginLoading = ref(false)
 
 const login = async () => {
+  if(!confirmCookieStrategy.value){
+    ElMessage.error('请先同意我们的cookie策略')
+    return
+  }
   try {
     loginLoading.value = true
     submitForm.accountNumber = loginForm.username
@@ -103,6 +107,7 @@ const resetForm = (form) => {
 }
 
 onMounted(() => {
+  checkConfirmStrategy()
   if (Cookies.get('rememberMe') && Cookies.get('rememberMe') === 'true') {
     loginForm.username = Cookies.get('username')
     loginForm.password = decrypt(Cookies.get('password'))
@@ -112,6 +117,39 @@ onMounted(() => {
     }
   }
 })
+
+const confirmCookieStrategy = ref(false)
+const confirmStrategyDialogVisible = ref(false)
+const checkConfirmStrategy = () => {
+  if(window.localStorage.getItem('confirmCookieStrategy') !== undefined){
+    if(window.localStorage.getItem('confirmCookieStrategy') === 'true') {
+      confirmCookieStrategy.value = true
+      return
+    }
+  }
+  ElNotification({
+    title: '请先确认我们的Cookie策略',
+    message: '点击此通知的任意位置来查看我们的Cookie策略',
+    duration: 0,
+    type: 'warning',
+    onClick: () => {
+      confirmStrategyDialogVisible.value = true
+    }
+  })
+}
+const confirmStrategy = () => {
+  window.localStorage.setItem('confirmCookieStrategy', 'true')
+  confirmStrategyDialogVisible.value = false
+  confirmCookieStrategy.value = true
+  ElNotification.closeAll()
+  ElMessage.success('您已同意我们的Cookie策略,请继续登录')
+}
+const refuseStrategy = () => {
+  window.localStorage.setItem('confirmCookieStrategy', 'false')
+  confirmStrategyDialogVisible.value = false
+  confirmCookieStrategy.value = false
+  ElMessage.error('您拒绝了我们的Cookie策略,将无法登录,请重新查看策略或退出本页面')
+}
 </script>
 
 <template>
@@ -176,15 +214,23 @@ onMounted(() => {
           </el-form-item>
           <div class="buttons">
             <el-form-item>
-              <!--          登录-->
-              <el-button
-                type="primary"
-                @click="submit(loginFormRef)"
-                :loading="loginLoading"
+              <el-tooltip
+                class="box-item"
+                effect="light"
+                content="请确认我们的Cookie政策"
+                placement="bottom"
+                :disabled="confirmCookieStrategy"
               >
-                登录
-              </el-button>
-              <!--        重置-->
+                <!--登录-->
+                <el-button
+                  type="primary"
+                  @click="submit(loginFormRef)"
+                  :loading="loginLoading"
+                >
+                  登录
+                </el-button>
+              </el-tooltip>
+              <!--重置-->
               <el-button type="info" @click="resetForm(loginFormRef)">重置</el-button>
             </el-form-item>
           </div>
@@ -192,6 +238,38 @@ onMounted(() => {
       </el-form>
     </div>
   </div>
+  <el-dialog
+    title="我们的Cookie策略"
+    v-model="confirmStrategyDialogVisible"
+    center
+  >
+    <el-card>
+      <p>我们使用本地存储记录的信息如下</p>
+      <ul>
+        <li>您是否确认了本策略通知</li>
+      </ul>
+      <p>我们将使用Cookie记录的信息如下</p>
+      <ul>
+        <li>您的确认登录的状态</li>
+        <li>您的用户角色信息</li>
+        <li>您的具体信息,根据角色不同包括:昵称、所属监所、个人头像链接、是否正在训练中等</li>
+        <li>您的登录用唯一标识符</li>
+      </ul>
+      <p>如果您选择了 ' 记住我 ' , 则Cookie中将额外记录</p>
+      <ul>
+        <li>您的用户名</li>
+        <li>您的密码</li>
+      </ul>
+    </el-card>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="confirmStrategy">
+          同意
+        </el-button>
+        <el-button @click="refuseStrategy">拒绝</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="less" scoped>
