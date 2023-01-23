@@ -190,7 +190,7 @@ const showCheckDialog = (id) => {
     />
     <!--查看本次评估具体信息-->
     <el-dialog
-      title="本次评估详情"
+      title="本次模拟详情"
       center
       v-model="checkTrainingDialogVisible"
     >
@@ -229,6 +229,8 @@ const showCheckDialog = (id) => {
       </span>
       </template>
     </el-dialog>
+    <!--回到顶部-->
+    <el-backtop :right="100" :bottom="100" />
   </el-card>
 </template>
 

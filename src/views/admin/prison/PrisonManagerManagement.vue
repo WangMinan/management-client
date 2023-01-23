@@ -282,6 +282,8 @@ const deletePrisonManagers = async () => {
       </span>
     </template>
   </el-dialog>
+  <!--回到顶部-->
+  <el-backtop :right="100" :bottom="100" />
 </template>
 
 <style lang="less" scoped>
