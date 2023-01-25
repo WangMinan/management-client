@@ -60,6 +60,7 @@ const handleSelectionChange = (val) => {
 // 新增警员模块
 const addPoliceDialogVisible = ref(false)
 const addPoliceFormRef = ref()
+const addDialogLoading = ref(false)
 const addPoliceForm = ref({
   name: '',
   imageUrl: '',
@@ -79,7 +80,6 @@ const addPoliceFormRules = ref({
   ]
 })
 const fileList = ref([])
-let isUploadEnabled = ref(false)
 const resetAddForm = (form) => {
   if(!form) return
   form.resetFields()
@@ -89,7 +89,6 @@ const beforeUpload = (file) => {
   const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpg'
   const isPNG = file.type === 'image/png'
   const isLt3M = file.size / 1024 / 1024 < 3
-  const hasName = addPoliceForm.value.name !== '' || editPoliceForm.value.name !== ''
   if (!isJPG && !isPNG) {
     ElMessage.error('上传图片只能是 JPG/PNG 格式!')
     // 重置fileList
@@ -100,27 +99,23 @@ const beforeUpload = (file) => {
     // 重置fileList
     fileList.value = []
   }
-  if (!hasName) {
-    ElMessage.error('请先输入警员姓名!')
-    // 重置fileList
-    fileList.value = []
-  }
-  return (isJPG || isPNG) && isLt3M && hasName
+  return (isJPG || isPNG) && isLt3M
 }
 // 上传图片
+// 限制上传数量
+const handleChangePic = (file,fileList) => {
+  if (fileList.length > 1) {
+    fileList.splice(0, 1);
+  }
+}
+let tmpFile
 const uploadFile = async (params) => {
   try {
-    const result = await putFile(addPoliceForm.value.name ?
-        addPoliceForm.value.name : editPoliceForm.value.name,
-        params.file)
-
-    isUploadEnabled.value = false
-    addPoliceForm.value.imageUrl = result.url
-    editPoliceForm.value.imageUrl = result.url
-    fileList.value = []
-    ElMessage.success('上传成功')
+    tmpFile = params.file
+    addPoliceForm.value.imageUrl = URL.createObjectURL(tmpFile)
+    editPoliceForm.value.imageUrl = URL.createObjectURL(tmpFile)
   } catch (e) {
-    ElMessage.error('数据上传失败')
+    ElMessage.error('图像更新失败')
   }
 }
 // 新增警员
@@ -129,21 +124,31 @@ const addPolice = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       try {
+        addDialogLoading.value = true
         const addForm = {
           name: addPoliceForm.value.name,
-          imageUrl: addPoliceForm.value.imageUrl,
+          imageUrl: '',
           password: encrypt(addPoliceForm.value.password)
+        }
+        if (tmpFile) {
+          const result = await putFile(addPoliceForm.value.name, tmpFile)
+          addForm.imageUrl = result.url
+        } else {
+          addForm.imageUrl = addPoliceForm.value.imageUrl
         }
         const {data} = await axios.post('/backstage-management-service/prison/police', addForm)
         if (data.code === 200) {
           ElMessage.success('新增警员成功')
           addPoliceDialogVisible.value = false
+          fileList.value = []
           await getPoliceList()
         } else {
           ElMessage.error(data.message)
         }
       } catch (e) {
         ElMessage.error('新增警员失败')
+      } finally {
+        addDialogLoading.value = false
       }
     } else {
       ElMessage.error('请检查输入的信息')
@@ -163,12 +168,12 @@ const deletePolices = async () => {
     type: 'warning'
   }).then(async () => {
     const {data} =
-        await axios.delete('/backstage-management-service/prison/police',
-            {
-              data: {
-                idList: policeSelection.value.idList
-              }
-            })
+      await axios.delete('/backstage-management-service/prison/police',
+        {
+          data: {
+            idList: policeSelection.value.idList
+          }
+        })
     if(data.code === 200) {
       ElMessage.success('删除成功')
       await getPoliceList()
@@ -191,6 +196,7 @@ const showCheckDialog = (id) => {
 // 修改警员信息
 const editPoliceDialogVisible = ref(false)
 const editPoliceForm = ref({})
+const editDialogLoading = ref(false)
 const editPoliceFormRef = ref()
 const editPoliceRules = ref({
   accountNumber:[
@@ -221,7 +227,6 @@ const getPrisonList = async () => {
   }
 }
 const showUpdateDialog = (id) => {
-  isUploadEnabled.value = true
   editPoliceDialogVisible.value = true
   editPoliceForm.value = policeList.value.find(item => item.id === id)
 }
@@ -230,27 +235,42 @@ const submitEdit = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       try {
+        editDialogLoading.value = true
         const uploadForm = {
           name: editPoliceForm.value.name,
           prisonName: editPoliceForm.value.prisonName,
-          imageUrl: editPoliceForm.value.imageUrl,
+          imageUrl: '',
+        }
+        if (tmpFile) {
+          const result = await putFile(editPoliceForm.value.name, tmpFile)
+          uploadForm.imageUrl = result.url
+        } else {
+          uploadForm.imageUrl = editPoliceForm.value.imageUrl
         }
         const {data} = await axios.put(`/backstage-management-service/prison/police/${editPoliceForm.value.id}`,
             uploadForm)
         if (data.code === 200) {
           ElMessage.success('修改警员成功')
           editPoliceDialogVisible.value = false
+          fileList.value = []
           await getPoliceList()
         } else {
           ElMessage.error(data.message)
         }
       } catch (e) {
         ElMessage.error('修改警员失败')
+      } finally {
+        editDialogLoading.value = false
       }
     } else {
       ElMessage.error('请检查输入的信息')
     }
   })
+}
+
+const closeDialog = (form) => {
+  form.resetFields()
+  fileList.value = []
 }
 
 onMounted(async () => {
@@ -336,8 +356,7 @@ onMounted(async () => {
   <el-dialog
     title="添加警员"
     v-model="addPoliceDialogVisible"
-    @open="isUploadEnabled=true"
-    @closed="resetAddForm(addPoliceFormRef)"
+    @closed="closeDialog(addPoliceFormRef)"
     center
   >
     <el-form
@@ -360,16 +379,26 @@ onMounted(async () => {
         </el-input>
       </el-form-item>
       <el-form-item class="imageUpload" prop="imageUrl" label="警员照片">
-        <el-image v-if="addPoliceForm.imageUrl !== ''" :src="addPoliceForm.imageUrl"/>
+        <el-image :src="addPoliceForm.imageUrl">
+          <template #placeholder>
+            <span>加载中</span>
+          </template>
+          <template #error>
+            <div class="image-slot">
+              <el-icon><Picture /></el-icon>
+            </div>
+          </template>
+        </el-image>
+      </el-form-item>
+      <el-form-item label="图片上传">
         <el-upload
           :before-upload="beforeUpload"
-          v-if="addPoliceForm.imageUrl === ''"
           action="#"
           :http-request="uploadFile"
           accept="image/jpeg,image/jpg,image/png"
-          :limit="1"
+          multiple
           :file-list="fileList"
-          :disabled="!isUploadEnabled"
+          :on-change="handleChangePic"
         >
           <el-button type="primary">点击上传</el-button>
           <template #tip>
@@ -380,7 +409,7 @@ onMounted(async () => {
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="addPolice(addPoliceFormRef)">
+        <el-button type="primary" @click="addPolice(addPoliceFormRef)" :loading="addDialogLoading">
           确认
         </el-button>
         <el-button @click="addPoliceDialogVisible=false">取消</el-button>
@@ -433,7 +462,7 @@ onMounted(async () => {
     title="警员信息修改"
     v-model="editPoliceDialogVisible"
     center
-    @closed="editPoliceFormRef.resetFields()"
+    @closed="closeDialog(editPoliceFormRef)"
   >
     <el-form
       :model="editPoliceForm"
@@ -477,10 +506,9 @@ onMounted(async () => {
           accept="image/jpeg,image/jpg,image/png"
           :limit="1"
           :file-list="fileList"
-          :disabled="!isUploadEnabled"
           :before-upload="beforeUpload"
         >
-          <el-button type="primary" :disabled="!isUploadEnabled">点击上传</el-button>
+          <el-button type="primary">点击上传</el-button>
           <template #tip>
             <div class="el-upload__tip">只能上传jpg/jpeg/png文件</div>
           </template>
@@ -489,7 +517,7 @@ onMounted(async () => {
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="submitEdit(editPoliceFormRef)">
+        <el-button type="primary" @click="submitEdit(editPoliceFormRef)" :loading="editDialogLoading">
           确认
         </el-button>
         <el-button type="info" @click="editPoliceDialogVisible = false">

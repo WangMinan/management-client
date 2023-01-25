@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import axios from '../../../api/request'
-import {ElMessage} from 'element-plus'
+import {ElMessage, genFileId} from 'element-plus'
 import {useRouter} from 'vue-router'
 import {putFile} from '../../../utils/OssUtil.js'
 
@@ -31,33 +31,47 @@ const getPersonalInformation = async () => {
 }
 
 let isEditing = ref(false)
-let isUploadEnabled = ref(false)
 
 const personalInformationFormRef = ref()
 
 const abandonRevise = () => {
   router.go(0)
 }
-
-const uploadFile = async (params) => {
-  if (!['image/jpeg', 'image/png', 'image/jpg'].includes(params.file.type)) {
+// 上传前校验
+const beforeUpload = (file) => {
+  const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpg'
+  const isPNG = file.type === 'image/png'
+  const isLt3M = file.size / 1024 / 1024 < 3
+  if (!isJPG && !isPNG) {
     ElMessage.error('上传图片只能是 JPG/PNG 格式!')
     // 重置fileList
     fileList.value = []
-  } else {
-    try {
-      const result = await putFile(personalInformation.value.name, params.file)
-      isUploadEnabled.value = false
-      personalInformation.value.imageUrl = result.url
-    } catch (e) {
-      ElMessage.error('数据上传失败')
-    }
+  }
+  if (!isLt3M) {
+    ElMessage.error('上传图片大小不能超过 3MB!')
+    // 重置fileList
+    fileList.value = []
+  }
+  return (isJPG || isPNG) && isLt3M
+}
+// 限制上传数量
+const handleChangePic = (file,fileList) => {
+  if (fileList.length > 1) {
+    fileList.splice(0, 1);
+  }
+}
+let tmpFile
+const uploadFile = async (params) => {
+  try {
+    tmpFile = params.file
+    personalInformation.value.imageUrl = URL.createObjectURL(params.file)
+  } catch (e) {
+    ElMessage.error('图像更新失败')
   }
 }
 
 const beginRevise = () => {
   isEditing.value = true
-  isUploadEnabled.value = true
 }
 
 const personalInformationRules = {
@@ -73,6 +87,8 @@ const reviseProfile = async (form) => {
     if(valid){
       cardLoading.value = true
       try{
+        const result = await putFile(personalInformation.value.name, tmpFile)
+        personalInformation.value.imageUrl = result.url
         const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
             personalInformation.value)
         if (data.code !== 200){
@@ -173,14 +189,16 @@ onMounted(() => {
         </el-form-item>
         <el-form-item label="图片修改">
           <el-upload
-              action="#"
-              :http-request="uploadFile"
-              accept="image/jpeg,image/jpg,image/png"
-              :limit="1"
-              :file-list="fileList"
-              :disabled="!isUploadEnabled"
+            :before-upload="beforeUpload"
+            action="#"
+            :http-request="uploadFile"
+            accept="image/jpeg,image/jpg,image/png"
+            multiple
+            :file-list="fileList"
+            :on-change="handleChangePic"
+            :disabled="!isEditing"
           >
-            <el-button type="primary" :disabled="!isUploadEnabled">点击上传</el-button>
+            <el-button type="primary" :disabled="!isEditing">点击上传</el-button>
             <template #tip>
               <div class="el-upload__tip">只能上传jpg/jpeg/png文件</div>
             </template>

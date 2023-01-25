@@ -8,10 +8,10 @@ import prisonApi from './mockdata/prison/prison.js'
 // 登录
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
 //     loginApi.getAdminLoginData())
-// Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-//     loginApi.getPoliceLoginData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-    loginApi.getPrisonLoginData())
+    loginApi.getPoliceLoginData())
+// Mock.mock('http://localhost:8080/api/backstage-management-service/login',
+//     loginApi.getPrisonLoginData())
 
 // 退出
 Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
