@@ -262,6 +262,9 @@ watch(checkIsDark, () => {
             <el-form-item label="更新时间">
               <el-input v-model="checkAssessmentData.updateTime"></el-input>
             </el-form-item>
+            <el-form-item label="评估描述">
+              <el-input type="textarea" v-model="checkAssessmentData.description"></el-input>
+            </el-form-item>
           </el-form>
         </el-card>
       </el-col>

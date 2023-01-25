@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import axios from '../../../api/request'
-import {ElMessage, genFileId} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import {putFile} from '../../../utils/OssUtil.js'
 
