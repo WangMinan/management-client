@@ -115,5 +115,14 @@ export default {
                 '南京监狱'
             ]
         }
+    },
+    getIsTrainingData: () => {
+        return {
+            code: 200,
+            msg: 'success',
+            data: {
+                isTraining: true
+            }
+        }
     }
 }

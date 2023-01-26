@@ -3,7 +3,7 @@ import {reactive, ref, onMounted} from 'vue'
 import {ElMessage, ElNotification} from 'element-plus'
 import axios from '../api/request'
 import Cookies from 'js-cookie'
-import {encrypt, decrypt} from "../utils/jsencrypt.js";
+import {encrypt} from "../utils/jsencrypt.js";
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -106,14 +106,22 @@ const resetForm = (form) => {
   form.resetFields()
 }
 
-onMounted(() => {
+onMounted(async () => {
   checkConfirmStrategy()
-  if (Cookies.get('rememberMe') && Cookies.get('rememberMe') === 'true') {
-    loginForm.username = Cookies.get('username')
-    loginForm.password = decrypt(Cookies.get('password'))
-    loginForm.rememberMe = true
-    if(Cookies.get('manualExit') === 'false') {
-      login()
+  if (Cookies.get('rememberMe') !== undefined &&
+      Cookies.get('manualExit') !== undefined &&
+      Cookies.get('role') !== undefined
+  ) {
+    if (Cookies.get('manualExit') === 'false' &&
+        Cookies.get('rememberMe') === 'true'
+    ) {
+      if (Cookies.get('role') === 'admin') {
+        await router.push('/admin/home')
+      } else if (Cookies.get('role') === 'prison') {
+        await router.push('/prison/home')
+      } else {
+        await router.push('/police/home')
+      }
     }
   }
 })

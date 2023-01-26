@@ -3,6 +3,11 @@ import {ref, onMounted, stop} from 'vue'
 import axios from '../../../api/request.js'
 import {ElLoading, ElMessage} from 'element-plus'
 import Cookies from 'js-cookie'
+import { useStore } from 'vuex'
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+const store = useStore()
 
 // 保存表格中的监狱数据
 const modelData = ref([])
@@ -127,6 +132,13 @@ const startTraining = async (id) => {
   }, 3600 * 1000)
 }
 onMounted(() => {
+  // 手动执行页面刷新来挽救初始加载时服务调用全局遮罩不显示的问题
+  if(window.localStorage.getItem('policeTrainingRefresh') === null){
+    window.localStorage.setItem('policeTrainingRefresh', 'true')
+    router.go(0)
+  } else {
+    window.localStorage.removeItem('policeTrainingRefresh')
+  }
   getModelList()
   // 判断时间先后
   if (window.localStorage.getItem('trainingStatus')){

@@ -14,14 +14,14 @@ const getImgSrc =(imgName) => {
 }
 
 onMounted(() => {
-  Cookies.set('manualExit','false')
+  Cookies.set('manualExit','false',{expires: 30})
 })
 
 const router = useRouter()
 const logout = async ()=> {
   // 从store中删除路由数据
   store.commit('saveNavState','')
-  Cookies.set('manualExit','true')
+  Cookies.set('manualExit','true',{expires: 30})
   // 使用服务方式调用loading全局遮罩 禁用操作
   const loading = ElLoading.service({
     lock: true,

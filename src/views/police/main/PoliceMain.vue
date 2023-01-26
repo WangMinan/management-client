@@ -4,7 +4,9 @@ import axios from '../../../api/request'
 import { ElMessage, ElLoading } from 'element-plus'
 import * as echarts from "echarts";
 import {useStorage} from '@vueuse/core'
+import {useRouter} from 'vue-router'
 
+const router = useRouter()
 const trainingSummaryData = ref({})
 
 const getTrainingSummaryData = async () => {
@@ -100,6 +102,11 @@ onMounted(async () => {
     await getTrainingDynamicData()
     await getWeeklyTrainingData()
     drawLineChart()
+    // 确认是否正在训练
+    const {data} = await axios.get('/backstage-management-service/police/home/isTraining')
+    if(data.code === 200 && data.data.isTraining === true){
+      await router.push('/police/training')
+    }
   } catch (e) {
     ElMessage.error("请求数据失败")
   } finally {
