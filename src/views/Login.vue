@@ -75,7 +75,7 @@ const login = async () => {
       Cookies.remove('rememberMe')
     }
     // 用户信息写入sessionStorage
-    Cookies.set('person', JSON.stringify(data.data.person))
+    Cookies.set('person', JSON.stringify(data.data.person), {expires: EXPIRE_DAY})
     Cookies.set('role',data.data.role,{expires: EXPIRE_DAY})
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
@@ -110,7 +110,8 @@ onMounted(async () => {
   checkConfirmStrategy()
   if (Cookies.get('rememberMe') !== undefined &&
       Cookies.get('manualExit') !== undefined &&
-      Cookies.get('role') !== undefined
+      Cookies.get('role') !== undefined &&
+      Cookies.get('person') !== undefined
   ) {
     if (Cookies.get('manualExit') === 'false' &&
         Cookies.get('rememberMe') === 'true'

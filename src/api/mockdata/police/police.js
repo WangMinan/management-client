@@ -121,7 +121,7 @@ export default {
             code: 200,
             msg: 'success',
             data: {
-                isTraining: true
+                isTraining: false
             }
         }
     }

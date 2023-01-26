@@ -81,6 +81,7 @@ _axios.interceptors.response.use(
                     ElMessage.error('您的访问未被授权,可能是您的身份验证已过期,3秒后将跳转至登录页面')
                     // 等待三秒
                     setTimeout(() => {
+                        Cookies.remove('manualExit')
                         router.push('/login').then(r => {
                             return r
                         })
@@ -91,6 +92,7 @@ _axios.interceptors.response.use(
                     ElMessage.error('您的访问未被授权,可能是您的身份已被注销,请您在登录页面重试,3秒后将执行跳转')
                     // 等待三秒
                     setTimeout(() => {
+                        Cookies.remove('manualExit')
                         router.push('/login').then(r => {
                             return r
                         })

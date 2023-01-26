@@ -133,7 +133,8 @@ const startTraining = async (id) => {
 }
 onMounted(() => {
   // 手动执行页面刷新来挽救初始加载时服务调用全局遮罩不显示的问题
-  if(window.localStorage.getItem('policeTrainingRefresh') === null){
+  if(window.localStorage.getItem('policeTrainingRefresh') === null &&
+      window.localStorage.getItem('trainingStatus')){
     window.localStorage.setItem('policeTrainingRefresh', 'true')
     router.go(0)
   } else {
@@ -154,6 +155,7 @@ onMounted(() => {
       // 等待到结束时间后关闭遮罩
       setTimeout(() => {
         loading.close()
+        window.localStorage.removeItem('trainingStatus')
       }, trainingStopTime - new Date().getTime())
     }
   }
