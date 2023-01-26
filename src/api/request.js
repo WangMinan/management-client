@@ -2,6 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import {ElMessage} from 'element-plus'
 import router from '../router/index'
+import {start, stop} from '../utils/nprogressUtil'
 
 const refreshToken = async () => {
     try {
@@ -38,6 +39,7 @@ const _axios = axios.create({
 // 请求拦截器
 _axios.interceptors.request.use(
     (req) => {
+        start()
         // 比如在这里添加统一的 headers
         if (Cookies.get('accessToken') !== null) {
             req.headers.Authorization = 'Bearer ' + Cookies.get('accessToken')
@@ -53,6 +55,7 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     (resp) => {
         // 如果resp中没有data或data中没有code则直接返回
+        stop()
         if (resp.data === undefined || resp.data.code === undefined) {
             return resp
         } else {
