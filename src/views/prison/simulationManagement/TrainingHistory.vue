@@ -17,7 +17,7 @@ const modelNames = ref([])
 const getModelNames = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/prison/trainDynamic')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     }
     modelNames.value = data.data
@@ -49,7 +49,7 @@ const getTrainingHistoryList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if (data.code !== 200) {
+    if (data.code !== 2000) {
       ElMessage.error(data.msg)
     } else {
       total.value = data.data.total

@@ -42,7 +42,7 @@ const getModelList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       modelData.value = data.data.list
@@ -102,7 +102,7 @@ const startTraining = async (id) => {
   modelLoading.value = true
   try {
     const {data} = await axios.post(`/psychology-service/training/${id}`)
-    if (data.code !== 200) {
+    if (data.code !== 2000) {
       ElMessage.error(data.msg)
     } else {
       const currentTime = new Date().getTime()

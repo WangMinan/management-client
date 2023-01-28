@@ -32,7 +32,7 @@ const getPrisonList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       prisonData.value = data.data.list
@@ -88,7 +88,7 @@ const addPrison = async (form) => {
     if (valid) {
       const {data} =
           await axios.post('/backstage-management-service/admin/prison',addPrisonForm.value)
-      if(data.code === 200) {
+      if(data.code === 2000) {
         ElMessage.success('新增监狱成功')
         addPrisonDialogVisible.value = false
         await getPrisonList()
@@ -121,7 +121,7 @@ const deletePrisons = async () => {
   }).then(async () => {
     const {data} =
         await axios.delete('/backstage-management-service/admin/prison', {data: prisonSelection.value})
-    if(data.code === 200) {
+    if(data.code === 2000) {
       ElMessage.success('删除成功')
       await getPrisonList()
     } else {

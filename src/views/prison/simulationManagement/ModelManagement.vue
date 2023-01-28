@@ -33,7 +33,7 @@ const getModelList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       modelData.value = data.data.list
@@ -87,7 +87,7 @@ const updateModelBySwitch = async (row) => {
     }
     const {data} =
         await axios.put(`/backstage-management-service/prison/model/{id}${row.id}`, rowData)
-    if (data.code === 200) {
+    if (data.code === 2000) {
       ElMessage.success('更新场景状态成功')
       await getModelList()
     } else {

@@ -29,7 +29,13 @@ const logout = async ()=> {
     background: 'rgba(0, 0, 0, 0.7)',
   })
   try{
-    await axios.post('/backstage-management-service/logout')
+    const {data} = await axios.post('/backstage-management-service/logout')
+    if(data.code === 2000){
+      Cookies.remove('accessToken')
+      Cookies.remove('refreshToken')
+    } else {
+      ElMessage.error(data.message)
+    }
   } catch (e) {
     ElMessage.error('后端服务器异常,将强制退出')
   } finally {
@@ -112,7 +118,7 @@ const submit = async (form) => {
         'newPassword': encrypt(revisePasswordForm.value.newPassword)
       }
       const {data} = await axios.put('/backstage-management-service/account/password',uploadTable)
-      if(data.code === 200){
+      if(data.code === 2000){
         ElMessage.success('修改成功')
         dialogVisible.value = false
         resetForm(form)
@@ -156,7 +162,7 @@ const reviseNicknameSubmit = (form) => {
       const prisonAdminId = (JSON.parse(Cookies.get('person'))).id
       const {data} = await axios.put(`/backstage-management-service/prison/${prisonAdminId}`,
           reviseNicknameData.value)
-      if(data.code === 200){
+      if(data.code === 2000){
         ElMessage.success('修改成功')
         reviseNicknameDialogVisible.value = false
         nickname.value = reviseNicknameData.value.nickname
@@ -187,13 +193,13 @@ const changeTheme = () => {
 <template>
   <div class="header">
     <div class="l-content">
-      <h1 v-if="Cookies.get('role') === 'admin'">
+      <h1 v-if="Cookies.get('role') === 'Admin'">
         监所警察执法保障试验平台——运维端,欢迎您:{{nickname}}
       </h1>
-      <h1 v-else-if="Cookies.get('role') === 'prison'">
+      <h1 v-else-if="Cookies.get('role') === 'Prison'">
         监所警察执法保障试验平台——监所端,欢迎您:{{nickname}}
       </h1>
-      <h1 v-else-if="Cookies.get('role') === 'police'">
+      <h1 v-else-if="Cookies.get('role') === 'Police'">
         监所警察执法保障试验平台——警员端,欢迎您:{{nickname}}
       </h1>
     </div>

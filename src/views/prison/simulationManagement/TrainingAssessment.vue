@@ -27,7 +27,7 @@ const getAssessmentList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       total.value = data.data.total
@@ -77,7 +77,7 @@ const deleteAssessment = async () => {
                 idList: assessmentSelection.value.idList
               }
             })
-    if(data.code === 200) {
+    if(data.code === 2000) {
       ElMessage.success('删除成功')
       await getAssessmentList()
     } else {

@@ -30,7 +30,7 @@ const rules = reactive({
   ],
   password: [
     {required: true, message: '请输入密码', trigger: 'blur'},
-    {min: 8, max: 20, message: '密码长度为8-20', trigger: 'blur'}
+    {min: 4, max: 20, message: '密码长度为4-20', trigger: 'blur'}
   ]
 })
 
@@ -60,18 +60,14 @@ const login = async () => {
     submitForm.password = encrypt(loginForm.password)
     const { data } =
         await axios.post('/backstage-management-service/login', submitForm)
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
       return
     }
     // 信息写入cookie
     if (loginForm.rememberMe) {
-      Cookies.set('username', loginForm.username, {expires: EXPIRE_DAY})
-      Cookies.set('password', encrypt(loginForm.password), {expires: EXPIRE_DAY})
       Cookies.set('rememberMe', loginForm.rememberMe, {expires: EXPIRE_DAY})
     } else {
-      Cookies.remove('username')
-      Cookies.remove('password')
       Cookies.remove('rememberMe')
     }
     // 用户信息写入sessionStorage
@@ -80,9 +76,9 @@ const login = async () => {
     Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
     Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
     ElMessage.success('登录成功')
-    if(data.data.role === 'admin'){
+    if(data.data.role === 'Admin'){
       await router.push('/admin/home')
-    } else if(data.data.role === 'prison'){
+    } else if(data.data.role === 'Prison'){
       await router.push('/prison/home')
     } else {
       if(data.data.person.training === false){
@@ -116,9 +112,9 @@ onMounted(async () => {
     if (Cookies.get('manualExit') === 'false' &&
         Cookies.get('rememberMe') === 'true'
     ) {
-      if (Cookies.get('role') === 'admin') {
+      if (Cookies.get('role') === 'Admin') {
         await router.push('/admin/home')
-      } else if (Cookies.get('role') === 'prison') {
+      } else if (Cookies.get('role') === 'Prison') {
         await router.push('/prison/home')
       } else {
         await router.push('/police/home')
@@ -265,11 +261,7 @@ const refuseStrategy = () => {
         <li>您的具体信息,根据角色不同包括:昵称、所属监所、个人头像链接、是否正在训练中等</li>
         <li>您的登录用唯一标识符</li>
       </ul>
-      <p>如果您选择了 ' 记住我 ' , 则Cookie中将额外记录</p>
-      <ul>
-        <li>您的用户名</li>
-        <li>您的密码</li>
-      </ul>
+      <p>如果您选择了 ' 记住我 ' , 则Cookie中不会记录额外信息</p>
     </el-card>
     <template #footer>
       <span class="dialog-footer">

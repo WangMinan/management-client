@@ -33,7 +33,7 @@ const getModelList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       modelData.value = data.data.list
@@ -105,7 +105,7 @@ const addModel = async (form) => {
     if (valid) {
       const {data} =
           await axios.post('/psychology-service/model',addModelForm.value)
-      if(data.code === 200) {
+      if(data.code === 2000) {
         ElMessage.success('新增场景成功')
         addModelDialogVisible.value = false
         await getModelList()
@@ -138,7 +138,7 @@ const deleteModels = async () => {
   }).then(async () => {
     const {data} =
         await axios.delete('/psychology-service/model', {data: modelSelection.value})
-    if(data.code === 200) {
+    if(data.code === 2000) {
       ElMessage.success('删除成功')
       await getModelList()
     } else {
@@ -172,7 +172,7 @@ const updateModelBySwitch = async (row) => {
     }
     const {data} =
         await axios.put(`/psychology-service/model/${row.id}`, rowData)
-    if (data.code === 200) {
+    if (data.code === 2000) {
       ElMessage.success('更新场景状态成功')
       await getModelList()
     } else {
@@ -254,7 +254,7 @@ const updateModel = async (form) => {
     if (valid) {
       const {data} =
           await axios.put(`/psychology-service/model/${updateModelData.value.id}`, tmpForm)
-      if(data.code === 200) {
+      if(data.code === 2000) {
         ElMessage.success('更新场景成功')
         updateModelDialogVisible.value = false
         await getModelList()
@@ -265,6 +265,11 @@ const updateModel = async (form) => {
       ElMessage.error('预校验未通过,请检查输入')
     }
   })
+}
+
+const handleUpdateModelDialogClose = (form) => {
+  updateModelDialogVisible.value = false
+  updateModelFormRef.value.resetFields()
 }
 </script>
 

@@ -197,21 +197,21 @@ router.beforeEach((to, from, next) => {
         },3000)
     } else {
         // 鉴权 如果Cookies中的role为admin则仅允许访问adminHome下的页面
-        if (Cookies.get('role') === 'admin') {
+        if (Cookies.get('role') === 'Admin') {
             if(to.path.startsWith('/admin')) {
                 next()
             } else {
                 ElMessage.error('您的访问未被授权,请联系管理员')
                 next(from.path)
             }
-        } else if (Cookies.get('role') === 'prison') {
+        } else if (Cookies.get('role') === 'Prison') {
             if(to.path.startsWith('/prison')) {
                 next()
             } else {
                 ElMessage.error('您的访问未被授权,请联系管理员')
                 next(from.path)
             }
-        } else if (Cookies.get('role') === 'police') {
+        } else if (Cookies.get('role') === 'Police') {
             if(to.path.startsWith('/police')) {
                 next()
             } else {

@@ -36,7 +36,7 @@ const getPrisonList = async () => {
         pageSize: 65535
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     }
     prisonData.value = data.data.list
@@ -57,7 +57,7 @@ const getPrisonManagerList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       prisonManagerData.value = data.data.list
@@ -123,7 +123,7 @@ const addPrisonManager = async (form) => {
     if (valid) {
       const {data} =
           await axios.post('/backstage-management-service/admin/padmin',addPrisonManagerForm.value)
-      if(data.code === 200) {
+      if(data.code === 2000) {
         ElMessage.success('新增监狱管理员成功')
         addPrisonManagerDialogVisible.value = false
         await getPrisonManagerList()
@@ -157,7 +157,7 @@ const deletePrisonManagers = async () => {
     const {data} =
         await axios.delete('/backstage-management-service/admin/padmin',
             {data: prisonManagerSelection.value})
-    if(data.code === 200) {
+    if(data.code === 2000) {
       ElMessage.success('删除成功')
       await getPrisonManagerList()
     } else {

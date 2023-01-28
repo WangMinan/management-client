@@ -26,7 +26,7 @@ const modelUseData = ref([])
 const getAccessData = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/admin/stats')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error("请求数据失败")
     } else {
       accessData.value = data.data
@@ -39,7 +39,7 @@ const getAccessData = async () => {
 const getModelUseData = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/admin/mainPage/dynamic')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error("请求数据失败")
     } else {
       modelUseData.value = data.data

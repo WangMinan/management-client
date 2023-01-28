@@ -20,7 +20,7 @@ const modelUseData = ref([])
 const getAccessData = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/prison/mainPage')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error("请求数据失败")
     } else {
       accessData.value = data.data
@@ -33,7 +33,7 @@ const getAccessData = async () => {
 const getModelUseData = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/prison/mainPage/dynamic')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error("请求数据失败")
     } else {
       modelUseData.value = data.data
@@ -48,7 +48,7 @@ const finishTrainingCount = ref([])
 const getFinishTrainingCount = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/prison/mainPage/stats')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error("请求数据失败")
     } else {
       finishTrainingCount.value = data.data

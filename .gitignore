@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 # package-lock.json
+#Electron-builder output
+/dist_electron

@@ -18,7 +18,7 @@ const getPersonalInformation = async () => {
   cardLoading.value = true
   try {
     const {data} = await axios.get('/backstage-management-service/police/profile')
-    if (data.code !== 200){
+    if (data.code !== 2000){
       ElMessage.error(data.message)
     } else {
       personalInformation.value = data.data
@@ -88,10 +88,12 @@ const reviseProfile = async (form) => {
       cardLoading.value = true
       try{
         const result = await putFile(personalInformation.value.name, tmpFile)
-        personalInformation.value.imageUrl = result.url
+        let url = result.url
+        // 截取url最后一个/之后的部分
+        personalInformation.value.imageUrl = url.substring(url.lastIndexOf('/') + 1)
         const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
             personalInformation.value)
-        if (data.code !== 200){
+        if (data.code !== 2000){
           ElMessage.error(data.message)
         } else {
           ElMessage.success('修改个人信息成功')

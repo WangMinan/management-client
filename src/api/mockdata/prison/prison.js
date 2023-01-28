@@ -1,14 +1,14 @@
 export default {
     reviseNicknameData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {}
         }
     },
     getAccessData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 workingModeNumber: 12,
@@ -20,7 +20,7 @@ export default {
     },
     getModelUseData: () => {
         return{
-            code: 200,
+            code: 2000,
             msg: "success",
             data: [
                 {
@@ -43,7 +43,7 @@ export default {
     },
     getFinishTrainingData: () => {
         return{
-            code: 200,
+            code: 2000,
             msg: "success",
             data: [
                 {
@@ -63,7 +63,7 @@ export default {
     },
     getPoliceListData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: "success",
             data: {
                 total: 1,
@@ -81,7 +81,7 @@ export default {
     },
     getAllModelNamesData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: "success",
             data: [
                 '模型1','模型2','模型3'
@@ -90,7 +90,7 @@ export default {
     },
     getTrainingHistoryListData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: "success",
             data: {
                 total: 3,
@@ -134,7 +134,7 @@ export default {
     },
     getTrainingAssessmentData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: "success",
             data: {
                 total: 8,

@@ -11,7 +11,7 @@ const getAssessmentData = async() => {
   assessmentLoading.value = true
   try {
     const {data}= await axios.get('/backstage-management-service/police/totalResult')
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       assessmentData.value = data.data

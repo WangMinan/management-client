@@ -7,10 +7,16 @@ import {start, stop} from '../utils/nprogressUtil'
 const refreshToken = async () => {
     try {
         // 在请求头中添加refreshToken
+        if(Cookies.get('refreshToken') === undefined) {
+            ElMessage.error("自动刷新令牌失败,请重新登录")
+            // 删除Cookies中的accessToken和refreshToken
+            await router.push('/login')
+            return false
+        }
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + Cookies.get('refreshToken')
         // 发送请求
-        const {data} = await axios.get('http://localhost:8080/api/backstage-management-service/refreshToken')
-        if(data.code === 200) {
+        const {data} = await axios.get('http://localhost:8080/api/backstage-management-service/token-refresh')
+        if(data.code === 2000) {
             // 更新Cookies中的accessToken
             Cookies.set('accessToken',data.data.accessToken, {expires: 30})
             Cookies.set('refreshToken',data.data.refreshToken, {expires: 30})
@@ -41,7 +47,7 @@ _axios.interceptors.request.use(
     (req) => {
         start()
         // 比如在这里添加统一的 headers
-        if (Cookies.get('accessToken') !== null) {
+        if (Cookies.get('accessToken') !== undefined) {
             req.headers.Authorization = 'Bearer ' + Cookies.get('accessToken')
         }
         return req
@@ -61,7 +67,7 @@ _axios.interceptors.response.use(
         } else {
             // 对返回的code进行处理
             switch (resp.data.code) {
-                case 200:
+                case 2000:
                     return resp
                 case 400:
                     // 通用请求错误

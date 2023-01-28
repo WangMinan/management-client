@@ -1,14 +1,14 @@
 export default {
     getRevisePasswordData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {}
         }
     },
     getPrisonTotalData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 total: 3,
@@ -31,7 +31,7 @@ export default {
     },
     getPrisonManagerTotalData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 total: 3,
@@ -57,7 +57,7 @@ export default {
     },
     getModelTotalData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 total: 3,
@@ -89,7 +89,7 @@ export default {
     },
     getAccessData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 accessCount: 37,
@@ -104,7 +104,7 @@ export default {
     },
     getModelUseData: () => {
         return{
-            code: 200,
+            code: 2000,
             msg: "success",
             data: [
                 {

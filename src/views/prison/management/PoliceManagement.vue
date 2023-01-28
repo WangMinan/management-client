@@ -27,7 +27,7 @@ const getPoliceList = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if (data.code === 200) {
+    if (data.code === 2000) {
       policeList.value = data.data.list
       total.value = data.data.total
     } else {
@@ -137,7 +137,7 @@ const addPolice = async (form) => {
           addForm.imageUrl = addPoliceForm.value.imageUrl
         }
         const {data} = await axios.post('/backstage-management-service/prison/police', addForm)
-        if (data.code === 200) {
+        if (data.code === 2000) {
           ElMessage.success('新增警员成功')
           addPoliceDialogVisible.value = false
           fileList.value = []
@@ -174,7 +174,7 @@ const deletePolices = async () => {
             idList: policeSelection.value.idList
           }
         })
-    if(data.code === 200) {
+    if(data.code === 2000) {
       ElMessage.success('删除成功')
       await getPoliceList()
     } else {
@@ -217,7 +217,7 @@ const prisonList = ref([])
 const getPrisonList = async () => {
   try {
     const {data} = await axios.get('/backstage-management-service/prison/prison')
-    if(data.code === 200){
+    if(data.code === 2000){
       prisonList.value = data.data
     } else {
       ElMessage.error(data.msg)
@@ -249,7 +249,7 @@ const submitEdit = async (form) => {
         }
         const {data} = await axios.put(`/backstage-management-service/prison/police/${editPoliceForm.value.id}`,
             uploadForm)
-        if (data.code === 200) {
+        if (data.code === 2000) {
           ElMessage.success('修改警员成功')
           editPoliceDialogVisible.value = false
           fileList.value = []

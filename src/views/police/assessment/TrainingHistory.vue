@@ -25,7 +25,7 @@ const getTrainingHistory = async () => {
         pageSize: queryInfo.value.pageSize
       }
     })
-    if(data.code !== 200){
+    if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
       trainingHistoryData.value = data.data.list

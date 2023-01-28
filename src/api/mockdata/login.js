@@ -1,7 +1,7 @@
 export default {
     getAdminLoginData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 role: 'admin',
@@ -16,7 +16,7 @@ export default {
     },
     getPoliceLoginData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 role: 'police',
@@ -34,7 +34,7 @@ export default {
     },
     getPrisonLoginData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 role: 'prison',
@@ -50,7 +50,7 @@ export default {
     },
     getLogoutData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {}
         }

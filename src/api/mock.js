@@ -8,22 +8,22 @@ import prisonApi from './mockdata/prison/prison.js'
 // 登录
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
 //     loginApi.getAdminLoginData())
-Mock.mock('http://localhost:8080/api/backstage-management-service/login',
-    loginApi.getPoliceLoginData())
+// Mock.mock('http://localhost:8080/api/backstage-management-service/login',
+//     loginApi.getPoliceLoginData())
 // Mock.mock('http://localhost:8080/api/backstage-management-service/login',
 //     loginApi.getPrisonLoginData())
 
 // 退出
-Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
-    loginApi.getLogoutData())
+// Mock.mock('http://localhost:8080/api/backstage-management-service/logout',
+//     loginApi.getLogoutData())
 
 // 运维
 Mock.mock('http://localhost:8080/api/backstage-management-service/account/password',
     adminApi.getRevisePasswordData())
-Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/prison'+'.*'),
-    adminApi.getPrisonTotalData())
-Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/padmin'+'.*'),
-    adminApi.getPrisonManagerTotalData())
+// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/prison'+'.*'),
+//     adminApi.getPrisonTotalData())
+// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/admin/padmin'+'.*'),
+//     adminApi.getPrisonManagerTotalData())
 Mock.mock(RegExp('http://localhost:8080/api/psychology-service/model'+'.*'),
     adminApi.getModelTotalData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/admin/stats',

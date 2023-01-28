@@ -1,7 +1,7 @@
 export default {
     getPersonalProfileData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 id: 1,
@@ -14,14 +14,14 @@ export default {
     },
     getTrainingReplyData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {}
         }
     },
     getTrainingHistoryData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 total: 13,
@@ -50,7 +50,7 @@ export default {
     },
     getAssessmentData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 mindStatus: '稳定',
@@ -60,7 +60,7 @@ export default {
     },
     getTrainingSummaryData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 // 今日预计模拟场景
@@ -74,7 +74,7 @@ export default {
     },
     getTrainingDynamicData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: [
                 {
@@ -97,7 +97,7 @@ export default {
     },
     getWeeklyTrainingData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: [
                 0, 4, 5, 3, 2, 1, 0
@@ -106,7 +106,7 @@ export default {
     },
     getAllPrisonsData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: [
                 '西安监狱',
@@ -118,7 +118,7 @@ export default {
     },
     getIsTrainingData: () => {
         return {
-            code: 200,
+            code: 2000,
             msg: 'success',
             data: {
                 isTraining: false
