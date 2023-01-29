@@ -14,7 +14,12 @@ const prisonManagerSelection = ref(
 // 新增管理员下拉菜单中的监所数据
 const prisonData = ref([])
 // 保存表格中的监狱管理员数据
-const prisonManagerData = ref([])
+const prisonManagerData = ref([{
+  id: '',
+  nickname: '',
+  accountNumber: '',
+  prisonName: ''
+}])
 // 表格的加载圈
 const prisonManagerLoading = ref(false)
 // 请求参数的格式
@@ -31,9 +36,9 @@ const getPrisonList = async () => {
   try{
     const {data} = await axios.get('/backstage-management-service/admin/prison',{
       params: {
-        query: '',
-        pageNum: 1,
-        pageSize: 65535
+        query: queryInfo.value.query,
+        pageNum: queryInfo.value.pageNum,
+        pageSize: queryInfo.value.pageSize
       }
     })
     if(data.code !== 2000){
@@ -48,6 +53,7 @@ const getPrisonList = async () => {
 }
 
 const getPrisonManagerList = async () => {
+  console.log('hello')
   try{
     prisonManagerLoading.value=true
     const {data} = await axios.get('/backstage-management-service/admin/padmin',{
@@ -60,7 +66,9 @@ const getPrisonManagerList = async () => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
+      // 赋值 不允许data.data.list数组的元素中id字段被舍入
       prisonManagerData.value = data.data.list
+      console.log(data.data.list)
       total.value = data.data.total
       // prisonManagerData.value = adminApi.getPrisonManagerTotalData().data.list
       // total.value = adminApi.getPrisonManagerTotalData().data.total
@@ -72,11 +80,6 @@ const getPrisonManagerList = async () => {
   }
 }
 
-onMounted(() => {
-  getPrisonList()
-  getPrisonManagerList()
-})
-
 const handleSizeChange = (newSize) => {
   queryInfo.pageSize = newSize
   getPrisonManagerList()
@@ -87,16 +90,14 @@ const handleCurrentChange = (newPage) => {
 }
 
 const handleSelectionChange = (val) => {
-  prisonManagerSelection.value.idList = val.map(item => item.accountNumber)
+  prisonManagerSelection.value.idList = val.map(item => item.id)
 }
 
 // 接下来是新增监狱管理员的部分
 let addPrisonManagerDialogVisible = ref(false)
 
 const addPrisonManagerForm = ref({
-  prisonName: '',
-  nickname:'',
-  password:''
+  prisonName: ''
 })
 
 const addPrisonManagerFormRef = ref()
@@ -104,14 +105,6 @@ const addPrisonManagerFormRef = ref()
 const addPrisonManagerRules = ref({
   prisonName: [
     {required: true, message: '请选择监狱管理员名称', trigger: 'blur'},
-  ],
-  nickname: [
-    {required: true, message: '请输入监狱管理员昵称', trigger: 'blur'},
-    {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
-  ],
-  password: [
-    {required: true, message: '请输入监狱管理员密码', trigger: 'blur'},
-    {min: 8, max: 20, message: '长度在 8 到 20 个字符', trigger: 'blur'}
   ]
 })
 
@@ -122,7 +115,7 @@ const addPrisonManager = async (form) => {
   await form.validate(async (valid, fields) => {
     if (valid) {
       const {data} =
-          await axios.post('/backstage-management-service/admin/padmin',addPrisonManagerForm.value)
+          await axios.post('/backstage-management-service/admin/prison/padmin',addPrisonManagerForm.value)
       if(data.code === 2000) {
         ElMessage.success('新增监狱管理员成功')
         addPrisonManagerDialogVisible.value = false
@@ -155,7 +148,7 @@ const deletePrisonManagers = async () => {
     type: 'warning'
   }).then(async () => {
     const {data} =
-        await axios.delete('/backstage-management-service/admin/padmin',
+        await axios.delete('/backstage-management-service/admin/prison/padmin',
             {data: prisonManagerSelection.value})
     if(data.code === 2000) {
       ElMessage.success('删除成功')
@@ -167,6 +160,11 @@ const deletePrisonManagers = async () => {
     ElMessage.info('已取消删除')
   })
 }
+
+onMounted(() => {
+  getPrisonList()
+  getPrisonManagerList()
+})
 </script>
 
 <template>
@@ -214,6 +212,7 @@ const deletePrisonManagers = async () => {
     >
       <el-empty v-if="prisonManagerData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>
+      <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="accountNumber" label="账号"></el-table-column>
       <el-table-column prop="nickname" label="监所管理员昵称"></el-table-column>
       <el-table-column prop="prisonName" label="所属监狱"></el-table-column>
@@ -236,6 +235,7 @@ const deletePrisonManagers = async () => {
       center
       @closed="resetPrisonManagerForm(addPrisonManagerFormRef)"
   >
+    <div>账号将自动生成,初始密码同账号</div>
     <el-form :model="addPrisonManagerForm" ref="addPrisonManagerFormRef" :rules="addPrisonManagerRules">
       <el-form-item prop="prisonName" label="管理员监所">
         <el-select v-model="addPrisonManagerForm.prisonName" placeholder="请选择管理员所在监所名称">
@@ -250,27 +250,6 @@ const deletePrisonManagers = async () => {
           >
           </el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item prop="nickname" label="管理员昵称">
-        <el-input v-model="addPrisonManagerForm.nickname" placeholder="请输入管理员昵称">
-          <template #prefix>
-            <el-icon><User /></el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password" label="管理员密码">
-        <el-input
-          v-model="addPrisonManagerForm.password"
-          placeholder="请输入管理员密码"
-          type="password"
-          show-password
-        >
-          <template #prefix>
-            <el-icon class="el-input__icon">
-              <Lock />
-            </el-icon>
-          </template>
-        </el-input>
       </el-form-item>
     </el-form>
     <template #footer>

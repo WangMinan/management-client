@@ -204,7 +204,7 @@ router.beforeEach((to, from, next) => {
                 ElMessage.error('您的访问未被授权,请联系管理员')
                 next(from.path)
             }
-        } else if (Cookies.get('role') === 'Prison') {
+        } else if (Cookies.get('role') === 'PrisonAdmin') {
             if(to.path.startsWith('/prison')) {
                 next()
             } else {

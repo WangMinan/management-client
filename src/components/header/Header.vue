@@ -30,15 +30,14 @@ const logout = async ()=> {
   })
   try{
     const {data} = await axios.post('/backstage-management-service/logout')
-    if(data.code === 2000){
-      Cookies.remove('accessToken')
-      Cookies.remove('refreshToken')
-    } else {
+    if(data.code !== 2000){
       ElMessage.error(data.message)
     }
   } catch (e) {
     ElMessage.error('后端服务器异常,将强制退出')
   } finally {
+    Cookies.remove('accessToken')
+    Cookies.remove('refreshToken')
     loading.close()
     await router.push('/login')
   }
@@ -196,7 +195,7 @@ const changeTheme = () => {
       <h1 v-if="Cookies.get('role') === 'Admin'">
         监所警察执法保障试验平台——运维端,欢迎您:{{nickname}}
       </h1>
-      <h1 v-else-if="Cookies.get('role') === 'Prison'">
+      <h1 v-else-if="Cookies.get('role') === 'PrisonAdmin'">
         监所警察执法保障试验平台——监所端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'Police'">

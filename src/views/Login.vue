@@ -78,7 +78,7 @@ const login = async () => {
     ElMessage.success('登录成功')
     if(data.data.role === 'Admin'){
       await router.push('/admin/home')
-    } else if(data.data.role === 'Prison'){
+    } else if(data.data.role === 'PrisonAdmin'){
       await router.push('/prison/home')
     } else {
       if(data.data.person.training === false){
@@ -114,7 +114,7 @@ onMounted(async () => {
     ) {
       if (Cookies.get('role') === 'Admin') {
         await router.push('/admin/home')
-      } else if (Cookies.get('role') === 'Prison') {
+      } else if (Cookies.get('role') === 'PrisonAdmin') {
         await router.push('/prison/home')
       } else {
         await router.push('/police/home')

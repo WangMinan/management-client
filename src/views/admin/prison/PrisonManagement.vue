@@ -35,6 +35,7 @@ const getPrisonList = async () => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
+      console.log(data)
       prisonData.value = data.data.list
       total.value = data.data.total
     }

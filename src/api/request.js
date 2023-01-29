@@ -63,7 +63,7 @@ _axios.interceptors.response.use(
         // 如果resp中没有data或data中没有code则直接返回
         stop()
         if (resp.data === undefined || resp.data.code === undefined) {
-            return resp
+            ElMessage.error('后端服务器异常,请联系管理员')
         } else {
             // 对返回的code进行处理
             switch (resp.data.code) {
