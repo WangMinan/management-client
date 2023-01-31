@@ -64,7 +64,7 @@ const addDialogLoading = ref(false)
 const addPoliceForm = ref({
   name: '',
   imageUrl: '',
-  password: ''
+  policeCode: ''
 })
 const addPoliceFormRules = ref({
   name: [
@@ -74,9 +74,9 @@ const addPoliceFormRules = ref({
   imageUrl: [
     {required: true, message: '请上传警员照片', trigger: 'blur'}
   ],
-  password: [
-    {required: true, message: '请输入警员密码', trigger: 'blur'},
-    {min: 8, max: 20, message: '长度在 8 到 20 个字符', trigger: 'blur'}
+  policeCode: [
+    {required: true, message: '请输入警员编号', trigger: 'blur'},
+    {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
   ]
 })
 const fileList = ref([])
@@ -128,7 +128,7 @@ const addPolice = async (form) => {
         const addForm = {
           name: addPoliceForm.value.name,
           imageUrl: '',
-          password: encrypt(addPoliceForm.value.password)
+          policeCode: addPoliceForm.value.policeCode
         }
         if (tmpFile) {
           const result = await putFile(addPoliceForm.value.name, tmpFile)
@@ -143,7 +143,7 @@ const addPolice = async (form) => {
           fileList.value = []
           await getPoliceList()
         } else {
-          ElMessage.error(data.message)
+          ElMessage.error(data.msg)
         }
       } catch (e) {
         ElMessage.error('新增警员失败')
@@ -199,9 +199,6 @@ const editPoliceForm = ref({})
 const editDialogLoading = ref(false)
 const editPoliceFormRef = ref()
 const editPoliceRules = ref({
-  accountNumber:[
-    {required: true, message: '请输入警员编号', trigger: 'blur'}
-  ],
   name: [
     {required: true, message: '请输入警员姓名', trigger: 'blur'},
     {min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur'}
@@ -359,6 +356,7 @@ onMounted(async () => {
     @closed="closeDialog(addPoliceFormRef)"
     center
   >
+    <div>警员登录初始密码同警号</div>
     <el-form
       :model="addPoliceForm"
       :rules="addPoliceFormRules"
@@ -371,10 +369,10 @@ onMounted(async () => {
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="password" label="初始密码">
-        <el-input type="password" show-password v-model="addPoliceForm.password" placeholder="请输入警员初始密码">
+      <el-form-item prop="policeCode" label="警员编号">
+        <el-input v-model="addPoliceForm.policeCode" placeholder="请输入警员编号">
           <template #prefix>
-            <el-icon><Lock/></el-icon>
+            <el-icon><Aim /></el-icon>
           </template>
         </el-input>
       </el-form-item>
@@ -440,13 +438,6 @@ onMounted(async () => {
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item prop="prisonName" label="监所名称">
-        <el-input v-model="showPoliceForm.prisonName" placeholder="请输入监所名称">
-          <template #prefix>
-            <el-icon><OfficeBuilding/></el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
       <el-form-item prop="image" label="警员相片">
         <el-image :src="showPoliceForm.imageUrl" style="width: 150px; height: 200px"/>
       </el-form-item>
@@ -469,13 +460,6 @@ onMounted(async () => {
       ref="editPoliceFormRef"
       :rules="editPoliceRules"
     >
-      <el-form-item prop="accountNumber" label="警员编号">
-        <el-input :disabled="true" v-model="editPoliceForm.accountNumber" placeholder="请输入警员编号">
-          <template #prefix>
-            <el-icon><Aim /></el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
       <el-form-item prop="name" label="警员姓名">
         <el-input v-model="editPoliceForm.name" placeholder="请输入警员姓名">
           <template #prefix>

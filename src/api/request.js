@@ -62,7 +62,11 @@ _axios.interceptors.response.use(
     (resp) => {
         // 如果resp中没有data或data中没有code则直接返回
         stop()
-        if (resp.data === undefined || resp.data.code === undefined) {
+        // sts临时授权
+        if(resp.data.AccessKeyId !== undefined) {
+            return resp
+        }
+        if (resp.data.code === undefined) {
             ElMessage.error('后端服务器异常,请联系管理员')
         } else {
             // 对返回的code进行处理
@@ -91,6 +95,8 @@ _axios.interceptors.response.use(
                     // 等待三秒
                     setTimeout(() => {
                         Cookies.remove('manualExit')
+                        Cookies.remove('accessToken')
+                        Cookies.remove('refreshToken')
                         router.push('/login').then(r => {
                             return r
                         })
@@ -102,6 +108,8 @@ _axios.interceptors.response.use(
                     // 等待三秒
                     setTimeout(() => {
                         Cookies.remove('manualExit')
+                        Cookies.remove('accessToken')
+                        Cookies.remove('refreshToken')
                         router.push('/login').then(r => {
                             return r
                         })

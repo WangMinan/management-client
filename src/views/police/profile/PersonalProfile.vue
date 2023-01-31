@@ -4,7 +4,7 @@ import axios from '../../../api/request'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
 import {putFile} from '../../../utils/OssUtil.js'
-
+import Cookies from 'js-cookie'
 
 const router = useRouter()
 
@@ -34,8 +34,9 @@ let isEditing = ref(false)
 
 const personalInformationFormRef = ref()
 
-const abandonRevise = () => {
-  router.go(0)
+const abandonRevise = async () => {
+  isEditing.value = false
+  await getPersonalInformation()
 }
 // 上传前校验
 const beforeUpload = (file) => {
@@ -87,22 +88,30 @@ const reviseProfile = async (form) => {
     if(valid){
       cardLoading.value = true
       try{
-        const result = await putFile(personalInformation.value.name, tmpFile)
-        let url = result.url
-        // 截取url最后一个/之后的部分
-        personalInformation.value.imageUrl = url.substring(url.lastIndexOf('/') + 1)
+        if(tmpFile !== undefined){
+          const result = await putFile(personalInformation.value.name, tmpFile)
+          personalInformation.value.imageUrl = result.url
+        }
+        const queryObject = {
+          name: personalInformation.value.name,
+          imageUrl: personalInformation.value.imageUrl
+        }
         const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
-            personalInformation.value)
+            queryObject)
         if (data.code !== 2000){
           ElMessage.error(data.message)
         } else {
           ElMessage.success('修改个人信息成功')
           isEditing.value = false
-          // 当前页面包括header全部刷新
+          // 修改Cookie中的person中的name和imageUrl
+          const person = JSON.parse(Cookies.get('person'))
+          person.name = personalInformation.value.name
+          person.imageUrl = personalInformation.value.imageUrl
+          Cookies.set('person', JSON.stringify(person))
           router.go(0)
         }
       } catch (e) {
-        ElMessage.error('数据初始化失败')
+        ElMessage.error('修改个人信息失败')
       } finally {
         // 刷新个人信息
         await getPersonalInformation()

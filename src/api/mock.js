@@ -32,8 +32,8 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/admin/mainPage
     adminApi.getModelUseData())
 
 // 警员
-Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/profile'+'.*'),
-    policeApi.getPersonalProfileData())
+// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/police/profile'+'.*'),
+//     policeApi.getPersonalProfileData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/police/home/isTraining',
     policeApi.getIsTrainingData())
 Mock.mock(RegExp('http://localhost:8080/api/psychology-service/training'+'.*'),
@@ -56,10 +56,10 @@ Mock.mock('http://localhost:8080/api/backstage-management-service/prison/mainPag
     prisonApi.getModelUseData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/prison/mainPage/stats',
     prisonApi.getFinishTrainingData())
-Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/police/query' + '.*'),
-    prisonApi.getPoliceListData())
-Mock.mock('http://localhost:8080/api/backstage-management-service/prison/prison',
-    policeApi.getAllPrisonsData())
+// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/police/query' + '.*'),
+//     prisonApi.getPoliceListData())
+// Mock.mock('http://localhost:8080/api/backstage-management-service/prison/prison',
+//     policeApi.getAllPrisonsData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/model' + '.*'),
     adminApi.getModelTotalData())
 Mock.mock('http://localhost:8080/api/backstage-management-service/prison/trainDynamic',
@@ -68,5 +68,5 @@ Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/
     prisonApi.getTrainingHistoryListData())
 Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/totalAssess' + '.*'),
     prisonApi.getTrainingAssessmentData())
-Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/'+'.*'),
-    prisonApi.reviseNicknameData())
+// Mock.mock(RegExp('http://localhost:8080/api/backstage-management-service/prison/'+'.*'),
+//     prisonApi.reviseNicknameData())

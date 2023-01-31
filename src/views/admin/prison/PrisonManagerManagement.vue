@@ -53,7 +53,6 @@ const getPrisonList = async () => {
 }
 
 const getPrisonManagerList = async () => {
-  console.log('hello')
   try{
     prisonManagerLoading.value=true
     const {data} = await axios.get('/backstage-management-service/admin/padmin',{
@@ -68,7 +67,6 @@ const getPrisonManagerList = async () => {
     } else {
       // 赋值 不允许data.data.list数组的元素中id字段被舍入
       prisonManagerData.value = data.data.list
-      console.log(data.data.list)
       total.value = data.data.total
       // prisonManagerData.value = adminApi.getPrisonManagerTotalData().data.list
       // total.value = adminApi.getPrisonManagerTotalData().data.total

@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import Cookies from 'js-cookie'
-import {onMounted, reactive, ref} from 'vue'
+import {onMounted, reactive, ref, watch} from 'vue'
 import axios from '../../api/request'
 import {ElLoading, ElMessage} from 'element-plus'
 import { useStore } from 'vuex'
@@ -132,14 +132,13 @@ const submit = async (form) => {
 
 const nickname = ref(
     (JSON.parse(Cookies.get('person'))).nickname ||
-        (JSON.parse(Cookies.get('person'))).name
+    (JSON.parse(Cookies.get('person'))).name
 )
 
 const imageUrl = ref(
     (JSON.parse(Cookies.get('person'))).imageUrl ||
     getImgSrc('user')
 )
-
 // 修改昵称请求
 let reviseNicknameDialogVisible = ref(false)
 const reviseNicknameFormRef = ref()
@@ -176,7 +175,7 @@ const reviseNicknameSubmit = (form) => {
 }
 
 // 为暗黑模式启用支持
-import { useDark, useToggle } from '@vueuse/core'
+import {useDark, useStorage, useToggle} from '@vueuse/core'
 
 const dark = ref(
       window.localStorage.getItem('vueuse-color-scheme') === 'dark'
@@ -187,6 +186,16 @@ const changeTheme = () => {
   dark.value = !dark.value
   toggleDark()
 }
+
+/*const policeChange = useStorage('policeChange', 'false')
+watch(policeChange, () => {
+  // 重新设置
+  nickname.value = (JSON.parse(Cookies.get('person'))).nickname ||
+      (JSON.parse(Cookies.get('person'))).name
+  imageUrl.value = (JSON.parse(Cookies.get('person'))).imageUrl ||
+      getImgSrc('user')
+  window.localStorage.setItem('policeChange', 'false')
+})*/
 </script>
 
 <template>
@@ -216,7 +225,7 @@ const changeTheme = () => {
         <el-col :span="6">
           <el-dropdown>
             <span class="el-dropdown-link">
-              <img v-if="Cookies.get('role') === 'police'" :src="imageUrl" class="user-icon" alt="LOGO">
+              <img v-if="Cookies.get('role') === 'Police'" :src="imageUrl" class="user-icon" alt="LOGO">
               <img v-else class="user-icon" :src="getImgSrc('user')" alt="logo">
             </span>
             <template #dropdown>
