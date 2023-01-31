@@ -55,8 +55,8 @@ const validateOldPass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请输入旧密码'))
   } else {
-    if (value.length < 8 || value.length > 20) {
-      callback(new Error('密码长度为8-20'))
+    if (value.length < 4 || value.length > 20) {
+      callback(new Error('密码长度为4-20'))
     } else {
       callback()
     }
@@ -67,8 +67,8 @@ const validateNewPass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请输入新密码'))
   } else {
-    if (value.length < 8 || value.length > 20) {
-      callback(new Error('密码长度为8-20'))
+    if (value.length < 4 || value.length > 20) {
+      callback(new Error('密码长度为4-20'))
     } else {
       callback()
     }
@@ -79,8 +79,8 @@ const validateConfirmPass = (rule, value, callback) => {
   if (value === '') {
     callback(new Error('请再次输入新密码'))
   } else {
-    if (value.length < 8 || value.length > 20) {
-      callback(new Error('密码长度为8-20'))
+    if (value.length < 4 || value.length > 20) {
+      callback(new Error('密码长度为4-20'))
     } else {
       if (value !== revisePasswordForm.value.newPassword) {
         callback(new Error('两次输入密码不一致!'))

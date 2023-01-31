@@ -39,7 +39,7 @@ const refreshToken = async () => {
 
 // 创建一个axios实例
 const _axios = axios.create({
-    baseURL: 'http://localhost:8080/api'
+    baseURL: 'http://123.249.5.227:8079/api'
 })
 
 // 请求拦截器
