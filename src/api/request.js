@@ -10,6 +10,8 @@ const refreshToken = async () => {
         if(Cookies.get('refreshToken') === undefined) {
             ElMessage.error("自动刷新令牌失败,请重新登录")
             // 删除Cookies中的accessToken和refreshToken
+            Cookies.remove('accessToken')
+            Cookies.remove('refreshToken')
             await router.push('/login')
             return false
         }
@@ -26,12 +28,16 @@ const refreshToken = async () => {
         } else {
             ElMessage.error("自动刷新令牌失败,请重新登录")
             // 删除Cookies中的accessToken和refreshToken
+            Cookies.remove('accessToken')
+            Cookies.remove('refreshToken')
             await router.push('/login')
             return false
         }
     } catch (e) {
         ElMessage.error("自动刷新令牌失败,请重新登录")
         // 删除Cookies中的accessToken和refreshToken
+        Cookies.remove('accessToken')
+        Cookies.remove('refreshToken')
         await router.push('/login')
         return false
     }
