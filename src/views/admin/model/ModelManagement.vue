@@ -26,7 +26,7 @@ const total = ref(0)
 const getModelList = async () => {
   try{
     modelLoading.value=true
-    const {data} = await axios.get('/psychology-service/model/',{
+    const {data} = await axios.get('/psychology-service/model',{
       params: {
         query: queryInfo.value.query,
         pageNum: queryInfo.value.pageNum,

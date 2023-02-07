@@ -19,7 +19,7 @@ const getPersonalInformation = async () => {
   try {
     const {data} = await axios.get('/backstage-management-service/police/profile')
     if (data.code !== 2000){
-      ElMessage.error(data.message)
+      ElMessage.error(data.msg)
     } else {
       personalInformation.value = data.data
     }
@@ -99,7 +99,7 @@ const reviseProfile = async (form) => {
         const {data} = await axios.put(`/backstage-management-service/police/profile/${personalInformation.value.id}`,
             queryObject)
         if (data.code !== 2000){
-          ElMessage.error(data.message)
+          ElMessage.error(data.msg)
         } else {
           ElMessage.success('修改个人信息成功')
           isEditing.value = false

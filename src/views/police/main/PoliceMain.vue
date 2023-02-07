@@ -104,8 +104,10 @@ onMounted(async () => {
     drawLineChart()
     // 确认是否正在训练
     const {data} = await axios.get('/backstage-management-service/police/home/isTraining')
-    if(data.code === 2000 && data.data.isTraining === true){
+    if(data.code === 2000 && data.data === true){
       await router.push('/police/training')
+    } else {
+      window.localStorage.removeItem('trainingStatus')
     }
   } catch (e) {
     ElMessage.error("请求数据失败")

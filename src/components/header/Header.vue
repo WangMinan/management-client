@@ -31,7 +31,7 @@ const logout = async ()=> {
   try{
     const {data} = await axios.post('/backstage-management-service/logout')
     if(data.code !== 2000){
-      ElMessage.error(data.message)
+      ElMessage.error(data.msg)
     }
   } catch (e) {
     ElMessage.error('后端服务器异常,将强制退出')

@@ -81,15 +81,10 @@ const login = async () => {
     } else if(data.data.role === 'PrisonAdmin'){
       await router.push('/prison/home')
     } else {
-      if(data.data.person.training === false){
-        window.localStorage.removeItem('trainingStatus')
-        await router.push('/police/home')
-      } else {
-        await router.push('/police/training')
-      }
+      await router.push('/police/home')
     }
   } catch (e) {
-    ElMessage.error(e.message)
+    // ElMessage.error(e.message)
   } finally {
     loginLoading.value = false
   }

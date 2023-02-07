@@ -81,7 +81,7 @@ _axios.interceptors.response.use(
                     return resp
                 case 400:
                     // 通用请求错误
-                    ElMessage.error(resp.data.message)
+                    ElMessage.error(resp.data.msg)
                     return Promise.reject(resp)
                 case 4010:
                     // access-token 过期 将cookie中的refreshToken放进请求头的Token中
@@ -109,17 +109,21 @@ _axios.interceptors.response.use(
                     },3000)
                     break
                 case 4012:
-                    // 用户未认证或已注销
-                    ElMessage.error('您的访问未被授权,可能是您的身份已被注销,请您在登录页面重试,3秒后将执行跳转')
-                    // 等待三秒
-                    setTimeout(() => {
-                        Cookies.remove('manualExit')
-                        Cookies.remove('accessToken')
-                        Cookies.remove('refreshToken')
-                        router.push('/login').then(r => {
-                            return r
-                        })
-                    },3000)
+                    if(router.currentRoute.value.path !== '/login') {
+                        // 用户未认证或已注销
+                        ElMessage.error('您的访问未被授权,可能是您的身份已被注销,请您在登录页面重试,3秒后将执行跳转')
+                        // 等待三秒
+                        setTimeout(() => {
+                            Cookies.remove('manualExit')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('refreshToken')
+                            router.push('/login').then(r => {
+                                return r
+                            })
+                        },3000)
+                    } else {
+                        ElMessage.error(resp.data.msg)
+                    }
                     break
                 case 4030:
                     // 用户权限不足
@@ -147,7 +151,9 @@ _axios.interceptors.response.use(
 
     },
     (err) => {
-        ElMessage.error("响应中出现了一个意外:" + err)
+        stop()
+        ElMessage.error('后端服务器异常,请联系管理员')
+        return Promise.reject(err)
     }
 )
 

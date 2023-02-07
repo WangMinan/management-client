@@ -3,7 +3,6 @@ import {onMounted, ref} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import axios from '../../../api/request'
 import {putFile} from "../../../utils/OssUtil.js";
-import {encrypt} from '../../../utils/jsencrypt.js'
 
 // 请求参数的格式
 const queryInfo = ref({
@@ -31,7 +30,7 @@ const getPoliceList = async () => {
       policeList.value = data.data.list
       total.value = data.data.total
     } else {
-      ElMessage.error(data.message)
+      ElMessage.error(data.msg)
     }
   } catch (e) {
     ElMessage.error('获取警员列表失败')
@@ -252,7 +251,7 @@ const submitEdit = async (form) => {
           fileList.value = []
           await getPoliceList()
         } else {
-          ElMessage.error(data.message)
+          ElMessage.error(data.msg)
         }
       } catch (e) {
         ElMessage.error('修改警员失败')
