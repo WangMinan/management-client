@@ -215,11 +215,13 @@ watch(policeChange, () => {
     <div class="r-content">
       <el-row :gutter="15">
         <el-col :span="18">
-          <el-button type="info" @click="changeTheme">
-            <el-icon v-if="!dark"><Sunny/></el-icon>
-            <el-icon v-else><Moon /></el-icon>
-            <span v-if="!dark">明亮模式</span>
-            <span v-else>暗黑模式</span>
+          <el-button v-if="!dark" @click="changeTheme" style="background:#409EFF; color: white">
+            <el-icon><Sunny/></el-icon>
+            <span>明亮模式</span>
+          </el-button>
+          <el-button v-else @click="changeTheme" style="background: #303133;color: white">
+            <el-icon><Moon/></el-icon>
+            <span>暗黑模式</span>
           </el-button>
         </el-col>
         <el-col :span="6">

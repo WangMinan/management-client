@@ -196,7 +196,7 @@ onMounted(async () => {
           </div>
         </template>
         <el-empty v-if="finishTrainingCount.length === 0" description="暂无数据"></el-empty>
-        <div class="graphBox">
+        <div v-else class="graphBox">
           <div id="pie" style="width: 400px; height: 350px;"></div>
         </div>
       </el-card>
@@ -210,7 +210,8 @@ onMounted(async () => {
             <span>场景模拟动态</span>
           </div>
         </template>
-        <ul>
+        <el-empty v-if="modelUseData.length === 0" description="暂无数据"></el-empty>
+        <ul v-else>
           <li v-for="item in modelUseData" :key="item.id">
             <!--对齐内容-->
             <el-row :gutter="20">

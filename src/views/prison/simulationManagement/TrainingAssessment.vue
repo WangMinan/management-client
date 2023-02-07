@@ -277,14 +277,14 @@ watch(checkIsDark, () => {
             </div>
           </template>
           <div class="graphCard">
-            <div class="graphBox">
+            <el-empty v-if="checkAssessmentData.mentalPercentList.length === 0" description="暂无数据"></el-empty>
+            <div v-else class="graphBox">
               <div id="pie" style="width: 400px; height: 300px"></div>
             </div>
           </div>
         </el-card>
       </el-col>
     </el-row>
-
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="checkAssessmentDialogVisible=false">关闭</el-button>

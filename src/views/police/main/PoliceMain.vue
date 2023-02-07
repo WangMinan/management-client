@@ -163,18 +163,21 @@ onMounted(async () => {
           </div>
         </template>
         <el-empty v-if="weeklyTrainingData.length === 0" description="暂无数据" />
-        <div class="graphBox">
+        <div v-else class="graphBox">
           <div id="line" style="width: 500px; height: 300px;"></div>
         </div>
       </el-card>
     </el-col>
     <el-col :span="12">
       <el-card>
-        <div class="card-header">
-          <el-icon><Menu /></el-icon>
-          <span>场景模拟动态</span>
-        </div>
-        <ul>
+        <template #header>
+          <div class="card-header">
+            <el-icon><Menu /></el-icon>
+            <span>场景模拟动态</span>
+          </div>
+        </template>
+        <el-empty v-if="trainingDynamicData.length === 0" description="暂无数据" />
+        <ul v-else>
           <li v-for="item in trainingDynamicData" :key="item.modelName">
             <el-row>
               <el-col :span="2">

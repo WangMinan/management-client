@@ -163,7 +163,7 @@ onMounted(async () => {
           </div>
         </template>
         <el-empty v-if="accessData.accessLastWeek.length === 0" description="暂无数据" />
-        <div class="graphBox">
+        <div v-else class="graphBox">
           <div id="line" style="width: 500px; height: 300px;"></div>
         </div>
       </el-card>
@@ -177,7 +177,8 @@ onMounted(async () => {
             <span>场景启用动态</span>
           </div>
         </template>
-        <ul>
+        <el-empty v-if="modelUseData.length === 0" description="暂无数据" />
+        <ul v-else>
           <li v-for="item in modelUseData" :key="item.id">
             <!--对齐内容-->
             <el-row :gutter="20">
