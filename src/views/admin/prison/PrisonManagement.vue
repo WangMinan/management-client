@@ -175,6 +175,8 @@ const deletePrisons = async () => {
       :data="prisonData"
       border stripe
       @selection-change="handleSelectionChange"
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
     >
       <el-empty v-if="prisonData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>

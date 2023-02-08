@@ -162,6 +162,8 @@ const showCheckDialog = (id) => {
       :ref="historyTableRef"
       :data="trainingHistory"
       border stripe
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
     >
       <el-empty v-if="trainingHistory.length === 0" description="暂无数据"></el-empty>
       <el-table-column prop="id" label="编号"></el-table-column>

@@ -201,12 +201,14 @@ onMounted(() => {
     </el-row>
     <!--表格-->
     <el-table
-        style="width: 100%;"
-        v-loading="prisonManagerLoading"
-        :ref="prisonManagerTableRef"
-        :data="prisonManagerData"
-        border stripe
-        @selection-change="handleSelectionChange"
+      style="width: 100%;"
+      v-loading="prisonManagerLoading"
+      :ref="prisonManagerTableRef"
+      :data="prisonManagerData"
+      border stripe
+      @selection-change="handleSelectionChange"
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
     >
       <el-empty v-if="prisonManagerData.length === 0" description="暂无数据"></el-empty>
       <el-table-column type="selection"></el-table-column>
@@ -228,10 +230,10 @@ onMounted(() => {
   </el-card>
   <!--添加监所管理员弹窗-->
   <el-dialog
-      title="添加监所管理员"
-      v-model="addPrisonManagerDialogVisible"
-      center
-      @closed="resetPrisonManagerForm(addPrisonManagerFormRef)"
+    title="添加监所管理员"
+    v-model="addPrisonManagerDialogVisible"
+    center
+    @closed="resetPrisonManagerForm(addPrisonManagerFormRef)"
   >
     <div>账号将自动生成,初始密码同账号</div>
     <el-form :model="addPrisonManagerForm" ref="addPrisonManagerFormRef" :rules="addPrisonManagerRules">

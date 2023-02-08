@@ -114,6 +114,8 @@ const handleCheckTrainingDialogClose = () => {
       v-loading="historyLoading"
       :ref="trainingHistoryTableRef"
       border stripe
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
     >
       <el-empty v-if="trainingHistoryData.length === 0" description="暂无数据"></el-empty>
       <el-table-column prop="id" label="序号"></el-table-column>
