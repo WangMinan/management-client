@@ -86,7 +86,7 @@ const updateModelBySwitch = async (row) => {
       enable: row.enable
     }
     const {data} =
-        await axios.put(`/backstage-management-service/prison/model/{id}${row.id}`, rowData)
+        await axios.put(`/backstage-management-service/prison/model/${row.id}`, rowData)
     if (data.code === 2000) {
       ElMessage.success('更新场景状态成功')
       await getModelList()
