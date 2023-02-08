@@ -26,7 +26,7 @@ const refreshToken = async () => {
             delete axios.defaults.headers.common['Authorization']
             return true
         } else {
-            ElMessage.error("自动刷新令牌失败,请重新登录")
+            ElMessage.error("自动刷新令牌失败,请重新登录或再次点击登录")
             // 删除Cookies中的accessToken和refreshToken
             Cookies.remove('accessToken')
             Cookies.remove('refreshToken')

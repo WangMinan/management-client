@@ -166,7 +166,7 @@ watch(checkIsDark, () => {
   <!--面包屑导航-->
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/prison/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>模拟项目管理</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟总体评估</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->
@@ -206,7 +206,7 @@ watch(checkIsDark, () => {
       <el-table-column type="selection"/>
       <el-table-column prop="id" label="ID"/>
       <el-table-column prop="policeName" label="警员姓名"/>
-      <el-table-column prop="result" label="模拟结果"/>
+      <el-table-column prop="result" label="评估结果"/>
       <el-table-column label="操作">
         <template #default="scope">
           <el-button type="success" size="small" @click="showCheckDialog(scope.row.id)">

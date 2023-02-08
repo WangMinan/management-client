@@ -135,7 +135,7 @@ const handleCheckModelDialogClose = () => {
   <!--面包屑导航-->
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/prison/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>模拟项目管理</el-breadcrumb-item>
+    <el-breadcrumb-item>模拟场景管理</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%">
     <!--搜索框-->
