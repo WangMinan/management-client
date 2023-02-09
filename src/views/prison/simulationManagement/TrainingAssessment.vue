@@ -4,8 +4,8 @@
 import {onMounted, ref, watch} from 'vue'
 import axios from '../../../api/request'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import * as echarts from "echarts";
-import {useStorage} from "@vueuse/core";
+import * as echarts from 'echarts'
+import {useStorage} from '@vueuse/core'
 
 const assessmentList = ref([])
 const queryInfo = ref({
