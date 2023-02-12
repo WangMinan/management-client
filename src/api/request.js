@@ -18,6 +18,8 @@ const refreshToken = async () => {
             Cookies.remove('manualExit')
             Cookies.remove('accessToken')
             Cookies.remove('refreshToken')
+            // 移除请求头中的Authorization
+            delete _axios.defaults.headers.common['Authorization']
             await router.push('/login')
             return false
         }
@@ -40,15 +42,18 @@ const refreshToken = async () => {
             Cookies.remove('manualExit')
             Cookies.remove('accessToken')
             Cookies.remove('refreshToken')
+            // 移除请求头中的Authorization
+            delete _axios.defaults.headers.common['Authorization']
             await router.push('/login')
             return false
         }
     } catch (e) {
-        ElMessage.error("自动刷新令牌失败,请重新登录或再次点击登录")
         // 删除Cookies中的accessToken和refreshToken
         Cookies.remove('manualExit')
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
+        // 移除请求头中的Authorization
+        delete _axios.defaults.headers.common['Authorization']
         await router.push('/login')
         return false
     }
