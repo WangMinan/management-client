@@ -67,8 +67,6 @@ const saveNavState = (path) => {
 <style lang="less" scoped>
 .imgBox{
   text-align: center;
-  //border-bottom: 1px solid #e4e7ed;
-  //border-right: 1px solid #e4e7ed;
   .logo{
     width: 42px;
     height: 42px;
