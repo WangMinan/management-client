@@ -76,11 +76,20 @@ const drawPieChart = () => {
   const emotions = [
     '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
   ]
-  for (let i = 0; i < emotions.length; i++) {
-    option.series[0].data.push({
-      value: assessmentData.value.mentalPercentList[i],
-      name: emotions[i]
-    })
+  if(assessmentData.value.mentalPercentList){
+    for (let i = 0; i < emotions.length; i++) {
+      option.series[0].data.push({
+        value: assessmentData.value.mentalPercentList[i],
+        name: emotions[i]
+      })
+    }
+  } else {
+    for (let i = 0; i < emotions.length; i++) {
+      option.series[0].data.push({
+        value: 0,
+        name: emotions[i]
+      })
+    }
   }
   myChart = echarts.init(document.getElementById('pie'),
       window.localStorage.getItem('vueuse-color-scheme') === 'dark' ? 'dark' : 'light'

@@ -97,11 +97,17 @@ const drawPieChart = () => {
       }
     ]
   }
-
-  for (const item of finishTrainingCount.value) {
+  if(finishTrainingCount.value){
+    for (const item of finishTrainingCount.value) {
+      option.series[0].data.push({
+        value: item.numberOfPolice,
+        name: item.modelName
+      })
+    }
+  } else {
     option.series[0].data.push({
-      value: item.numberOfPolice,
-      name: item.modelName
+      value: 0,
+      name: '暂无数据'
     })
   }
   myChart = echarts.init(document.getElementById('pie'),
