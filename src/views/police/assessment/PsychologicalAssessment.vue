@@ -76,7 +76,7 @@ const drawPieChart = () => {
   const emotions = [
     '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
   ]
-  if(assessmentData.value.mentalPercentList){
+  if(assessmentData.value.mentalPercentList.length === 0){
     for (let i = 0; i < emotions.length; i++) {
       option.series[0].data.push({
         value: assessmentData.value.mentalPercentList[i],
