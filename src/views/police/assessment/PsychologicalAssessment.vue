@@ -23,7 +23,9 @@ const getAssessmentData = async() => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
-      assessmentData.value = data.data
+      if(data.data !== null){
+        assessmentData.value = data.data
+      }
     }
   } catch (e) {
     ElMessage.error('获取评估数据失败')
