@@ -92,7 +92,7 @@ const drawPieChart = () => {
 const checkIsDark = useStorage('vueuse-color-scheme','auto')
 watch(checkIsDark, () => {
   if (myChart) {
-    myChart.dispose(); //销毁
+    myChart.dispose(); //销毁原本的图表
   }
   drawPieChart()
 })
