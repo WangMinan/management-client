@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import axios from '../../../api/request'
-import {putFile} from "../../../utils/OssUtil.js";
+import {deleteFile, putFile} from '../../../utils/OssUtil.js'
 
 // 请求参数的格式
 const queryInfo = ref({
@@ -117,6 +117,7 @@ const uploadFile = async (params) => {
     ElMessage.error('图像更新失败')
   }
 }
+
 // 新增警员
 const addPolice = async (form) => {
   if(!form) return
@@ -222,9 +223,11 @@ const getPrisonList = async () => {
     ElMessage.error('获取监所列表失败')
   }
 }
+let oldFileName = ''
 const showUpdateDialog = (id) => {
   editPoliceDialogVisible.value = true
   editPoliceForm.value = policeList.value.find(item => item.id === id)
+  oldFileName = editPoliceForm.value.imageUrl.substring(editPoliceForm.value.imageUrl.lastIndexOf('/') + 1)
 }
 const submitEdit = async (form) => {
   if(!form) return
@@ -239,6 +242,8 @@ const submitEdit = async (form) => {
         }
         if (tmpFile) {
           const result = await putFile(editPoliceForm.value.name, tmpFile)
+          // 删除OSS中的旧头像
+          await deleteFile(oldFileName)
           uploadForm.imageUrl = result.url
         } else {
           uploadForm.imageUrl = editPoliceForm.value.imageUrl

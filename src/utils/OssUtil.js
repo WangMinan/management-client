@@ -1,5 +1,6 @@
-import axios from "../api/request.js";
-import OSS from "ali-oss";
+import axios from '../api/request.js'
+import OSS from 'ali-oss'
+import {revertFromUTF8} from './utf8Util.js'
 
 export const headers = {
     // 指定该Object被下载时的网页缓存行为。
@@ -29,29 +30,33 @@ export const createFileNameUUID = () => {
     return `${+new Date()}_${rx()}${rx()}`
 }
 
+const initOssClient = async () => {
+    // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
+    // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
+    const token = await axios.get('https://osssts.wangminan.me/sts')
+    return new OSS({
+        endpoint: 'oss-cn-hongkong.aliyuncs.com', //填写Bucket所在地域
+        accessKeyId: token.data.AccessKeyId,
+        accessKeySecret: token.data.AccessKeySecret,
+        // STS临时授权
+        stsToken: token.data.SecurityToken,
+        bucket: 'wangminan-files', // 填写Bucket名称。
+        useFetch: true, // 支持上传大于100KB的文件
+        secure: true, // 返回的url为https
+        refreshSTSToken: async () => {
+            const refreshToken = await axios.get("https://osssts.wangminan.me/sts");
+            return {
+                accessKeyId: refreshToken.AccessKeyId,
+                accessKeySecret: refreshToken.AccessKeySecret,
+                stsToken: refreshToken.SecurityToken,
+            };
+        },
+    })
+}
+
 export const putFile = async (name, file) => {
     try {
-        // 填写OSS文件完整路径和本地文件的完整路径。OSS文件完整路径中不能包含Bucket名称。
-        // 如果本地文件的完整路径中未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件。
-        const token = await axios.get('https://stsauth.wangminan.me/sts')
-        const client = new OSS({
-            endpoint: 'oss-cn-hongkong.aliyuncs.com', //填写Bucket所在地域
-            accessKeyId: token.data.AccessKeyId,
-            accessKeySecret: token.data.AccessKeySecret,
-            // STS临时授权
-            stsToken: token.data.SecurityToken,
-            bucket: 'wangminan-files', // 填写Bucket名称。
-            useFetch: true, // 支持上传大于100KB的文件
-            secure: true, // 返回的url为https
-            refreshSTSToken: async () => {
-                const refreshToken = await axios.get("https://stsauth.wangminan.me/sts");
-                return {
-                    accessKeyId: refreshToken.AccessKeyId,
-                    accessKeySecret: refreshToken.AccessKeySecret,
-                    stsToken: refreshToken.SecurityToken,
-                };
-            },
-        })
+        const client = await initOssClient()
         return await client.put(
             // police/张三_uuid.jpg
             'police/' + name + '_' + createFileNameUUID() + '.' + file.name.split('.')[1],
@@ -60,6 +65,19 @@ export const putFile = async (name, file) => {
         )
     } catch (e) {
         // 向上层抛出异常
+        throw e
+    }
+}
+
+// 删除原有文件
+export const deleteFile = async (name) => {
+    try{
+        const client = await initOssClient()
+        return await client.delete(
+            // 注意UTF-8转码 否则delete的请求路径中将出现中文问题
+            revertFromUTF8('police/' + name)
+        )
+    } catch (e) {
         throw e
     }
 }

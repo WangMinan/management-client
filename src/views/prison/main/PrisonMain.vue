@@ -136,7 +136,9 @@ onMounted(async () => {
     await getAccessData()
     await getModelUseData()
     await getFinishTrainingCount()
-    drawPieChart()
+    if(finishTrainingCount.value.length !== 0){
+      drawPieChart()
+    }
   } catch (e) {
     ElMessage.error("请求首页数据失败")
   } finally {

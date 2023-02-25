@@ -3,7 +3,7 @@ import {onMounted, ref} from 'vue'
 import axios from '../../../api/request'
 import {ElMessage} from 'element-plus'
 import {useRouter} from 'vue-router'
-import {putFile} from '../../../utils/OssUtil.js'
+import {putFile, deleteFile} from '../../../utils/OssUtil.js'
 import Cookies from 'js-cookie'
 
 const router = useRouter()
@@ -14,6 +14,8 @@ const cardLoading = ref(false)
 
 const fileList = ref([])
 
+let oldFileName = ''
+
 const getPersonalInformation = async () => {
   cardLoading.value = true
   try {
@@ -22,6 +24,7 @@ const getPersonalInformation = async () => {
       ElMessage.error(data.msg)
     } else {
       personalInformation.value = data.data
+      oldFileName = personalInformation.value.imageUrl.split('/')[personalInformation.value.imageUrl.split('/').length - 1]
     }
   } catch (e) {
     ElMessage.error('数据初始化失败')
@@ -90,6 +93,8 @@ const reviseProfile = async (form) => {
       try{
         if(tmpFile !== undefined){
           const result = await putFile(personalInformation.value.name, tmpFile)
+          // 删除OSS中的旧头像
+          await deleteFile(oldFileName)
           personalInformation.value.imageUrl = result.url
         }
         const queryObject = {
