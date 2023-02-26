@@ -103,8 +103,55 @@ const resetForm = (form) => {
   form.resetFields()
 }
 
+// 校验浏览器版本 高级的await属性需要chrome > 89, safari > 15 建议使用chromium内核的浏览器
+const checkBrowserVersion = () => {
+  const ua = navigator.userAgent.toLowerCase()
+  const isChrome = ua.indexOf('chrome') !== -1
+  const isSafari = ua.indexOf('safari') !== -1
+  const isFirefox = ua.indexOf('firefox') !== -1
+  if (isChrome) {
+    const chromeVersion = ua.match(/chrome\/([\d.]+)/)[1]
+    if (parseInt(chromeVersion.split('.')[0]) < 89) {
+      ElNotification({
+        title: '兼容性问题',
+        message: '您的浏览器可能无法正常使用全部功能。我们推荐您使用' +
+            '<a href="https://www.google.com/chrome" style="text-decoration: none;color: black">' +
+            '89及以上版本的Chrome浏览器' +
+            '</a>' +
+            '以完整地使用我们的功能。',
+        type: 'warning',
+      })
+    }
+  } else if (isSafari) {
+    const safariVersion = ua.match(/version\/([\d.]+)/)[1]
+    if (parseInt(safariVersion.split('.')[0]) < 15) {
+      ElNotification({
+        title: '兼容性问题',
+        message: '您的浏览器可能无法正常使用全部功能。我们推荐您使用' +
+            '<a href="https://www.apple.com/safari/" style="text-decoration: none;color: black">' +
+            '15及以上版本的Safari浏览器' +
+            '</a>' +
+            '以完整地使用我们的功能。',
+        type: 'warning',
+      })
+    }
+  } else if (isFirefox) {
+    ElNotification({
+      title: '兼容性问题',
+      dangerouslyUseHTMLString: true,
+      message: '您的浏览器可能无法正常使用全部功能。我们推荐您使用' +
+          '<a href="https://www.google.com/chrome" style="text-decoration: none;color: black">' +
+          '89及以上版本的Chrome浏览器' +
+          '</a>' +
+          '以完整地使用我们的功能。',
+      type: 'warning',
+    })
+  }
+}
+
 onMounted(async () => {
   checkConfirmStrategy()
+  checkBrowserVersion()
   if (Cookies.get('rememberMe') !== undefined &&
       Cookies.get('manualExit') !== undefined &&
       Cookies.get('role') !== undefined &&
@@ -277,7 +324,7 @@ const refuseStrategy = () => {
 
 <style lang="less" scoped>
 .login-container{
-  background: url("../assets/img/linebackground.jpg") no-repeat fixed center;
+  background: url("../assets/img/linebackground.webp") no-repeat fixed center;
   background-size:100% ,100%;
   height: 100%;
   .login-banner{

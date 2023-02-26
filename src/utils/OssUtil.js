@@ -30,6 +30,8 @@ export const createFileNameUUID = () => {
     return `${+new Date()}_${rx()}${rx()}`
 }
 
+// 注意 这样的语法(在模块顶层使用await without 一个 async) 不被低级浏览器支持 需要引入并配置插件
+// npm install vite-plugin-top-level-await
 const token = await axios.get(import.meta.env.VITE_OSS_STS_URL)
 
 const client = new OSS({
