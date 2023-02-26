@@ -8,6 +8,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const EXPIRE_DAY = 30
+const EXPIRE_ACCESS_TOKEN = 30
+const EXPIRE_REFRESH_TOKEN = 7
+const APP_NAME = import.meta.env.VITE_APP_NAME
 
 // ref引入 要使用vue2中的$ref需要这样引入
 const loginFormRef = ref()
@@ -73,8 +76,11 @@ const login = async () => {
     // 用户信息写入sessionStorage
     Cookies.set('person', JSON.stringify(data.data.person), {expires: EXPIRE_DAY})
     Cookies.set('role',data.data.role,{expires: EXPIRE_DAY})
-    Cookies.set('accessToken', data.data.accessToken, {expires: EXPIRE_DAY})
-    Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_DAY})
+    const millisecond = new Date().getTime();
+    // 过期时间30min
+    const expiresTime = new Date(millisecond + 60 * 1000 * EXPIRE_ACCESS_TOKEN);
+    Cookies.set('accessToken', data.data.accessToken, {expires: expiresTime})
+    Cookies.set('refreshToken', data.data.refreshToken, {expires: EXPIRE_REFRESH_TOKEN})
     ElMessage.success('登录成功')
     if(data.data.role === 'Admin'){
       await router.push('/admin/home')
@@ -157,7 +163,7 @@ const refuseStrategy = () => {
     <div class="login-banner">
       <el-row>
         <div style="margin: auto; ">
-          <h1 style="color: white ">监所警察执法保障试验平台</h1>
+          <h1 style="color: white ">{{ APP_NAME }}</h1>
         </div>
       </el-row>
     </div>

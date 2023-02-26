@@ -8,6 +8,7 @@ import { useStore } from 'vuex'
 import { encrypt } from '../../utils/jsencrypt.js'
 
 const store = useStore()
+const APP_NAME = import.meta.env.VITE_APP_NAME
 
 const getImgSrc =(imgName) => {
   return new URL(`../../assets/img/${imgName}.png`, import.meta.url).href
@@ -202,13 +203,13 @@ watch(policeChange, () => {
   <div class="header">
     <div class="l-content">
       <h1 v-if="Cookies.get('role') === 'Admin'">
-        监所警察执法保障试验平台——运维端,欢迎您:{{nickname}}
+        {{ APP_NAME }}——运维端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'PrisonAdmin'">
-        监所警察执法保障试验平台——监所端,欢迎您:{{nickname}}
+        {{ APP_NAME }}——监所端,欢迎您:{{nickname}}
       </h1>
       <h1 v-else-if="Cookies.get('role') === 'Police'">
-        监所警察执法保障试验平台——警员端,欢迎您:{{nickname}}
+        {{ APP_NAME }}——警员端,欢迎您:{{nickname}}
       </h1>
     </div>
     <div class="flex-grow"></div>

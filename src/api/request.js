@@ -6,7 +6,7 @@ import {start, stop} from '../utils/nprogressUtil'
 
 // 创建一个axios实例
 const _axios = axios.create({
-    baseURL: 'http://123.249.5.227:8079/api'
+    baseURL: import.meta.env.VITE_BASE_URL
 })
 
 const refreshToken = async () => {
@@ -81,7 +81,7 @@ const refreshOrBackToLogin = async () => {
         firstTimeToRefresh = false
         await refreshToken()
     } else {
-        if(router.currentRoute.value.path !== '/login') {
+        if(router.currentRoute.value.fullPath !== '/login') {
             ElMessage.error('您的访问未被授权,可能是您的身份验证已过期,3秒后将跳转至登录页面')
             // 等待三秒
             setTimeout(() => {
@@ -139,7 +139,7 @@ _axios.interceptors.response.use(
                     await refreshOrBackToLogin()
                     break
                 case 4012:
-                    if (router.currentRoute.value.path !== '/login') {
+                    if (router.currentRoute.value.fullPath !== '/login') {
                         // 用户未认证或已注销
                         ElMessage.error('您的访问未被授权,可能是您的身份已被注销,请您在登录页面重试,3秒后将执行跳转')
                         // 等待三秒

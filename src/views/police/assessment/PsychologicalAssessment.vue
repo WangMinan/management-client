@@ -110,7 +110,9 @@ watch(checkIsDark, () => {
 
 onMounted(async () => {
   await getAssessmentData()
-  drawPieChart()
+  if(assessmentData.value.mentalPercentList.length !== 0){
+    drawPieChart()
+  }
 })
 </script>
 
