@@ -9,7 +9,7 @@ const assessmentData = ref({
   id: '',
   mentalPercentList : [],
   result: false,
-  description: '',
+  description: '$',
   createTime: '',
   updateTime: ''
 })
@@ -78,7 +78,7 @@ const drawPieChart = () => {
   const emotions = [
     '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
   ]
-  if(assessmentData.value.mentalPercentList.length === 0){
+  if(assessmentData.value.mentalPercentList.length !== 0){
     for (let i = 0; i < emotions.length; i++) {
       option.series[0].data.push({
         value: assessmentData.value.mentalPercentList[i],
@@ -147,7 +147,7 @@ onMounted(async () => {
             <span>评估结果</span>
           </div>
         </template>
-        <el-empty v-if="assessmentData.description === ''" description="暂无数据" />
+        <el-empty v-if="assessmentData.description === '$'" description="暂无数据" />
         <div v-else>
           <span v-if="assessmentData.result">您的心理状态: 总体<strong>正常</strong></span>
           <span v-else>您的心理状态: 总体<strong>异常</strong></span>

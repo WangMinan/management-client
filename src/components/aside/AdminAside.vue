@@ -56,10 +56,9 @@ const saveNavState = (path) => {
       <el-menu-item
         :index="'/admin/opBoard'"
         @click="saveNavState('/admin/opBoard')"
-        :disabled="true"
       >
         <el-icon><Odometer /></el-icon>
-        <span>平台运维看板</span>
+        <span>监所情况看板</span>
       </el-menu-item>
     </el-menu>
   </el-aside>

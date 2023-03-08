@@ -35,7 +35,7 @@ const stateFormat =  (row, column, cellValue) => {
 const getModelList = async () => {
   try{
     modelLoading.value=true
-    const {data} = await axios.get('/psychology-service/model',{
+    const {data} = await axios.get('/backstage-management-service/model',{
       params: {
         query: queryInfo.value.query,
         pageNum: queryInfo.value.pageNum,
@@ -101,7 +101,7 @@ const startTraining = async (id) => {
   let loading
   modelLoading.value = true
   try {
-    const {data} = await axios.post(`/psychology-service/training/${id}`)
+    const {data} = await axios.post(`/backstage-management-service/training/${id}`)
     if (data.code !== 2000) {
       ElMessage.error(data.msg)
     } else {

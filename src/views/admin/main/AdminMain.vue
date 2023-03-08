@@ -183,7 +183,7 @@ onMounted(async () => {
             <!--对齐内容-->
             <el-row :gutter="20">
               <el-col :span="8">
-                <span>{{item.prisonName}}</span>
+                <span>{{item.policeName}}</span>
               </el-col>
               <el-col :span="8">
                 <span v-if="item.operation">启用了</span>
@@ -194,7 +194,8 @@ onMounted(async () => {
               </el-col>
             </el-row>
             <div style="text-align: start;font-size: 10px;margin-left: 6%;color: gray">
-              <span>启用时间:{{item.time}}</span>
+              <div>开始时间:{{item.startTime}}</div>
+              <div v-if="item.endTime">结束时间:{{item.endTime}}</div>
             </div>
           </li>
         </ul>

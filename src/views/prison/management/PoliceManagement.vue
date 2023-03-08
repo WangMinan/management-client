@@ -57,7 +57,7 @@ const handleSelectionChange = (val) => {
 }
 
 // 新增警员模块
-const addPoliceDialogVisible = ref(false)
+let addPoliceDialogVisible = ref(false)
 const addPoliceFormRef = ref()
 const addDialogLoading = ref(false)
 const addPoliceForm = ref({
