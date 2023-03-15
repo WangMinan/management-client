@@ -70,7 +70,7 @@ const getAssessmentData = async () => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
-      if(data.data !== null){
+      if(data.data !== []){
         assessmentData.value = data.data
       }
     }
