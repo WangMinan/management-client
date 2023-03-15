@@ -26,7 +26,9 @@ jobs:
           publish_dir: dist
           cname: management_client.wangminan.me
 
-      - name: Deploy mirror
+      - name: 开始部署镜像站
+        run: echo "开始部署镜像站"
+
 
       - name: 删除旧的dist
         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd ~/management_client/ && rm -rf ./dist"
