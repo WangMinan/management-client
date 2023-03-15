@@ -116,7 +116,6 @@ const reviseProfile = async (form) => {
           router.go(0)
         }
       } catch (e) {
-        console.log(e)
         ElMessage.error('修改个人信息失败')
       } finally {
         // 刷新个人信息

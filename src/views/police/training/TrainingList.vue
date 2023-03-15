@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, stop} from 'vue'
+import {ref, onMounted, stop, onBeforeUnmount} from 'vue'
 import axios from '../../../api/request.js'
 import {ElLoading, ElMessage} from 'element-plus'
 import Cookies from 'js-cookie'
@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// 保存表格中的监狱数据
+// 保存表格中的场景数据
 const modelData = ref([])
 // 表格的加载圈
 const modelLoading = ref(false)
@@ -93,69 +93,173 @@ const handleCheckModelDialogClose = () => {
 }
 
 // 模拟部分
+const currentTrainingId = ref(0)
+const currentTrainingModelName = ref('')
+const trainingDialogVisible = ref(false)
+const currentTrainingHour = ref(0)
+const currentTrainingMinute = ref(0)
+const currentTrainingSecond = ref(0)
+const currentTrainingMillisecond = ref(0)
 const startTraining = async (id) => {
-  let loading
-  modelLoading.value = true
   try {
     const {data} = await axios.post(`/backstage-management-service/training/${id}`)
     if (data.code !== 2000) {
       ElMessage.error(data.msg)
     } else {
-      const currentTime = new Date().getTime()
-      // 结束时间为开始后一个小时
-      const stopTime = currentTime + 3600 * 1000
+      currentTrainingId.value = data.data
       const trainingDetail = {
         policeId: (JSON.parse(Cookies.get('person'))).id,
-        trainingStopTime: stopTime
+        currentTrainingId: currentTrainingId.value
       }
       window.localStorage.setItem('trainingStatus', JSON.stringify(trainingDetail))
-      // 使用服务调用全局遮罩
-      // TODO 设计一个训练界面
-      loading = ElLoading.service({
-        lock: true,
-        text: '正在模拟中，您的模拟结束时间为' + new Date(stopTime).toLocaleString(),
-        background: 'rgba(0, 0, 0, 0.7)',
-      })
+      currentTrainingModelName.value = modelData.value.find(item => item.id === id).name
+      // 弹出模拟框
+      trainingDialogVisible.value = true
+      startCountUp()
       ElMessage.success('启动模拟成功')
     }
   } catch (e) {
     ElMessage.error('启动模拟失败，请检查网络环境')
-  } finally {
-    modelLoading.value = false
   }
-  // 等待一小时后关闭遮罩
-  setTimeout(() => {
-    loading.close()
-  }, 3600 * 1000)
+}
+let timer = null
+const startCountUp = () => {
+  // 每间隔10毫秒刷新一次currentTrainingMillisecond currentTrainingSecond currentTrainingMinute currentTrainingHour
+  timer = setInterval(() => {
+    currentTrainingMillisecond.value += 10
+    if (currentTrainingMillisecond.value >= 1000) {
+      currentTrainingMillisecond.value = 0
+      currentTrainingSecond.value += 1
+    }
+    if (currentTrainingSecond.value >= 60) {
+      currentTrainingSecond.value = 0
+      currentTrainingMinute.value += 1
+    }
+    if (currentTrainingMinute.value >= 60) {
+      currentTrainingMinute.value = 0
+      currentTrainingHour.value += 1
+    }
+  }, 10);
+}
+
+// 暂停/继续模拟
+const isPause = ref(false)
+const pauseBtnLoading = ref(false)
+const pauseOrContinueTraining = async () => {
+  try{
+    pauseBtnLoading.value = true
+    if (isPause.value){
+      startCountUp()
+    } else {
+      stopCountUp()
+    }
+    isPause.value = !isPause.value
+    // 向window.localStorage中写入暂停/继续的状态
+    const trainingDetail = {
+      policeId: (JSON.parse(Cookies.get('person'))).id,
+      currentTrainingId: currentTrainingId.value,
+      currentTrainingMillisecond: currentTrainingMillisecond.value,
+      currentTrainingSecond: currentTrainingSecond.value,
+      currentTrainingMinute: currentTrainingMinute.value,
+      currentTrainingHour: currentTrainingHour.value
+    }
+    window.localStorage.setItem('trainingStatus', JSON.stringify(trainingDetail))
+    const {data} = await axios.put(`/backstage-management-service/training/${currentTrainingId.value}`)
+    if (data.code !== 2000) {
+      ElMessage.error(data.msg)
+    } else {
+      if(isPause.value){
+        ElMessage.success('暂停模拟成功')
+      } else {
+        ElMessage.success('继续模拟成功')
+      }
+    }
+  } catch (e) {
+    ElMessage.error('暂停/继续模拟失败，请检查网络环境')
+  } finally {
+    pauseBtnLoading.value = false
+  }
+}
+
+const stopCountUp = () => {
+  // 停止计时
+  clearInterval(timer)
+}
+
+// 停止模拟
+const stopBtnLoading = ref(false)
+const stopTraining = async () => {
+  stopBtnLoading.value = true
+  try{
+    const {data} = await axios.get(`/backstage-management-service/training/${currentTrainingId.value}`)
+    if (data.code !== 2000) {
+      ElMessage.error(data.msg)
+    } else {
+      window.localStorage.removeItem('trainingStatus')
+      trainingDialogVisible.value = false
+      currentTrainingHour.value = 0
+      currentTrainingMinute.value = 0
+      currentTrainingSecond.value = 0
+      ElMessage.success('结束模拟成功, 请在模拟记录中查看模拟结果')
+    }
+  } catch (e) {
+    ElMessage.error('结束模拟失败，请检查网络环境')
+  } finally {
+    stopBtnLoading.value = false
+  }
+}
+
+// 取消模拟
+const cancelBtnLoading = ref(false)
+const cancelTraining = async () => {
+  cancelBtnLoading.value = true
+  try{
+    const {data} = await axios.delete(`/backstage-management-service/training/${currentTrainingId.value}`)
+    if (data.code !== 2000) {
+      ElMessage.error(data.msg)
+    } else {
+      window.localStorage.removeItem('trainingStatus')
+      trainingDialogVisible.value = false
+      currentTrainingHour.value = 0
+      currentTrainingMinute.value = 0
+      currentTrainingSecond.value = 0
+      ElMessage.success('取消模拟成功, 请在模拟记录中查看模拟结果')
+    }
+  } catch (e) {
+    ElMessage.error('取消模拟失败，请检查网络环境')
+  } finally {
+    cancelBtnLoading.value = false
+  }
 }
 
 onMounted(() => {
-  // 手动执行页面刷新来挽救初始加载时服务调用全局遮罩不显示的问题
-  if(window.localStorage.getItem('policeTrainingRefresh') === null &&
-      window.localStorage.getItem('trainingStatus')){
-    window.localStorage.setItem('policeTrainingRefresh', 'true')
-    router.go(0)
-  } else {
-    window.localStorage.removeItem('policeTrainingRefresh')
-  }
   getModelList()
   // 判断时间先后
-  if (window.localStorage.getItem('trainingStatus')){
+  if (window.localStorage.getItem('trainingStatus') !== null){
     const trainingStatus = JSON.parse(window.localStorage.getItem('trainingStatus'))
-    const trainingStopTime = trainingStatus.trainingStopTime
-    if (trainingStopTime > new Date().getTime()) {
-      // 使用服务调用全局遮罩
-      const loading = ElLoading.service({
-        lock: true,
-        text: '正在模拟中，您的模拟结束时间为' + new Date(trainingStopTime).toLocaleString(),
-        background: 'rgba(0, 0, 0, 0.7)',
-      })
-      // 等待到结束时间后关闭遮罩
-      setTimeout(() => {
-        loading.close()
-        window.localStorage.removeItem('trainingStatus')
-      }, trainingStopTime - new Date().getTime())
+    currentTrainingMillisecond.value = trainingStatus.currentTrainingMillisecond
+    currentTrainingSecond.value = trainingStatus.currentTrainingSecond
+    currentTrainingMinute.value = trainingStatus.currentTrainingMinute
+    currentTrainingHour.value = trainingStatus.currentTrainingHour
+    currentTrainingId.value = trainingStatus.currentTrainingId
+    trainingDialogVisible.value = true
+    isPause.value = true
+  }
+})
+
+onBeforeUnmount(() => {
+  if(trainingDialogVisible.value){
+    stopCountUp()
+    // 向window.localStorage中写入暂停/继续的状态
+    const trainingDetail = {
+      policeId: (JSON.parse(Cookies.get('person'))).id,
+      currentTrainingId: currentTrainingId.value,
+      currentTrainingMillisecond: currentTrainingMillisecond.value,
+      currentTrainingSecond: currentTrainingSecond.value,
+      currentTrainingMinute: currentTrainingMinute.value,
+      currentTrainingHour: currentTrainingHour.value
     }
+    window.localStorage.setItem('trainingStatus', JSON.stringify(trainingDetail))
   }
 })
 </script>
@@ -277,6 +381,67 @@ onMounted(() => {
       </span>
     </template>
   </el-dialog>
+
+<!-- 警员训练弹窗 -->
+  <el-dialog
+    center
+    v-model="trainingDialogVisible"
+    :close-on-press-escape="false"
+    :close-on-click-modal="false"
+    :show-close="false"
+  >
+    <div class="trainingBody">
+      <div>
+        <span style="font-size: 2em">您正在进行场景 {{currentTrainingModelName}} 的模拟</span>
+      </div>
+      <p></p>
+      <div>
+        <span style="font-size: 1em">当前模拟时长</span>
+        <p></p>
+        <span style="font-size: 3em">
+          {{currentTrainingHour}}:{{currentTrainingMinute}}:{{currentTrainingSecond}}:{{currentTrainingMillisecond.toString().substring(0, 2)}}
+        </span>
+      </div>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button
+          type="danger"
+          :loading="cancelBtnLoading"
+          :disabled="cancelBtnLoading"
+          @click="cancelTraining"
+        >
+          取消模拟
+        </el-button>
+        <el-button
+          v-if="!isPause"
+          type="warning"
+          :loading="pauseBtnLoading"
+          :disabled="pauseBtnLoading"
+          @click="pauseOrContinueTraining"
+        >
+          暂停模拟
+        </el-button>
+        <el-button
+          v-else
+          type="success"
+          :loading="pauseBtnLoading"
+          :disabled="pauseBtnLoading"
+          @click="pauseOrContinueTraining"
+        >
+          继续模拟
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="stopBtnLoading"
+          @click="stopTraining"
+          :disabled="stopBtnLoading"
+        >
+          结束模拟
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="less" scoped>
@@ -293,5 +458,8 @@ onMounted(() => {
 }
 .el-pagination{
   margin-top: 2%;
+}
+.trainingBody{
+  text-align: center;
 }
 </style>

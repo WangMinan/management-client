@@ -181,15 +181,19 @@ onMounted(async () => {
           <li v-for="item in trainingDynamicData" :key="item.modelName">
             <el-row>
               <el-col :span="2">
-                <span>您在</span>
-              </el-col>
-              <el-col :span="16">
-                <span>{{item.startTime}}到{{item.endTime}}期间</span>
+                <span>您</span>
               </el-col>
               <el-col :span="6">
-                <span>完成了{{item.modelName}}</span>
+                <span>完成了</span>
+              </el-col>
+              <el-col :span="16">
+                <span>{{item.modelName}}</span>
               </el-col>
             </el-row>
+            <div style="text-align: start;font-size: 10px;margin-left: 6%;color: gray">
+              <div>开始时间:{{item.startTime}}</div>
+              <div v-if="item.endTime">结束时间:{{item.endTime}}</div>
+            </div>
           </li>
         </ul>
       </el-card>

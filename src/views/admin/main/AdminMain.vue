@@ -182,13 +182,13 @@ onMounted(async () => {
           <li v-for="item in modelUseData" :key="item.id">
             <!--对齐内容-->
             <el-row :gutter="20">
-              <el-col :span="10">
+              <el-col :span="6">
                 <span>警员:{{item.policeName}}</span>
               </el-col>
               <el-col :span="4">
                 <span>完成了</span>
               </el-col>
-              <el-col :span="10">
+              <el-col :span="14">
                 <span>"{{item.modelName}}"场景的模拟</span>
               </el-col>
             </el-row>
