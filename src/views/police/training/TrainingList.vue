@@ -3,11 +3,9 @@ import {ref, onMounted, stop} from 'vue'
 import axios from '../../../api/request.js'
 import {ElLoading, ElMessage} from 'element-plus'
 import Cookies from 'js-cookie'
-import { useStore } from 'vuex'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const store = useStore()
 
 // 保存表格中的监狱数据
 const modelData = ref([])
@@ -49,8 +47,6 @@ const getModelList = async () => {
       // 将modalData中的数据按照priority进行从小到大排序
       modelData.value.sort((a,b) => a.priority - b.priority)
       total.value = data.data.total
-      // modelData.value = adminApi.getModelTotalData().data.list
-      // total.value = adminApi.getModelTotalData().data.total
     }
   } catch (e) {
     ElMessage.error('获取模拟场景列表失败，请检查网络环境')
@@ -114,6 +110,7 @@ const startTraining = async (id) => {
       }
       window.localStorage.setItem('trainingStatus', JSON.stringify(trainingDetail))
       // 使用服务调用全局遮罩
+      // TODO 设计一个训练界面
       loading = ElLoading.service({
         lock: true,
         text: '正在模拟中，您的模拟结束时间为' + new Date(stopTime).toLocaleString(),
@@ -131,6 +128,7 @@ const startTraining = async (id) => {
     loading.close()
   }, 3600 * 1000)
 }
+
 onMounted(() => {
   // 手动执行页面刷新来挽救初始加载时服务调用全局遮罩不显示的问题
   if(window.localStorage.getItem('policeTrainingRefresh') === null &&

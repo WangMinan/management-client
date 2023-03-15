@@ -34,4 +34,4 @@ jobs:
         run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd ~/management_client/ && rm -rf ./dist"
 
       - name: 上传新的dist包到服务器中
-        run: ls && sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./dist root@${{secrets.REMOTE_IP}}:~/management_client/
+        run: sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./dist root@${{secrets.REMOTE_IP}}:~/management_client/

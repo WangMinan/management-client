@@ -174,7 +174,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><Menu /></el-icon>
-            <span>场景启用动态</span>
+            <span>警员模拟动态</span>
           </div>
         </template>
         <el-empty v-if="modelUseData.length === 0" description="暂无数据" />
@@ -182,15 +182,14 @@ onMounted(async () => {
           <li v-for="item in modelUseData" :key="item.id">
             <!--对齐内容-->
             <el-row :gutter="20">
-              <el-col :span="8">
-                <span>{{item.policeName}}</span>
+              <el-col :span="10">
+                <span>警员:{{item.policeName}}</span>
               </el-col>
-              <el-col :span="8">
-                <span v-if="item.operation">启用了</span>
-                <span v-else>禁用了</span>
+              <el-col :span="4">
+                <span>完成了</span>
               </el-col>
-              <el-col :span="8">
-                <span>{{item.modelName}}</span>
+              <el-col :span="10">
+                <span>"{{item.modelName}}"场景的模拟</span>
               </el-col>
             </el-row>
             <div style="text-align: start;font-size: 10px;margin-left: 6%;color: gray">
