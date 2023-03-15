@@ -19,10 +19,17 @@ jobs:
       - name: Build
         run: npm run build && cd dist && echo > .nojekyll
 
-      - name: Deploy
+      - name: Deploy GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist
           cname: management_client.wangminan.me
-          
+
+      - name: Deploy mirror
+
+      - name: 删除旧的dist
+        run: sshpass -p ${{secrets.REMOTE_PWD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_IP}} "cd ~/management_client/ && rm -rf ./dist"
+
+      - name: 上传新的dist包到服务器中
+        run: ls && sshpass -p ${{secrets.REMOTE_PWD}} scp -r -o StrictHostKeyChecking=no ./dist root@${{secrets.REMOTE_IP}}:~/management_client/
