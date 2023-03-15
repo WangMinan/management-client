@@ -2,8 +2,9 @@
 import {onMounted, ref, watch} from 'vue'
 import axios from '../../../api/request.js'
 import {ElMessage} from 'element-plus'
-import * as echarts from "echarts";
-import {useStorage} from "@vueuse/core";
+import * as echarts from 'echarts'
+import {useStorage} from '@vueuse/core'
+import {isArray} from 'ali-oss/lib/common/utils/isArray.js'
 
 // 获取监所数据
 const prisonList = ref([
@@ -71,7 +72,8 @@ const getAssessmentData = async () => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
-      if(data.data !== []){
+      // 打包之后原本的数组判定语句不生效
+      if(!isArray(data.data)){
         assessmentData.value = data.data
       }
     }
