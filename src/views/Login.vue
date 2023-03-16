@@ -244,11 +244,13 @@ const refuseStrategy = () => {
         <!--密码-->
         <el-form-item prop="password">
           <el-input
-              placeholder="请输入密码"
-              type="password"
-              show-password
-              v-model="loginForm.password"
+            placeholder="请输入密码"
+            type="password"
+            show-password
+            v-model="loginForm.password"
+            @keyup.enter.native="submit(loginFormRef)"
           >
+            <!-- 这个keyup放在btn上不生效 怀疑是tooltip做了某些覆盖 -->
             <template #prefix>
               <el-icon class="el-input__icon">
                 <Lock />
@@ -260,7 +262,8 @@ const refuseStrategy = () => {
         <el-row class="button-row" align="middle">
           <el-form-item>
             <el-checkbox
-                v-model="loginForm.rememberMe"
+              v-model="loginForm.rememberMe"
+              @keyup.enter.native="submit(loginFormRef)"
             >
               记住我
             </el-checkbox>

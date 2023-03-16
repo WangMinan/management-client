@@ -411,6 +411,7 @@ onBeforeUnmount(() => {
           :disabled="cancelBtnLoading"
           @click="cancelTraining"
         >
+          <el-icon><CircleClose /></el-icon>
           取消模拟
         </el-button>
         <el-button
@@ -420,6 +421,7 @@ onBeforeUnmount(() => {
           :disabled="pauseBtnLoading"
           @click="pauseOrContinueTraining"
         >
+          <el-icon><VideoPause /></el-icon>
           暂停模拟
         </el-button>
         <el-button
@@ -429,6 +431,7 @@ onBeforeUnmount(() => {
           :disabled="pauseBtnLoading"
           @click="pauseOrContinueTraining"
         >
+          <el-icon><VideoPlay /></el-icon>
           继续模拟
         </el-button>
         <el-button
@@ -437,6 +440,7 @@ onBeforeUnmount(() => {
           @click="stopTraining"
           :disabled="stopBtnLoading"
         >
+          <el-icon><CircleCheck /></el-icon>
           结束模拟
         </el-button>
       </span>
