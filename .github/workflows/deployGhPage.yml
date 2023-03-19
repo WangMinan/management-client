@@ -24,7 +24,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist
-#          cname: management_client.wangminan.me
+          cname: management_client.wangminan.me
 
       - name: 开始部署镜像站
         run: echo "开始部署镜像站"
