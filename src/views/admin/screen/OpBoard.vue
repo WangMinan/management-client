@@ -171,7 +171,7 @@ onMounted( () => {
   <!--面包屑导航-->
   <el-breadcrumb>
     <el-breadcrumb-item :to="{ path: '/admin/home' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item>平台运维看板</el-breadcrumb-item>
+    <el-breadcrumb-item>监所情况看板</el-breadcrumb-item>
   </el-breadcrumb>
   <el-card style="margin-top: 2%; align-items: center">
     <!--需要绑定@clear以在清空文本框时做状态更新-->

@@ -1,4 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
+import {ElMessage} from 'element-plus'
+import Cookies from 'js-cookie'
 
 const routes = [
     {
@@ -60,7 +62,7 @@ const routes = [
                 name: 'opBoard',
                 component: () => import('../views/admin/screen/OpBoard.vue'),
                 meta: {
-                    title: '监所管理系统-运维大屏'
+                    title: '监所管理系统-监所情况看板'
                 }
             }
         ]
@@ -173,9 +175,6 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes
 })
-
-import {ElMessage} from 'element-plus'
-import Cookies from 'js-cookie'
 
 // 挂载路由守卫 若请求头中没有access-token或refresh-token则跳转到登录页
 router.beforeEach((to, from, next) => {
