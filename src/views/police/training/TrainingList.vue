@@ -382,7 +382,7 @@ onBeforeUnmount(() => {
     </template>
   </el-dialog>
 
-<!-- 警员训练弹窗 -->
+<!-- 警员模拟弹窗 -->
   <el-dialog
     center
     v-model="trainingDialogVisible"

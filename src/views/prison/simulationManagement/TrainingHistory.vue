@@ -60,7 +60,7 @@ const getTrainingHistoryList = async () => {
       })
     }
   } catch (e) {
-    ElMessage.error('获取训练历史列表失败，请检查网络环境')
+    ElMessage.error('获取模拟历史列表失败，请检查网络环境')
   } finally {
     historyLoading.value = false
   }

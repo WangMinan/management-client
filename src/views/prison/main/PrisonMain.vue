@@ -200,7 +200,7 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><Help /></el-icon>
-            <span>本周各项训练完成分布</span>
+            <span>本周各项模拟完成分布</span>
           </div>
         </template>
         <el-empty v-if="finishTrainingCount.length === 0" description="暂无数据"></el-empty>

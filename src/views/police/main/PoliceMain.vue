@@ -18,7 +18,7 @@ const getTrainingSummaryData = async () => {
       trainingSummaryData.value = data.data
     }
   } catch (e) {
-    ElMessage.error("请求训练数据失败")
+    ElMessage.error("请求模拟数据失败")
   }
 }
 
@@ -33,7 +33,7 @@ const getTrainingDynamicData = async () => {
       trainingDynamicData.value = data.data
     }
   } catch (e) {
-    ElMessage.error("请求训练数据失败")
+    ElMessage.error("请求模拟数据失败")
   }
 }
 
@@ -48,7 +48,7 @@ const getWeeklyTrainingData = async () => {
       weeklyTrainingData.value = data.data
     }
   } catch (e) {
-    ElMessage.error("请求训练数据失败")
+    ElMessage.error("请求模拟数据失败")
   }
 }
 
@@ -102,7 +102,7 @@ onMounted(async () => {
     await getTrainingDynamicData()
     await getWeeklyTrainingData()
     drawLineChart()
-    // 确认是否正在训练
+    // 确认是否正在模拟
     const {data} = await axios.get('/backstage-management-service/police/home/isTraining')
     if(data.code === 2000 && data.data === true){
       await router.push('/police/training')
