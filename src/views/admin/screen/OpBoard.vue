@@ -4,7 +4,6 @@ import axios from '../../../api/request.js'
 import {ElMessage} from 'element-plus'
 import * as echarts from 'echarts'
 import {useStorage} from '@vueuse/core'
-import {isArray} from 'ali-oss/lib/common/utils/isArray.js'
 
 // 获取监所数据
 const prisonList = ref([
@@ -42,14 +41,7 @@ const getPrisonList = async () => {
 
 
 // 获取评估数据
-const assessmentData = ref({
-  id: '',
-  mentalPercentList : [],
-  result: false,
-  description: '$',
-  createTime: '',
-  updateTime: ''
-})
+const assessmentData = ref([])
 
 const assessmentLoading = ref(false)
 const getAssessmentData = async () => {
@@ -57,14 +49,7 @@ const getAssessmentData = async () => {
   try {
     if(prisonName.value === ''){
       // 重置数据
-      assessmentData.value = {
-        id: '',
-        mentalPercentList : [],
-        result: false,
-        description: '$',
-        createTime: '',
-        updateTime: ''
-      }
+      assessmentData.value = []
       return
     }
     const prisonId = (prisonList.value.find(item => item.name === prisonName.value)).id
@@ -72,10 +57,7 @@ const getAssessmentData = async () => {
     if(data.code !== 2000){
       ElMessage.error(data.msg)
     } else {
-      // 打包之后原本的数组判定语句不生效
-      if(!isArray(data.data)){
-        assessmentData.value = data.data
-      }
+      assessmentData.value = data.data
     }
   } catch (e) {
     ElMessage.error('获取评估数据失败')
@@ -129,10 +111,10 @@ const drawPieChart = () => {
   const emotions = [
     '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
   ]
-  if(assessmentData.value.mentalPercentList.length !== 0){
+  if(checkAssessmentData.value.mentalPercentList.length !== 0){
     for (let i = 0; i < emotions.length; i++) {
       option.series[0].data.push({
-        value: assessmentData.value.mentalPercentList[i],
+        value: checkAssessmentData.value.mentalPercentList[i],
         name: emotions[i]
       })
     }
@@ -161,10 +143,25 @@ watch(checkIsDark, () => {
 
 onMounted( () => {
   getPrisonList()
-  if(assessmentData.value.mentalPercentList.length !== 0){
-    drawPieChart()
-  }
 })
+
+// 表格
+const assessmentTableRef = ref()
+const checkAssessmentData = ref({
+  id: '',
+  mentalPercentList : [],
+  result: false,
+  description: '$',
+  createTime: '',
+  updateTime: ''
+})
+
+const checkAssessmentDialogVisible = ref(false)
+
+const showCheckDialog = (id) => {
+    checkAssessmentData.value = assessmentData.value.find(item => item.id === id)
+    checkAssessmentDialogVisible.value = true
+}
 </script>
 
 <template>
@@ -192,50 +189,98 @@ onMounted( () => {
         :value="item.name"
       />
     </el-select>
+    <!--表格-->
+    <el-table
+      style="width: 100%; margin-top: 2%;"
+      v-loading="assessmentLoading"
+      :ref="assessmentTableRef"
+      :data="assessmentData"
+      border stripe
+      :header-cell-style="{'text-align':'center'}"
+      :cell-style="{'text-align':'center'}"
+    >
+      <el-empty v-if="assessmentData.length === 0" description="暂无数据"></el-empty>
+      <el-table-column prop="id" label="ID"/>
+      <el-table-column prop="policeName" label="警员姓名"/>
+      <el-table-column prop="result" label="评估结果"/>
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button type="success" size="small" @click="showCheckDialog(scope.row.id)">
+            <el-icon><InfoFilled /></el-icon>
+            <span>查看模拟具体信息</span>
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </el-card>
-  <el-row :gutter="15">
-    <el-col :span="12">
-      <el-card>
-        <template #header>
-          <div class="card-header">
-            <el-icon><TrendCharts /></el-icon>
-            <span>情绪分析</span>
+  <!--查看本次评估具体信息-->
+  <el-dialog
+    title="本次评估详情"
+    center
+    v-model="checkAssessmentDialogVisible"
+    @opened="drawPieChart"
+    width="80%"
+  >
+    <el-row :gutter="15">
+      <el-col :span="12">
+        <el-card>
+          <template #header>
+            <div class="card-header">
+              <el-icon><List /></el-icon>
+              <span>模拟明细</span>
+            </div>
+          </template>
+          <el-form
+            :model="checkAssessmentData"
+            ref="checkTrainingFormRef"
+            :disabled="true"
+          >
+            <el-form-item label="评估序号">
+              <el-input v-model="checkAssessmentData.id"></el-input>
+            </el-form-item>
+            <el-form-item label="警员名称">
+              <el-input v-model="checkAssessmentData.policeName"></el-input>
+            </el-form-item>
+            <el-form-item label="评估结果">
+              <el-input v-model="checkAssessmentData.result"></el-input>
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <el-input v-model="checkAssessmentData.createTime"></el-input>
+            </el-form-item>
+            <el-form-item label="更新时间">
+              <el-input v-model="checkAssessmentData.updateTime"></el-input>
+            </el-form-item>
+            <el-form-item label="评估描述">
+              <el-input type="textarea" v-model="checkAssessmentData.description"></el-input>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card>
+          <template #header>
+            <div class="card-header">
+                <el-icon><TrendCharts /></el-icon>
+                <span>情绪分析</span>
+            </div>
+          </template>
+          <div class="graphCard">
+            <el-empty v-if="checkAssessmentData.mentalPercentList.length === 0" description="暂无数据"></el-empty>
+            <div v-else class="graphBox">
+                <div id="pie" style="width: 400px; height: 300px"></div>
+            </div>
           </div>
-        </template>
-        <div class="graphCard">
-          <el-empty v-if="assessmentData.mentalPercentList.length === 0" description="暂无数据" />
-          <div v-else class="graphBox">
-            <div id="pie" style="width: 400px; height: 300px"></div>
-          </div>
-        </div>
-      </el-card>
-    </el-col>
-    <el-col :span="12">
-      <el-card>
-        <template #header>
-          <div class="card-header">
-            <el-icon><Stopwatch /></el-icon>
-            <span>评估结果</span>
-          </div>
-        </template>
-        <el-empty v-if="assessmentData.description === '$'" description="暂无数据" />
-        <div v-else>
-          <span v-if="assessmentData.result">{{prisonName}}的心理状态: 总体<strong>正常</strong></span>
-          <span v-else>{{prisonName}}的心理状态: 总体<strong>异常</strong></span>
-          <el-divider>
-            <el-icon><star-filled /></el-icon>
-          </el-divider>
-          <div>评估描述</div>
-          <span>{{assessmentData.description}}</span>
-          <el-divider>
-            <el-icon><star-filled /></el-icon>
-          </el-divider>
-          <div>评估时间</div>
-          <span>{{assessmentData.createTime}} 到 {{assessmentData.updateTime}}</span>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="checkAssessmentDialogVisible=false">关闭</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!--回到顶部-->
+  <el-backtop :right="100" :bottom="100" />
 </template>
 
 <style lang="less" scoped>
