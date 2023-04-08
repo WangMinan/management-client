@@ -233,7 +233,7 @@ watch(policeChange, () => {
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item v-if="Cookies.get('role') === 'prison'" @click="reviseNicknameDialogVisible=true">
+                <el-dropdown-item v-if="Cookies.get('role') === 'PrisonAdmin'" @click="reviseNicknameDialogVisible=true">
                   <span>修改昵称</span>
                 </el-dropdown-item>
                 <el-dropdown-item @click="dialogVisible=true">
@@ -279,7 +279,7 @@ watch(policeChange, () => {
       <el-form-item prop="newPassword" label="请输入新密码">
         <el-input
             v-model="revisePasswordForm.newPassword"
-            placeholder="旧密码"
+            placeholder="新密码"
             type="password"
             show-password
         >
