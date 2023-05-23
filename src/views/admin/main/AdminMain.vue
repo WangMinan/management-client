@@ -1,13 +1,13 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
-import {useStore} from 'vuex'
-import {useRouter} from 'vue-router'
-import axios from '../../../api/request'
-import {ElLoading, ElMessage} from 'element-plus'
-import * as echarts from 'echarts'
-import {useStorage} from "@vueuse/core";
-
-const store = useStore()
+  import {onMounted, ref, watch} from 'vue'
+  import {useStore} from 'vuex'
+  import {useRouter} from 'vue-router'
+  import axios from '../../../api/request'
+  import {ElLoading, ElMessage} from 'element-plus'
+  import * as echarts from 'echarts'
+  import {useStorage} from '@vueuse/core'
+  
+  const store = useStore()
 const router = useRouter()
 const accessData = ref({
   // 今日访问量

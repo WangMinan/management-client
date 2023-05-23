@@ -1,17 +1,17 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
-import axios from '../../../api/request'
-import {ElLoading, ElMessage} from 'element-plus'
-import {useStore} from 'vuex'
-import * as echarts from 'echarts'
-import {useStorage} from '@vueuse/core'
-
-const store = useStore()
+  import {onMounted, ref, watch} from 'vue'
+  import axios from '../../../api/request'
+  import {ElLoading, ElMessage} from 'element-plus'
+  import {useStore} from 'vuex'
+  import * as echarts from 'echarts'
+  import {useStorage} from '@vueuse/core'
+  
+  const store = useStore()
 
 const accessData = ref({
   workingModeNumber: 0,
   finishTrainTimeDaily: 0,
-  loginTimeDaily: 0,
+  abnormalCount: 0,
   finishTrainTimeWeekly: 0
 })
 
@@ -165,10 +165,10 @@ onMounted(async () => {
         <template #header>
           <div class="card-header">
             <el-icon><OfficeBuilding /></el-icon>
-            <span>今日监所在线人数</span>
+            <span>监所评估异常人数</span>
           </div>
         </template>
-        {{accessData.loginTimeDaily}}
+        {{accessData.abnormalCount}}
       </el-card>
     </el-col>
     <el-col :span="6">

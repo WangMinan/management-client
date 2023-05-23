@@ -1,11 +1,11 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
-import axios from '../../../api/request.js'
-import {ElMessage} from 'element-plus'
-import * as echarts from 'echarts'
-import {useStorage} from '@vueuse/core'
+	import {onMounted, ref, watch} from 'vue'
+	import axios from '../../../api/request.js'
+	import {ElMessage} from 'element-plus'
+	import * as echarts from 'echarts'
+	import {useStorage} from '@vueuse/core'
 
-// 获取监所数据
+	// 获取监所数据
 const prisonList = ref([
   {
     name:'',
@@ -109,7 +109,7 @@ const drawPieChart = () => {
   }
 
   const emotions = [
-    '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
+    '愤怒', '厌恶', '恐惧', '幸福', '悲伤', '惊喜'
   ]
   if(checkAssessmentData.value.mentalPercentList.length !== 0){
     for (let i = 0; i < emotions.length; i++) {
@@ -141,8 +141,9 @@ watch(checkIsDark, () => {
   drawPieChart()
 })
 
-onMounted( () => {
-  getPrisonList()
+onMounted( async () => {
+  await getPrisonList()
+  console.log(assessmentData.value.length === 0)
 })
 
 // 表格
@@ -176,7 +177,7 @@ const showCheckDialog = (id) => {
       filterable
       style="width: 30%"
       v-model="prisonName"
-      placeholder="请选择监所名称"
+      placeholder="请先选择一个监所"
       clearable
       @change="getAssessmentData">
       <template #prefix>
@@ -199,7 +200,7 @@ const showCheckDialog = (id) => {
       :header-cell-style="{'text-align':'center'}"
       :cell-style="{'text-align':'center'}"
     >
-      <el-empty v-if="assessmentData.length === 0" description="暂无数据"></el-empty>
+      <el-empty v-if="assessmentData.length === 0" description="暂无数据,请选择监所"></el-empty>
       <el-table-column prop="id" label="ID"/>
       <el-table-column prop="policeName" label="警员姓名"/>
       <el-table-column prop="result" label="评估结果"/>

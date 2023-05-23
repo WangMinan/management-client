@@ -1,9 +1,9 @@
 <script setup>
-import {ref, onMounted, stop, onBeforeUnmount} from 'vue'
+import {onBeforeUnmount, onMounted, ref} from 'vue'
 import axios from '../../../api/request.js'
-import {ElLoading, ElMessage} from 'element-plus'
+import {ElMessage} from 'element-plus'
 import Cookies from 'js-cookie'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 
 const router = useRouter()
 
@@ -59,7 +59,7 @@ const handleSizeChange = (newSize) => {
   queryInfo.pageSize = newSize
   getModelList()
 }
-const handleCurrentChange = (newPage) => {
+const handleCurrentChange = () => {
   queryInfo.pageNum = newPage
   getModelList()
 }
@@ -274,9 +274,9 @@ onBeforeUnmount(() => {
     <el-row class="searchRow">
       <el-col :span = "10">
         <!--需要绑定@clear以在清空文本框时做状态更新-->
-        <el-input placeholder="请输入搜索内容" v-model="queryInfo.query" clearable @clear="getModelList">
+        <el-input placeholder="请输入搜索内容" v-model="queryInfo.query" clearable @clear="getModelList()">
           <template #append>
-            <el-button @click="getModelList">
+            <el-button @click="getModelList()">
               <el-icon class="el-input__icon">
                 <Search />
               </el-icon>
@@ -333,8 +333,8 @@ onBeforeUnmount(() => {
       :page-sizes="[2, 5, 10, 20]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange()"
+      @current-change="handleCurrentChange()"
     />
   </el-card>
   <!--查看场景具体信息弹窗-->
@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
           type="danger"
           :loading="cancelBtnLoading"
           :disabled="cancelBtnLoading"
-          @click="cancelTraining"
+          @click="cancelTraining()"
         >
           <el-icon><CircleClose /></el-icon>
           取消模拟
@@ -419,7 +419,7 @@ onBeforeUnmount(() => {
           type="warning"
           :loading="pauseBtnLoading"
           :disabled="pauseBtnLoading"
-          @click="pauseOrContinueTraining"
+          @click="pauseOrContinueTraining()"
         >
           <el-icon><VideoPause /></el-icon>
           暂停模拟
@@ -429,7 +429,7 @@ onBeforeUnmount(() => {
           type="success"
           :loading="pauseBtnLoading"
           :disabled="pauseBtnLoading"
-          @click="pauseOrContinueTraining"
+          @click="pauseOrContinueTraining()"
         >
           <el-icon><VideoPlay /></el-icon>
           继续模拟
@@ -437,7 +437,7 @@ onBeforeUnmount(() => {
         <el-button
           type="primary"
           :loading="stopBtnLoading"
-          @click="stopTraining"
+          @click="stopTraining()"
           :disabled="stopBtnLoading"
         >
           <el-icon><CircleCheck /></el-icon>

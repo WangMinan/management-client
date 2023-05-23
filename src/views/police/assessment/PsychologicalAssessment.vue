@@ -1,11 +1,11 @@
 <script setup>
-import {onMounted, ref, watch} from 'vue'
-import {ElMessage} from 'element-plus'
-import axios from '../../../api/request'
-import * as echarts from "echarts";
-import {useStorage} from "@vueuse/core";
-
-const assessmentData = ref({
+  import {onMounted, ref, watch} from 'vue'
+  import {ElMessage} from 'element-plus'
+  import axios from '../../../api/request'
+  import * as echarts from "echarts";
+  import {useStorage} from "@vueuse/core";
+  
+  const assessmentData = ref({
   id: '',
   mentalPercentList : [],
   result: false,
@@ -76,7 +76,7 @@ const drawPieChart = () => {
   }
 
   const emotions = [
-    '愤怒', '厌恶', '恐惧', '高兴', '悲伤', '惊讶'
+    '愤怒', '厌恶', '恐惧', '幸福', '悲伤', '惊喜'
   ]
   if(assessmentData.value.mentalPercentList.length !== 0){
     for (let i = 0; i < emotions.length; i++) {
